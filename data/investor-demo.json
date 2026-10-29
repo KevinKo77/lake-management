@@ -1,0 +1,81 @@
+{
+  "fixtureVersion": 1,
+  "fictional": true,
+  "currency": "EUR",
+  "budget": 300000,
+  "description": "Synthetic illustrative scenarios, not observed returns, real investment opportunities or a recommendation.",
+  "opportunities": [
+    {
+      "id": "demo-case-a",
+      "athleteId": "demo-tennis-a",
+      "label": "DEMO A \u2014 Tennis development",
+      "demo": true,
+      "note": "FICTIONAL teaching case. All revenue, rights, probabilities and costs are invented scenario assumptions. No real athlete, contract or offer.",
+      "createdAt": null,
+      "diligence": {
+        "contract": false,
+        "revenue": false,
+        "counterparty": false
+      },
+      "model": {
+        "capital": 100000,
+        "revenue": 300000,
+        "growth": 0.06,
+        "share": 0.15,
+        "years": 5,
+        "cost": 1500,
+        "discount": 0.15,
+        "cap": 2.5,
+        "upfrontFee": 2000,
+        "paymentDelay": 0,
+        "collectionRate": 0.95,
+        "probabilities": [
+          0.3,
+          0.5,
+          0.2
+        ],
+        "multipliers": [
+          0.4,
+          1,
+          1.6
+        ]
+      }
+    },
+    {
+      "id": "demo-case-b",
+      "athleteId": "demo-tennis-b",
+      "label": "DEMO B \u2014 Delayed revenue share",
+      "demo": true,
+      "note": "FICTIONAL teaching case. All revenue, rights, probabilities and costs are invented scenario assumptions. No real athlete, contract or offer.",
+      "createdAt": null,
+      "diligence": {
+        "contract": false,
+        "revenue": false,
+        "counterparty": false
+      },
+      "model": {
+        "capital": 120000,
+        "revenue": 400000,
+        "growth": 0.04,
+        "share": 0.16,
+        "years": 5,
+        "cost": 2000,
+        "discount": 0.15,
+        "cap": 2.4,
+        "upfrontFee": 3000,
+        "paymentDelay": 1,
+        "collectionRate": 0.9,
+        "probabilities": [
+          0.4,
+          0.45,
+          0.15
+        ],
+        "multipliers": [
+          0.3,
+          1,
+          1.8
+        ]
+      }
+    }
+  ]
+}

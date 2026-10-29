@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 2,
+  "retrievedAt": "2026-10-29",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+  "method": "Manual structured-data extraction checked against immutable Wikidata revision pages. No live feed or financial performance data.",
+  "athletes": [
+    {
+      "id": "Q28777443",
+      "name": "Tallon Griekspoor",
+      "birthDate": "1996-07-02",
+      "country": "Netherlands",
+      "sport": "Tennis",
+      "atpId": "GJ37",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q28777443",
+      "properties": {
+        "name": "label/en",
+        "birthDate": "P569",
+        "country": "P27",
+        "sport": "P641",
+        "atpId": "P536"
+      },
+      "sourceRevision": "2520726280",
+      "revisionUrl": "https://www.wikidata.org/w/index.php?oldid=2520726280&title=Q28777443",
+      "referenceCounts": {
+        "birthDate": 1,
+        "country": 0,
+        "sport": 1,
+        "atpId": 1
+      },
+      "historicalSinglesRanking": {
+        "rank": 21,
+        "asOf": "2023-11-06",
+        "property": "P1352",
+        "qualifiers": {
+          "sport": "tennis singles",
+          "pointInTime": "P585"
+        },
+        "underlyingReferences": 1,
+        "sourceUrl": "https://www.wikidata.org/w/index.php?oldid=2520726280&title=Q28777443",
+        "meaning": "dated ranking statement; not a current rank or a performance forecast"
+      }
+    },
+    {
+      "id": "Q28493468",
+      "name": "Emil Ruusuvuori",
+      "birthDate": "1999-04-02",
+      "country": "Finland",
+      "sport": "Tennis",
+      "atpId": "RH24",
+      "sourceUrl": "https://www.wikidata.org/wiki/Q28493468",
+      "properties": {
+        "name": "label/en",
+        "birthDate": "P569",
+        "country": "P27",
+        "sport": "P641",
+        "atpId": "P536"
+      },
+      "historicalSinglesRanking": {
+        "rank": 44,
+        "asOf": "2022-08-08",
+        "property": "P1352",
+        "qualifiers": {
+          "sport": "tennis singles",
+          "pointInTime": "P585"
+        },
+        "sourceUrl": "https://www.wikidata.org/w/index.php?oldid=2518423972&title=Q28493468",
+        "underlyingReferences": 0,
+        "meaning": "dated ranking statement; not a current rank or a performance forecast"
+      },
+      "sourceRevision": "2518423972",
+      "revisionUrl": "https://www.wikidata.org/w/index.php?oldid=2518423972&title=Q28493468",
+      "referenceCounts": {
+        "birthDate": 0,
+        "country": 0,
+        "sport": 1,
+        "atpId": 0
+      }
+    }
+  ],
+  "reviewedAt": "2026-10-29"
+}
