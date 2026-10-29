@@ -23,7 +23,7 @@ Internal investor-document existence tests were excluded along with those docume
 
 This review branch does not deploy the site. CNAME and the Google verification file are preserved byte for byte. There is no deployment workflow or configuration change.
 
-Before merging, review the new positioning: the home page changes from strategic advisory to a sports-investment research project. The previous commercial service descriptions and contact form are replaced. Confirm appropriate company/legal/contact information before commercial use; none has been invented here.
+Before merging, review the new positioning: the home page changes from strategic advisory to a sports-investment research project. The founder name, biography, photograph and business contact are restored from the existing public site. Lake Management is presented as a sports-economy investment-platform project, and Lake Intelligence as a multisport research-platform project whose current demo focuses on tennis. Regulatory authorizations are not represented as obtained. No payments or real investments are available.
 
 After explicit approval, merge the reviewed PR into main. Under the existing Pages main/root configuration, that merge is the publication trigger. Do not change DNS, the Pages source or CNAME. Then check the home page, mobile navigation, fictional demo, exports and data integrity at the existing domain. If necessary, revert the integration commit via a reviewed PR; do not reset main.
 
