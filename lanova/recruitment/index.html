@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>LANOVA Sports | Recruitment Optimizer (beta)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#decision">Skip to the decision</a>
+<header class="top">
+  <div class="logo">LA<span>NOVA</span> <small>SPORTS</small></div>
+  <span id="beta" class="badge warn" title="Not yet approved for production; the live optimizer remains at /optimizer/">BETA · under independent review</span>
+  <nav aria-label="LANOVA tools">
+    <a href="../lanova-demo/index.html">Decision Lab</a>
+    <a href="../predictive/index.html">Promotion research</a>
+    <a aria-current="page" href="index.html">Recruitment Optimizer V2</a>
+  </nav>
+</header>
+<div id="data-status" class="fictional" role="note">FICTIONAL DEMONSTRATION DATA — the club, players and every figure are invented for illustration.</div>
+
+<main>
+  <section class="intro">
+    <p class="eyebrow">Squad capital allocation</p>
+    <h1>Which signings, together, make the club stronger without breaking it?</h1>
+    <p class="lede">Enter your shortlist with real contract terms. The optimizer evaluates every combination against your transfer budget, season-by-season squad-cost limit, downside cash floor and registration rules, then explains the recommendation, every rejection and what would change the answer.</p>
+  </section>
+
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+
+  <section id="decision" class="panel decision" aria-labelledby="decision-title">
+    <div class="row between">
+      <h2 id="decision-title">Recommendation</h2>
+      <span id="proof" class="badge"></span>
+    </div>
+    <p id="summary" class="summary"></p>
+    <div id="warnings" role="alert"></div>
+    <div id="stale-banner" class="verdict bad" role="alert" hidden></div>
+    <div id="chips" class="chips"></div>
+    <div id="kpis" class="kpis"></div>
+    <details id="disclosures" class="basis" open><summary>How to read these numbers</summary><dl id="disclosure-list"></dl></details>
+    <div class="actions">
+      <button id="export-memo" type="button" disabled>Decision memo (HTML)</button>
+      <button id="export-csv" type="button" class="secondary" disabled>Audit schedules (CSV)</button>
+      <button id="export-json" type="button" class="secondary">Scenario inputs (JSON)</button>
+      <label class="file secondary">Import scenario<input id="import-json" type="file" accept="application/json,.json"></label>
+      <button id="reset" type="button" class="ghost">Reset to demo</button>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="cmp-title">
+    <div class="row between">
+      <h2 id="cmp-title">Saved scenarios, side by side</h2>
+      <form id="snapshot-form" class="row" novalidate>
+        <label class="inline">Name this scenario <input id="snapshot-label" maxlength="60" placeholder="e.g. Board case — tighter cash"></label>
+        <button id="snapshot-save" type="submit">Save for comparison</button>
+      </form>
+    </div>
+    <p class="muted">Save up to 3 versions of the inputs. Each one is re-optimised from its own saved inputs every time it is shown, and listed against the current scenario with exactly what differs.</p>
+    <div class="scroll"><table id="compare"></table></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel" aria-labelledby="why-title">
+      <h2 id="why-title">Why these players</h2>
+      <p class="muted">Marginal value = objective lost if the player is removed, after diminishing returns at the same position.</p>
+      <div class="scroll"><table id="marginals"></table></div>
+      <h3>Limits at or near their edge</h3>
+      <ul id="binding" class="plain"></ul>
+    </section>
+    <section class="panel" aria-labelledby="change-title">
+      <h2 id="change-title">What would change the answer</h2>
+      <p class="muted">Each line re-runs the full optimisation with one limit relaxed. A value of €0 means that resource is not what is holding the club back.</p>
+      <div class="scroll"><table id="shadow"></table></div>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="not-title">
+    <h2 id="not-title">Why not the others</h2>
+    <p class="muted">For each candidate left out, the optimizer re-solves with that player forced in and reports exactly what it would cost and which limits break.</p>
+    <ul id="exclusions" class="reasons"></ul>
+  </section>
+
+  <div class="grid2">
+    <section class="panel" aria-labelledby="alt-title">
+      <h2 id="alt-title">Next-best portfolios</h2>
+      <div class="scroll"><table id="alternatives"></table></div>
+    </section>
+    <section class="panel" aria-labelledby="sheet-title">
+      <h2 id="sheet-title">Against spreadsheet-style baselines</h2>
+      <p class="muted small">Both picks are judged by this full model. This compares models and search methods, not Excel as a tool: Excel Solver could be given this full model too.</p>
+      <h3>Simple greedy spreadsheet-style shortlist</h3>
+      <div id="baseline"></div>
+      <details><summary>Rules of the greedy shortlist</summary><ol id="baseline-rules" class="muted"></ol></details>
+      <h3>Exact optimum of a simplified spreadsheet model (Solver-style)</h3>
+      <div id="solver-baseline"></div>
+      <details><summary>What the simplified model includes</summary><ol id="solver-rules" class="muted"></ol></details>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="headroom-title">
+    <h2 id="headroom-title">Season-by-season headroom for the recommendation</h2>
+    <div class="scroll"><table id="headroom"></table></div>
+    <p class="muted small">Squad cost = committed squad + new wages, bonuses, signing bonuses and amortisation of fees. Cash = opening cash + club operating cash + signings' downside cash flows (resale and revenue haircuts applied), measured at each season end.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="club-title">
+    <h2 id="club-title">Club limits and objective</h2>
+    <form id="club" class="fields" novalidate></form>
+    <div class="scroll"><table id="seasons" class="inputs"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="cand-title">
+    <div class="row between">
+      <h2 id="cand-title">Candidates and contract terms</h2>
+      <div><button id="add" type="button">+ Add candidate</button></div>
+    </div>
+    <p class="muted small">Money in euros. Instalments as percentages per season, e.g. 50/30/20. Exit season = last season at the club; exit value 0 means the contract simply ends. "Downside exit" overrides the club resale haircut for that player.</p>
+    <div class="scroll wide"><table id="candidates" class="inputs"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="econ-title">
+    <div class="row between">
+      <h2 id="econ-title">Contract economics, line by line</h2>
+      <label class="inline">Candidate <select id="econ-select"></select></label>
+    </div>
+    <div class="scroll"><table id="econ"></table></div>
+  </section>
+</main>
+<footer class="foot">LANOVA Sports by Lake Management · Recruitment Optimizer V2 (prototype) · Runs entirely in this browser; scenarios are stored only in local browser storage.</footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>

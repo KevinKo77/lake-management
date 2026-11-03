@@ -1,0 +1,276 @@
+{
+  "fictional": true,
+  "label": "Fictional second-tier club — summer window demonstration",
+  "note": "All clubs, players and figures are fictional and illustrative. Expected points are analyst inputs, not forecasts.",
+  "context": {
+    "horizon": 4,
+    "discountRate": 0.1,
+    "transferBudget": 2500000,
+    "squadCostLimit": [
+      16000000,
+      16000000,
+      16500000,
+      17000000
+    ],
+    "committedSquadCost": [
+      13200000,
+      10800000,
+      8500000,
+      6000000
+    ],
+    "openingCash": 5000000,
+    "operatingCashFlow": [
+      -300000,
+      500000,
+      700000,
+      900000
+    ],
+    "minCash": 0,
+    "currentSquadSize": 21,
+    "maxSquadSize": 25,
+    "currentNonEU": 2,
+    "maxNonEU": 3,
+    "maxSignings": 4,
+    "positionNeeds": {
+      "CB": 1,
+      "ST": 1
+    },
+    "objective": "blended",
+    "valuePerPoint": 250000,
+    "samePositionFactor": 0.5,
+    "minPortfolioNpv": null,
+    "stress": {
+      "resaleHaircut": 0.5,
+      "revenueHaircut": 0.3,
+      "upsideResale": 0.2,
+      "upsideRevenue": 0.2
+    },
+    "protectedReserve": 500000,
+    "lifetimeCapital": 9000000,
+    "maxDownsideLoss": 3500000
+  },
+  "candidates": [
+    {
+      "id": "cb-a",
+      "name": "Centre-back A (24)",
+      "position": "CB",
+      "age": 24,
+      "dealType": "permanent",
+      "fee": 1200000,
+      "instalments": [
+        0.5,
+        0.3,
+        0.2
+      ],
+      "agentFee": 120000,
+      "signingBonus": 150000,
+      "contractYears": 4,
+      "wage": 450000,
+      "wageGrowth": 0.03,
+      "bonusExpected": 40000,
+      "points": 3.0,
+      "exitSeason": 3,
+      "exitValue": 2000000,
+      "exitValueDownside": 900000,
+      "sellOnPct": 0.1,
+      "saleCostPct": 0.05
+    },
+    {
+      "id": "cb-b",
+      "name": "Centre-back B (31)",
+      "position": "CB",
+      "age": 31,
+      "dealType": "free",
+      "agentFee": 200000,
+      "signingBonus": 300000,
+      "contractYears": 2,
+      "wage": 600000,
+      "points": 2.5
+    },
+    {
+      "id": "cb-c",
+      "name": "Centre-back C (21, loan)",
+      "position": "CB",
+      "age": 21,
+      "dealType": "loan",
+      "fee": 150000,
+      "contractYears": 1,
+      "wage": 500000,
+      "wageShare": 0.6,
+      "points": 2.0
+    },
+    {
+      "id": "st-a",
+      "name": "Striker A (22)",
+      "position": "ST",
+      "age": 22,
+      "dealType": "permanent",
+      "fee": 2000000,
+      "instalments": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "agentFee": 200000,
+      "contractYears": 5,
+      "wage": 550000,
+      "wageGrowth": 0.05,
+      "revenue": 100000,
+      "points": 4.0,
+      "exitSeason": 3,
+      "exitValue": 4000000,
+      "exitValueDownside": 1500000,
+      "sellOnPct": 0.15,
+      "saleCostPct": 0.05
+    },
+    {
+      "id": "st-b",
+      "name": "Striker B (29)",
+      "position": "ST",
+      "age": 29,
+      "dealType": "permanent",
+      "fee": 600000,
+      "agentFee": 60000,
+      "contractYears": 3,
+      "wage": 700000,
+      "points": 3.5
+    },
+    {
+      "id": "st-c-loan",
+      "name": "Striker C (25) — loan",
+      "position": "ST",
+      "age": 25,
+      "nonEU": true,
+      "dealType": "loan",
+      "fee": 300000,
+      "contractYears": 1,
+      "wage": 900000,
+      "wageShare": 0.5,
+      "points": 3.0,
+      "group": "Striker C"
+    },
+    {
+      "id": "st-c-perm",
+      "name": "Striker C (25) — permanent",
+      "position": "ST",
+      "age": 25,
+      "nonEU": true,
+      "dealType": "permanent",
+      "fee": 1600000,
+      "instalments": [
+        0.5,
+        0.5
+      ],
+      "agentFee": 150000,
+      "contractYears": 4,
+      "wage": 800000,
+      "points": 3.0,
+      "exitSeason": 2,
+      "exitValue": 1800000,
+      "saleCostPct": 0.05,
+      "group": "Striker C"
+    },
+    {
+      "id": "w-a",
+      "name": "Winger A (23)",
+      "position": "W",
+      "age": 23,
+      "dealType": "permanent",
+      "fee": 800000,
+      "instalments": [
+        0.5,
+        0.5
+      ],
+      "agentFee": 80000,
+      "contractYears": 4,
+      "wage": 350000,
+      "wageGrowth": 0.03,
+      "points": 2.2,
+      "exitSeason": 3,
+      "exitValue": 1600000,
+      "saleCostPct": 0.05
+    },
+    {
+      "id": "w-b",
+      "name": "Winger B (28)",
+      "position": "W",
+      "age": 28,
+      "dealType": "free",
+      "agentFee": 100000,
+      "signingBonus": 150000,
+      "contractYears": 3,
+      "wage": 400000,
+      "points": 1.8
+    },
+    {
+      "id": "cm-a",
+      "name": "Midfielder A (26)",
+      "position": "CM",
+      "age": 26,
+      "dealType": "permanent",
+      "fee": 500000,
+      "agentFee": 50000,
+      "contractYears": 3,
+      "wage": 300000,
+      "points": 1.5,
+      "exitValue": 600000
+    },
+    {
+      "id": "cm-b",
+      "name": "Midfielder B (20, loan)",
+      "position": "CM",
+      "age": 20,
+      "dealType": "loan",
+      "fee": 0,
+      "contractYears": 1,
+      "wage": 350000,
+      "points": 1.4
+    },
+    {
+      "id": "gk-a",
+      "name": "Goalkeeper A (33)",
+      "position": "GK",
+      "age": 33,
+      "dealType": "free",
+      "agentFee": 50000,
+      "contractYears": 2,
+      "wage": 250000,
+      "points": 1.0
+    },
+    {
+      "id": "fb-a",
+      "name": "Full-back A (22)",
+      "position": "FB",
+      "age": 22,
+      "nonEU": true,
+      "dealType": "permanent",
+      "fee": 400000,
+      "agentFee": 40000,
+      "contractYears": 3,
+      "wage": 250000,
+      "points": 1.2,
+      "exitValue": 700000,
+      "saleCostPct": 0.05
+    },
+    {
+      "id": "am-a",
+      "name": "Attacking midfielder A (25)",
+      "position": "AM",
+      "age": 25,
+      "nonEU": true,
+      "dealType": "permanent",
+      "fee": 1800000,
+      "instalments": [
+        0.34,
+        0.33,
+        0.33
+      ],
+      "agentFee": 180000,
+      "contractYears": 4,
+      "wage": 650000,
+      "points": 3.2,
+      "exitValue": 2500000,
+      "saleCostPct": 0.05
+    }
+  ]
+}
