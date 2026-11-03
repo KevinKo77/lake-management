@@ -1,14 +1,16 @@
-import {defaults,demoCandidates,MAX_CANDIDATES,POSITIONS,optimize,parseWorkspace} from './model.js';
+import {defaults,demoCandidates,MAX_CANDIDATES,POSITIONS,optimize,parseWorkspace,validateCandidates} from './model.js';
 import {decisionRecord,decisionCsv,decisionHtml} from './report.js';
 import {money,esc} from '../src/format.js';
 const $=id=>document.getElementById(id),KEY='lanova-optimizer-v2-draft';
 const monetary=new Set(['budget','wageCap','capital','reserve','minNpv','maxDownsideLoss']);
 let candidates=structuredClone(demoCandidates),result=null,selected=0,saved=[],nextId=1;
 function number(el,scale=1){if(!el.value.trim())throw Error('Complete every numeric input');const v=Number(el.value)*scale;if(!Number.isFinite(v))throw Error('Use finite numeric inputs');return v;}
+function readCandidateRows(skipId){
+ return candidates.filter(c=>c.id!==skipId).map(c=>{const row=$('candidates').querySelector(`[data-row="${c.id}"]`);return {id:c.id,name:row.querySelector('[data-field="name"]').value,position:row.querySelector('[data-field="position"]').value,enabled:row.querySelector('[data-field="enabled"]').checked,...Object.fromEntries(['fee','wage','revenue','resale','score'].map(k=>[k,number(row.querySelector(`[data-field="${k}"]`),k==='score'?1:1e6)]))};});
+}
 function readInputs(){
  const assumptions=Object.fromEntries(Object.keys(defaults).map(k=>[k,k==='objective'?$(k).value:number($(k),monetary.has(k)?1e6:1)]));
- const list=candidates.map(c=>{const row=$('candidates').querySelector(`[data-row="${c.id}"]`);return {id:c.id,name:row.querySelector('[data-field="name"]').value,position:row.querySelector('[data-field="position"]').value,enabled:row.querySelector('[data-field="enabled"]').checked,...Object.fromEntries(['fee','wage','revenue','resale','score'].map(k=>[k,number(row.querySelector(`[data-field="${k}"]`),k==='score'?1:1e6)]))};});
- return parseWorkspace({schema:'lanova-optimizer-v2',assumptions,candidates:list});
+ return parseWorkspace({schema:'lanova-optimizer-v2',assumptions,candidates:readCandidateRows()});
 }
 function renderCandidates(){
  $('candidates').innerHTML=candidates.map(c=>`<tr data-row="${esc(c.id)}"><td><input type="checkbox" data-field="enabled" aria-label="Include ${esc(c.name)}" ${c.enabled?'checked':''}></td><td><input data-field="name" aria-label="Candidate name" maxlength="80" value="${esc(c.name)}"></td><td><select data-field="position" aria-label="Role for ${esc(c.name)}">${POSITIONS.map(p=>`<option ${c.position===p?'selected':''}>${p}</option>`).join('')}</select></td>${['fee','wage','revenue','resale','score'].map(k=>`<td><input data-field="${k}" aria-label="${esc(({fee:'Transfer fee',wage:'Annual wage',revenue:'Annual incremental revenue',resale:'Terminal resale',score:'Priority score'})[k])} for ${esc(c.name)}${k==='score'?'':' in million euros'}" type="number" min="0" max="100" step="${k==='score'?'1':'0.01'}" value="${c[k]/(k==='score'?1:1e6)}"></td>`).join('')}<td><button data-remove="${esc(c.id)}" class="remove" aria-label="Remove ${esc(c.name)}">×</button></td></tr>`).join('');
@@ -18,7 +20,7 @@ function setExportState(enabled){for(const id of ['export-json','export-csv','ex
 function stale(){result=null;selected=0;setExportState(false);$('result-content').hidden=true;$('empty-results').hidden=false;$('empty-results').innerHTML='<span>↗</span><h3>Inputs changed.</h3><p>Run the optimizer to refresh every combination, scenario and constraint.</p>';$('search-proof').textContent='Recalculation required';$('run-status').textContent='Inputs changed — run the optimizer again.';$('error').textContent='';}
 function handleError(e){$('error').textContent=e.message;}
 function run(){
- try{const workspace=readInputs();candidates=workspace.candidates;result=optimize(workspace.assumptions,candidates);selected=0;$('error').textContent='';
+ try{const workspace=readInputs();candidates=workspace.candidates;renderCandidates();result=optimize(workspace.assumptions,candidates);selected=0;$('error').textContent='';
  $('search-proof').textContent=`${result.activeCount} available · ${result.possibleSubsets.toLocaleString()} possible subsets · ${result.feasibleCount.toLocaleString()} feasible`;
  if(!result.portfolios.length){$('empty-results').hidden=false;$('empty-results').innerHTML='<span>∅</span><h3>No feasible combination.</h3><p>'+esc(result.noFeasibleReason)+'</p>';$('result-content').hidden=true;setExportState(false);$('run-status').textContent='Search complete. No combination meets all constraints.';return;}
  $('run-status').textContent='Search complete. Exact optimum within the available shortlist and stated assumptions.';renderResult();
@@ -43,7 +45,7 @@ function download(name,body,type){const url=URL.createObjectURL(new Blob([body],
 $('run').onclick=run;
 for(const key of Object.keys(defaults))$(key).addEventListener(key==='objective'?'change':'input',stale);
 $('candidates').addEventListener('input',stale);$('candidates').addEventListener('change',stale);
-$('candidates').addEventListener('click',event=>{const b=event.target.closest('[data-remove]');if(!b)return;try{candidates=readInputs().candidates.filter(c=>c.id!==b.dataset.remove);renderCandidates();stale();}catch(e){handleError(e);}});
+$('candidates').addEventListener('click',event=>{const b=event.target.closest('[data-remove]');if(!b)return;try{candidates=validateCandidates(readCandidateRows(b.dataset.remove));renderCandidates();stale();}catch(e){handleError(e);}});
 $('add-candidate').onclick=()=>{try{const w=readInputs();if(w.candidates.length>=MAX_CANDIDATES)throw Error('Shortlist limit reached');let id;do{id='candidate-'+nextId++;}while(w.candidates.some(c=>c.id===id));candidates=[...w.candidates,{id,name:'New analyst candidate',position:'MF',fee:1000000,wage:300000,revenue:200000,resale:1500000,score:70,enabled:true}];renderCandidates();stale();}catch(e){handleError(e);}};
 $('combinations').addEventListener('click',e=>{const b=e.target.closest('[data-inspect]');if(b&&result){selected=Number(b.dataset.inspect);renderResult();}});
 $('pin').onclick=()=>{if(!result?.portfolios[selected]||saved.length>=3)return;saved.push(structuredClone({label:new Date().toLocaleString('en-GB'),assumptions:result.assumptions,candidates:result.candidates,portfolio:result.portfolios[selected]}));renderSaved();$('run-status').textContent='Decision frozen in comparison. Change inputs and rerun to compare another.';};
@@ -55,5 +57,6 @@ $('import-button').onclick=()=>$('import-file').click();
 $('import-file').onchange=async()=>{try{const file=$('import-file').files[0];if(!file)return;if(file.size>256000)throw Error('Import limit is 256 KB');populate(parseWorkspace(JSON.parse(await file.text())));run();}catch(e){handleError(e);}finally{$('import-file').value='';}};
 $('reset').onclick=()=>{populate({assumptions:defaults,candidates:demoCandidates});run();};
 for(const [id,name,type,build] of [['export-json','lanova-v2-decision.json','application/json',r=>JSON.stringify(r,null,2)],['export-csv','lanova-v2-decision.csv','text/csv',decisionCsv],['export-html','lanova-v2-report.html','text/html',decisionHtml]])$(id).onclick=()=>{try{download(name,build(decisionRecord(result,selected,saved)),type);}catch(e){handleError(e);}};
+$('export-inputs').onclick=()=>{try{download('lanova-v2-inputs.json',JSON.stringify(readInputs(),null,2),'application/json');$('error').textContent='';}catch(e){handleError(e);}};
 $('print').onclick=()=>window.print();
 renderCandidates();renderSaved();run();
