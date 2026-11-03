@@ -1,0 +1,1518 @@
+{
+  "schemaVersion": 1,
+  "modelVersion": "promotion-logistic-v1",
+  "seed": 9401,
+  "features": [
+    "rank_strength",
+    "points_per_game",
+    "goal_difference_per_game",
+    "gap_to_second_per_42",
+    "gap_to_sixth_per_42",
+    "season_fraction"
+  ],
+  "target": "Actual promotion to Primera next season, including playoff winner; inferred from next-season membership",
+  "scope": "Historical Segunda backtests only. No current-season forecasts.",
+  "acceptedSeasons": [
+    "2012-13",
+    "2013-14",
+    "2014-15",
+    "2015-16",
+    "2016-17",
+    "2017-18",
+    "2020-21",
+    "2021-22",
+    "2022-23",
+    "2023-24"
+  ],
+  "audit": [
+    {
+      "season": "2012-13",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "elche cf",
+        "ud almeria",
+        "villarreal cf"
+      ]
+    },
+    {
+      "season": "2013-14",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "cordoba cf",
+        "deportivo la coruna",
+        "sd eibar"
+      ]
+    },
+    {
+      "season": "2014-15",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "real betis",
+        "sporting gijon",
+        "ud las palmas"
+      ]
+    },
+    {
+      "season": "2015-16",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "ca osasuna",
+        "cd alaves",
+        "cd leganes"
+      ]
+    },
+    {
+      "season": "2016-17",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "getafe cf",
+        "girona fc",
+        "levante ud"
+      ]
+    },
+    {
+      "season": "2017-18",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "rayo vallecano",
+        "real valladolid",
+        "sd huesca"
+      ]
+    },
+    {
+      "season": "2018-19",
+      "accepted": false,
+      "reason": "Administrative awarded matches: excluded"
+    },
+    {
+      "season": "2019-20",
+      "accepted": false,
+      "reason": "COVID interruption and exceptional calendar: excluded from V1"
+    },
+    {
+      "season": "2020-21",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "rayo vallecano",
+        "rcd espanyol",
+        "rcd mallorca"
+      ]
+    },
+    {
+      "season": "2021-22",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "girona fc",
+        "real valladolid",
+        "ud almeria"
+      ]
+    },
+    {
+      "season": "2022-23",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "cd alaves",
+        "granada cf",
+        "ud las palmas"
+      ]
+    },
+    {
+      "season": "2023-24",
+      "accepted": true,
+      "matches": 462,
+      "promoted": [
+        "cd leganes",
+        "rcd espanyol",
+        "real valladolid"
+      ]
+    },
+    {
+      "season": "2024-25",
+      "accepted": false,
+      "reason": "Incomplete season: 453 matches, 22 clubs, game counts [41, 42]"
+    },
+    {
+      "season": "2025-26",
+      "accepted": false,
+      "reason": "Incomplete season: 0 matches, 0 clubs, game counts []"
+    }
+  ],
+  "folds": [
+    {
+      "testSeason": "2016-17",
+      "trainSeasons": [
+        "2012-13",
+        "2013-14",
+        "2014-15"
+      ],
+      "calibrationSeason": "2015-16",
+      "trainRows": 183,
+      "calibrationRows": 66,
+      "testRows": 66,
+      "bootstrapFits": 117,
+      "calibrated": {
+        "n": 66,
+        "positives": 9,
+        "brier": 0.059725212192278,
+        "logLoss": 0.20459850949753133,
+        "auc": 0.9181286549707601,
+        "ece": 0.05483538663732555,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 43,
+            "meanPrediction": 0.028842832558217527,
+            "observedRate": 0.046511627906976744
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 9,
+            "meanPrediction": 0.14644907542178184,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 7,
+            "meanPrediction": 0.2822794443740613,
+            "observedRate": 0.2857142857142857
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 2,
+            "meanPrediction": 0.49721932282050285,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 1,
+            "meanPrediction": 0.767548999091411,
+            "observedRate": 1.0
+          },
+          {
+            "from": 0.8,
+            "to": 1,
+            "n": 4,
+            "meanPrediction": 0.9273994741650905,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "rawLogistic": {
+        "n": 66,
+        "positives": 9,
+        "brier": 0.059240028150868415,
+        "logLoss": 0.20739270897720935,
+        "auc": 0.9181286549707601,
+        "ece": 0.040960167101956664,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 45,
+            "meanPrediction": 0.030993181734508195,
+            "observedRate": 0.044444444444444446
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 10,
+            "meanPrediction": 0.14212384354677188,
+            "observedRate": 0.1
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 6,
+            "meanPrediction": 0.2835423786389448,
+            "observedRate": 0.16666666666666666
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 2,
+            "meanPrediction": 0.647780387018269,
+            "observedRate": 1.0
+          },
+          {
+            "from": 0.8,
+            "to": 1,
+            "n": 3,
+            "meanPrediction": 0.9096225754942804,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "constant": {
+        "n": 66,
+        "positives": 9,
+        "brier": 0.11783607595771915,
+        "logLoss": 0.3985843526534618,
+        "auc": 0.5,
+        "ece": 0.008214676889375688,
+        "reliability": [
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 66,
+            "meanPrediction": 0.14457831325301204,
+            "observedRate": 0.13636363636363635
+          }
+        ]
+      },
+      "rankBaseline": {
+        "n": 66,
+        "positives": 9,
+        "brier": 0.08204569185893293,
+        "logLoss": 0.274754329349982,
+        "auc": 0.8927875243664717,
+        "ece": 0.06828445739235958,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 33,
+            "meanPrediction": 0.046233768593796944,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 16,
+            "meanPrediction": 0.11752603903006986,
+            "observedRate": 0.125
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 13,
+            "meanPrediction": 0.2912494915268453,
+            "observedRate": 0.23076923076923078
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 4,
+            "meanPrediction": 0.4811917352668593,
+            "observedRate": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "testSeason": "2017-18",
+      "trainSeasons": [
+        "2012-13",
+        "2013-14",
+        "2014-15",
+        "2015-16"
+      ],
+      "calibrationSeason": "2016-17",
+      "trainRows": 249,
+      "calibrationRows": 66,
+      "testRows": 63,
+      "bootstrapFits": 115,
+      "calibrated": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.09795282657607031,
+        "logLoss": 0.3100762573910752,
+        "auc": 0.8353909465020576,
+        "ece": 0.09540497676402065,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 40,
+            "meanPrediction": 0.023092158115507206,
+            "observedRate": 0.05
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 6,
+            "meanPrediction": 0.15485349105782933,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 10,
+            "meanPrediction": 0.3047550877196406,
+            "observedRate": 0.4
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 4,
+            "meanPrediction": 0.519119558973049,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 3,
+            "meanPrediction": 0.6746161480963923,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "rawLogistic": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.09728124084951921,
+        "logLoss": 0.3078918951977321,
+        "auc": 0.8353909465020576,
+        "ece": 0.09468267416148643,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 38,
+            "meanPrediction": 0.021983964781400845,
+            "observedRate": 0.05263157894736842
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 7,
+            "meanPrediction": 0.13645192767515785,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 11,
+            "meanPrediction": 0.2918480090677216,
+            "observedRate": 0.36363636363636365
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 4,
+            "meanPrediction": 0.500762161312254,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 3,
+            "meanPrediction": 0.6491616351211019,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "constant": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.12244897959183673,
+        "logLoss": 0.4101163182884088,
+        "auc": 0.5,
+        "ece": 8.326672684688674e-17,
+        "reliability": [
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 63,
+            "meanPrediction": 0.14285714285714277,
+            "observedRate": 0.14285714285714285
+          }
+        ]
+      },
+      "rankBaseline": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.09672794158598241,
+        "logLoss": 0.33379004872091783,
+        "auc": 0.7541152263374485,
+        "ece": 0.044168873341595055,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 38,
+            "meanPrediction": 0.04799774018564028,
+            "observedRate": 0.05263157894736842
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 10,
+            "meanPrediction": 0.15158779301194164,
+            "observedRate": 0.2
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 11,
+            "meanPrediction": 0.2990088858509911,
+            "observedRate": 0.18181818181818182
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 4,
+            "meanPrediction": 0.5416666666666666,
+            "observedRate": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "testSeason": "2020-21",
+      "trainSeasons": [
+        "2012-13",
+        "2013-14",
+        "2014-15",
+        "2015-16",
+        "2016-17"
+      ],
+      "calibrationSeason": "2017-18",
+      "trainRows": 315,
+      "calibrationRows": 63,
+      "testRows": 66,
+      "bootstrapFits": 112,
+      "calibrated": {
+        "n": 66,
+        "positives": 9,
+        "brier": 0.06017205396368862,
+        "logLoss": 0.1989729954573504,
+        "auc": 0.9532163742690059,
+        "ece": 0.07069519242727612,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 44,
+            "meanPrediction": 0.02616019274056445,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 9,
+            "meanPrediction": 0.13755388730974916,
+            "observedRate": 0.2222222222222222
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 5,
+            "meanPrediction": 0.26868271302161106,
+            "observedRate": 0.4
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 4,
+            "meanPrediction": 0.503313811048244,
+            "observedRate": 0.25
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 4,
+            "meanPrediction": 0.7292556184204475,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "rawLogistic": {
+        "n": 66,
+        "positives": 9,
+        "brier": 0.059422396221049736,
+        "logLoss": 0.18805239071745372,
+        "auc": 0.9532163742690059,
+        "ece": 0.047920772996474424,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 48,
+            "meanPrediction": 0.01794391278569736,
+            "observedRate": 0.020833333333333332
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 6,
+            "meanPrediction": 0.13521474509732626,
+            "observedRate": 0.16666666666666666
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 4,
+            "meanPrediction": 0.2868409366293595,
+            "observedRate": 0.5
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 2,
+            "meanPrediction": 0.5432479684468031,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 2,
+            "meanPrediction": 0.6531238495115561,
+            "observedRate": 0.5
+          },
+          {
+            "from": 0.8,
+            "to": 1,
+            "n": 4,
+            "meanPrediction": 0.8525031468336344,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "constant": {
+        "n": 66,
+        "positives": 9,
+        "brier": 0.11781076066790355,
+        "logLoss": 0.3984815165401748,
+        "auc": 0.5,
+        "ece": 0.00649350649350644,
+        "reliability": [
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 66,
+            "meanPrediction": 0.1428571428571428,
+            "observedRate": 0.13636363636363635
+          }
+        ]
+      },
+      "rankBaseline": {
+        "n": 66,
+        "positives": 9,
+        "brier": 0.06848290147320477,
+        "logLoss": 0.23404223905555802,
+        "auc": 0.9454191033138402,
+        "ece": 0.061911341971211765,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 41,
+            "meanPrediction": 0.05002736175931859,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 7,
+            "meanPrediction": 0.12284020327498589,
+            "observedRate": 0.14285714285714285
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 14,
+            "meanPrediction": 0.2785802067862718,
+            "observedRate": 0.2857142857142857
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 3,
+            "meanPrediction": 0.5249056144196809,
+            "observedRate": 1.0
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 1,
+            "meanPrediction": 0.6302521008403361,
+            "observedRate": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "testSeason": "2021-22",
+      "trainSeasons": [
+        "2012-13",
+        "2013-14",
+        "2014-15",
+        "2015-16",
+        "2016-17",
+        "2017-18"
+      ],
+      "calibrationSeason": "2020-21",
+      "trainRows": 378,
+      "calibrationRows": 66,
+      "testRows": 63,
+      "bootstrapFits": 115,
+      "calibrated": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.10257600420850196,
+        "logLoss": 0.3398502694860986,
+        "auc": 0.8292181069958848,
+        "ece": 0.07717794174400851,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 44,
+            "meanPrediction": 0.024438327484855474,
+            "observedRate": 0.045454545454545456
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 4,
+            "meanPrediction": 0.1249550689767191,
+            "observedRate": 0.5
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 7,
+            "meanPrediction": 0.2984997934112715,
+            "observedRate": 0.14285714285714285
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 4,
+            "meanPrediction": 0.5022663649904424,
+            "observedRate": 0.5
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 3,
+            "meanPrediction": 0.7535453395325974,
+            "observedRate": 0.3333333333333333
+          },
+          {
+            "from": 0.8,
+            "to": 1,
+            "n": 1,
+            "meanPrediction": 0.9218830173254092,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "rawLogistic": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.10207516891660445,
+        "logLoss": 0.340780054498797,
+        "auc": 0.8292181069958848,
+        "ece": 0.07771243409839365,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 45,
+            "meanPrediction": 0.023931431145033964,
+            "observedRate": 0.044444444444444446
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 3,
+            "meanPrediction": 0.12336039727407395,
+            "observedRate": 0.6666666666666666
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 7,
+            "meanPrediction": 0.28152704988480354,
+            "observedRate": 0.14285714285714285
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 4,
+            "meanPrediction": 0.4825818106624543,
+            "observedRate": 0.5
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 3,
+            "meanPrediction": 0.7398010735864492,
+            "observedRate": 0.3333333333333333
+          },
+          {
+            "from": 0.8,
+            "to": 1,
+            "n": 1,
+            "meanPrediction": 0.9168863857556048,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "constant": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.12244991130126268,
+        "logLoss": 0.4101201371248336,
+        "auc": 0.5,
+        "ece": 0.0009652509652510466,
+        "reliability": [
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 63,
+            "meanPrediction": 0.1418918918918918,
+            "observedRate": 0.14285714285714285
+          }
+        ]
+      },
+      "rankBaseline": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.10014997663829527,
+        "logLoss": 0.3270203995045741,
+        "auc": 0.7973251028806584,
+        "ece": 0.051696014733772166,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 38,
+            "meanPrediction": 0.04397796179757519,
+            "observedRate": 0.02631578947368421
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 9,
+            "meanPrediction": 0.13389767694115517,
+            "observedRate": 0.1111111111111111
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 12,
+            "meanPrediction": 0.30263504395083346,
+            "observedRate": 0.4166666666666667
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 3,
+            "meanPrediction": 0.5522303680198417,
+            "observedRate": 0.6666666666666666
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 1,
+            "meanPrediction": 0.668918918918919,
+            "observedRate": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "testSeason": "2022-23",
+      "trainSeasons": [
+        "2012-13",
+        "2013-14",
+        "2014-15",
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2020-21"
+      ],
+      "calibrationSeason": "2021-22",
+      "trainRows": 444,
+      "calibrationRows": 63,
+      "testRows": 63,
+      "bootstrapFits": 115,
+      "calibrated": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.08361161729007635,
+        "logLoss": 0.2648067535814065,
+        "auc": 0.9176954732510288,
+        "ece": 0.09851414872717247,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 36,
+            "meanPrediction": 0.04377197805715794,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 10,
+            "meanPrediction": 0.16077089858857802,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 12,
+            "meanPrediction": 0.29569547023041026,
+            "observedRate": 0.4166666666666667
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 5,
+            "meanPrediction": 0.48575263667333557,
+            "observedRate": 0.8
+          }
+        ]
+      },
+      "rawLogistic": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.07902607628350455,
+        "logLoss": 0.23733174976438673,
+        "auc": 0.9176954732510288,
+        "ece": 0.0957065987255915,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 41,
+            "meanPrediction": 0.021400277314496494,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 5,
+            "meanPrediction": 0.1394735171794719,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 9,
+            "meanPrediction": 0.287114685692688,
+            "observedRate": 0.5555555555555556
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 3,
+            "meanPrediction": 0.4416732703373016,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 5,
+            "meanPrediction": 0.657250175171433,
+            "observedRate": 0.8
+          }
+        ]
+      },
+      "constant": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.12244969413836052,
+        "logLoss": 0.41011924565573177,
+        "auc": 0.5,
+        "ece": 0.0008453085376161074,
+        "reliability": [
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 63,
+            "meanPrediction": 0.14201183431952674,
+            "observedRate": 0.14285714285714285
+          }
+        ]
+      },
+      "rankBaseline": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.0860385327214218,
+        "logLoss": 0.26471042815098067,
+        "auc": 0.9125514403292181,
+        "ece": 0.10034546763066354,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 40,
+            "meanPrediction": 0.04244597818526072,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 5,
+            "meanPrediction": 0.13985584910906274,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 13,
+            "meanPrediction": 0.28333419284245653,
+            "observedRate": 0.46153846153846156
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 4,
+            "meanPrediction": 0.5112173414560682,
+            "observedRate": 0.75
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 1,
+            "meanPrediction": 0.6528599605522682,
+            "observedRate": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "testSeason": "2023-24",
+      "trainSeasons": [
+        "2012-13",
+        "2013-14",
+        "2014-15",
+        "2015-16",
+        "2016-17",
+        "2017-18",
+        "2020-21",
+        "2021-22"
+      ],
+      "calibrationSeason": "2022-23",
+      "trainRows": 507,
+      "calibrationRows": 63,
+      "testRows": 63,
+      "bootstrapFits": 116,
+      "calibrated": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.06890975564345121,
+        "logLoss": 0.21933506782212456,
+        "auc": 0.9382716049382716,
+        "ece": 0.061991338211166126,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 36,
+            "meanPrediction": 0.020463167406518067,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 9,
+            "meanPrediction": 0.14068462145921537,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 13,
+            "meanPrediction": 0.3040073439830931,
+            "observedRate": 0.38461538461538464
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 3,
+            "meanPrediction": 0.48469964991814146,
+            "observedRate": 0.6666666666666666
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 1,
+            "meanPrediction": 0.7865094995769182,
+            "observedRate": 1.0
+          },
+          {
+            "from": 0.8,
+            "to": 1,
+            "n": 1,
+            "meanPrediction": 0.9046773913525701,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "rawLogistic": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.07089804271007301,
+        "logLoss": 0.2276309188218357,
+        "auc": 0.9382716049382716,
+        "ece": 0.07276098262272385,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 36,
+            "meanPrediction": 0.025918752148232693,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 9,
+            "meanPrediction": 0.14776916359890271,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 14,
+            "meanPrediction": 0.2962197607787759,
+            "observedRate": 0.35714285714285715
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 2,
+            "meanPrediction": 0.47623210228881824,
+            "observedRate": 1.0
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 1,
+            "meanPrediction": 0.7232898867106904,
+            "observedRate": 1.0
+          },
+          {
+            "from": 0.8,
+            "to": 1,
+            "n": 1,
+            "meanPrediction": 0.8562249023037103,
+            "observedRate": 1.0
+          }
+        ]
+      },
+      "constant": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.12244954491491893,
+        "logLoss": 0.4101186334683569,
+        "auc": 0.5,
+        "ece": 0.0007518796992481425,
+        "reliability": [
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 63,
+            "meanPrediction": 0.1421052631578947,
+            "observedRate": 0.14285714285714285
+          }
+        ]
+      },
+      "rankBaseline": {
+        "n": 63,
+        "positives": 9,
+        "brier": 0.0741006801972241,
+        "logLoss": 0.23719894320533158,
+        "auc": 0.9351851851851851,
+        "ece": 0.07705844054724058,
+        "reliability": [
+          {
+            "from": 0,
+            "to": 0.1,
+            "n": 40,
+            "meanPrediction": 0.040232384045695714,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.1,
+            "to": 0.2,
+            "n": 5,
+            "meanPrediction": 0.13900240032784966,
+            "observedRate": 0.0
+          },
+          {
+            "from": 0.2,
+            "to": 0.4,
+            "n": 13,
+            "meanPrediction": 0.2974446868736195,
+            "observedRate": 0.46153846153846156
+          },
+          {
+            "from": 0.4,
+            "to": 0.6,
+            "n": 4,
+            "meanPrediction": 0.514185855263158,
+            "observedRate": 0.5
+          },
+          {
+            "from": 0.6,
+            "to": 0.8,
+            "n": 1,
+            "meanPrediction": 0.6395881006864989,
+            "observedRate": 1.0
+          }
+        ]
+      }
+    }
+  ],
+  "holdoutSeasons": [
+    "2021-22",
+    "2022-23",
+    "2023-24"
+  ],
+  "holdoutUniqueClubSeasons": 63,
+  "holdoutByStage": {
+    "10": {
+      "n": 63,
+      "positives": 9,
+      "brier": 0.09339318809096013,
+      "logLoss": 0.32784799101682405,
+      "auc": 0.8189300411522633,
+      "ece": 0.026978741349013367,
+      "reliability": [
+        {
+          "from": 0,
+          "to": 0.1,
+          "n": 36,
+          "meanPrediction": 0.037346898536583746,
+          "observedRate": 0.027777777777777776
+        },
+        {
+          "from": 0.1,
+          "to": 0.2,
+          "n": 9,
+          "meanPrediction": 0.14860823593620412,
+          "observedRate": 0.1111111111111111
+        },
+        {
+          "from": 0.2,
+          "to": 0.4,
+          "n": 14,
+          "meanPrediction": 0.2911349246674778,
+          "observedRate": 0.2857142857142857
+        },
+        {
+          "from": 0.4,
+          "to": 0.6,
+          "n": 4,
+          "meanPrediction": 0.5145476777749249,
+          "observedRate": 0.75
+        }
+      ]
+    },
+    "21": {
+      "n": 63,
+      "positives": 9,
+      "brier": 0.08940820766242921,
+      "logLoss": 0.2772293227678718,
+      "auc": 0.8765432098765432,
+      "ece": 0.06128412197269361,
+      "reliability": [
+        {
+          "from": 0,
+          "to": 0.1,
+          "n": 38,
+          "meanPrediction": 0.03137060262882297,
+          "observedRate": 0.02631578947368421
+        },
+        {
+          "from": 0.1,
+          "to": 0.2,
+          "n": 8,
+          "meanPrediction": 0.14044983580449125,
+          "observedRate": 0.0
+        },
+        {
+          "from": 0.2,
+          "to": 0.4,
+          "n": 11,
+          "meanPrediction": 0.3007461750443884,
+          "observedRate": 0.45454545454545453
+        },
+        {
+          "from": 0.4,
+          "to": 0.6,
+          "n": 3,
+          "meanPrediction": 0.4380319655611906,
+          "observedRate": 0.3333333333333333
+        },
+        {
+          "from": 0.6,
+          "to": 0.8,
+          "n": 2,
+          "meanPrediction": 0.7306065720393021,
+          "observedRate": 0.5
+        },
+        {
+          "from": 0.8,
+          "to": 1,
+          "n": 1,
+          "meanPrediction": 0.9218830173254092,
+          "observedRate": 1.0
+        }
+      ]
+    },
+    "32": {
+      "n": 63,
+      "positives": 9,
+      "brier": 0.0722959813886402,
+      "logLoss": 0.2189147771049338,
+      "auc": 0.9382716049382717,
+      "ece": 0.05247649442515666,
+      "reliability": [
+        {
+          "from": 0,
+          "to": 0.1,
+          "n": 42,
+          "meanPrediction": 0.020266199971754502,
+          "observedRate": 0.0
+        },
+        {
+          "from": 0.1,
+          "to": 0.2,
+          "n": 6,
+          "meanPrediction": 0.15210300751063793,
+          "observedRate": 0.16666666666666666
+        },
+        {
+          "from": 0.2,
+          "to": 0.4,
+          "n": 7,
+          "meanPrediction": 0.31512039965586736,
+          "observedRate": 0.2857142857142857
+        },
+        {
+          "from": 0.4,
+          "to": 0.6,
+          "n": 5,
+          "meanPrediction": 0.50392819705992,
+          "observedRate": 0.8
+        },
+        {
+          "from": 0.6,
+          "to": 0.8,
+          "n": 2,
+          "meanPrediction": 0.792966187048053,
+          "observedRate": 0.5
+        },
+        {
+          "from": 0.8,
+          "to": 1,
+          "n": 1,
+          "meanPrediction": 0.9046773913525701,
+          "observedRate": 1.0
+        }
+      ]
+    }
+  },
+  "holdout": {
+    "calibrated": {
+      "n": 189,
+      "positives": 27,
+      "brier": 0.08503245904734318,
+      "logLoss": 0.2746640302965431,
+      "auc": 0.8836305441243713,
+      "ece": 0.03968338808963702,
+      "reliability": [
+        {
+          "from": 0,
+          "to": 0.1,
+          "n": 116,
+          "meanPrediction": 0.029204755569189455,
+          "observedRate": 0.017241379310344827
+        },
+        {
+          "from": 0.1,
+          "to": 0.2,
+          "n": 23,
+          "meanPrediction": 0.14668221108372154,
+          "observedRate": 0.08695652173913043
+        },
+        {
+          "from": 0.2,
+          "to": 0.4,
+          "n": 32,
+          "meanPrediction": 0.29968561463825105,
+          "observedRate": 0.34375
+        },
+        {
+          "from": 0.4,
+          "to": 0.6,
+          "n": 12,
+          "meanPrediction": 0.4909939660902394,
+          "observedRate": 0.6666666666666666
+        },
+        {
+          "from": 0.6,
+          "to": 0.8,
+          "n": 4,
+          "meanPrediction": 0.7617863795436776,
+          "observedRate": 0.5
+        },
+        {
+          "from": 0.8,
+          "to": 1,
+          "n": 2,
+          "meanPrediction": 0.9132802043389896,
+          "observedRate": 1.0
+        }
+      ]
+    },
+    "rawLogistic": {
+      "n": 189,
+      "positives": 27,
+      "brier": 0.08399976263672734,
+      "logLoss": 0.2685809076950065,
+      "auc": 0.887517146776406,
+      "ece": 0.02246887767747901,
+      "reliability": [
+        {
+          "from": 0,
+          "to": 0.1,
+          "n": 122,
+          "meanPrediction": 0.023667220071780834,
+          "observedRate": 0.01639344262295082
+        },
+        {
+          "from": 0.1,
+          "to": 0.2,
+          "n": 17,
+          "meanPrediction": 0.14102183824174735,
+          "observedRate": 0.11764705882352941
+        },
+        {
+          "from": 0.2,
+          "to": 0.4,
+          "n": 30,
+          "meanPrediction": 0.290059939044356,
+          "observedRate": 0.36666666666666664
+        },
+        {
+          "from": 0.4,
+          "to": 0.6,
+          "n": 9,
+          "meanPrediction": 0.4675345842488176,
+          "observedRate": 0.4444444444444444
+        },
+        {
+          "from": 0.6,
+          "to": 0.8,
+          "n": 9,
+          "meanPrediction": 0.6921048870363559,
+          "observedRate": 0.6666666666666666
+        },
+        {
+          "from": 0.8,
+          "to": 1,
+          "n": 2,
+          "meanPrediction": 0.8865556440296576,
+          "observedRate": 1.0
+        }
+      ]
+    },
+    "constant": {
+      "n": 189,
+      "positives": 27,
+      "brier": 0.12244971678484735,
+      "logLoss": 0.41011933874964085,
+      "auc": 0.5,
+      "ece": 0.0008541464007050803,
+      "reliability": [
+        {
+          "from": 0.1,
+          "to": 0.2,
+          "n": 189,
+          "meanPrediction": 0.14200299645643777,
+          "observedRate": 0.14285714285714285
+        }
+      ]
+    },
+    "rankBaseline": {
+      "n": 189,
+      "positives": 27,
+      "brier": 0.08676306318564704,
+      "logLoss": 0.27630992362029544,
+      "auc": 0.887631458619113,
+      "ece": 0.07195229895610232,
+      "reliability": [
+        {
+          "from": 0,
+          "to": 0.1,
+          "n": 118,
+          "meanPrediction": 0.042188957945306055,
+          "observedRate": 0.00847457627118644
+        },
+        {
+          "from": 0.1,
+          "to": 0.2,
+          "n": 19,
+          "meanPrediction": 0.13680896524499783,
+          "observedRate": 0.05263157894736842
+        },
+        {
+          "from": 0.2,
+          "to": 0.4,
+          "n": 38,
+          "meanPrediction": 0.2942564727294471,
+          "observedRate": 0.4473684210526316
+        },
+        {
+          "from": 0.4,
+          "to": 0.6,
+          "n": 11,
+          "meanPrediction": 0.5234821719033118,
+          "observedRate": 0.6363636363636364
+        },
+        {
+          "from": 0.6,
+          "to": 0.8,
+          "n": 3,
+          "meanPrediction": 0.6537889933858954,
+          "observedRate": 0.3333333333333333
+        }
+      ]
+    },
+    "brierDifference90ClusterIntervalVsConstant": [
+      -0.04863921846373983,
+      -0.026195297011268506
+    ],
+    "brierDifference90ClusterIntervalVsRank": [
+      -0.00426958817963042,
+      0.0008083799030226672
+    ]
+  },
+  "financialIntegrationGate": {
+    "passed": true,
+    "criteria": "Held-out Brier and log loss below both constant and empirical-rank baselines; pooled ECE < 0.10",
+    "meaning": "Research-only historical probability weighting; not live forecast approval or independent validation"
+  },
+  "uncertainty": {
+    "method": "120 season-cluster training bootstraps and club-cluster calibration bootstraps per fold; central 90% percentile range, expanded to include point estimate",
+    "caveats": "Parameter instability only; not a coverage-guaranteed confidence interval, event prediction interval, or all sources of model uncertainty. Only three holdout seasons; repeated snapshots are dependent."
+  },
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "sklearn": "1.8.0",
+    "scipy": "1.17.0"
+  }
+}

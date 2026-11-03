@@ -1,0 +1,11 @@
+import {npv, MODEL_VERSION} from '../src/finance.js';
+export const strategies=Object.freeze([
+ {id:'experience',name:'Experienced striker',fee:5000000,wage:1200000,resale:1000000,description:'Immediate-experience hypothesis'},
+ {id:'development',name:'Two emerging players',fee:4500000,wage:650000,resale:6000000,description:'Development and resale hypothesis'},
+ {id:'flexibility',name:'Preserve flexibility',fee:1000000,wage:300000,resale:500000,description:'Liquidity-first hypothesis'}]);
+export const defaults={budget:5000000,years:4,inflation:3,haircut:50,discount:10,agent:5,revenue:800000,capital:12000000};
+export function validate(a){for(const [k,min,max] of [['budget',0,1e9],['years',1,10],['inflation',-20,50],['haircut',0,100],['discount',0,50],['agent',0,20],['revenue',0,1e8],['capital',0,1e9]])if(!Number.isFinite(a[k])||a[k]<min||a[k]>max)throw Error(k+' is outside the permitted range');if(!Number.isInteger(a.years))throw Error('Use a whole-year horizon');return {...a};}
+export function simulate(input,s){const a=validate(input);if(!s||![s.fee,s.wage,s.resale].every(x=>Number.isFinite(x)&&x>=0))throw Error('Invalid strategy');const initial=s.fee*(1+a.agent/100);const wages=Array.from({length:a.years},(_,i)=>s.wage*(1+a.inflation/100)**i);const total=initial+wages.reduce((x,y)=>x+y,0);
+ const flows=(revenue,resale)=>[-initial,...wages.map((w,i)=>revenue-w+(i===a.years-1?resale:0))];const base=flows(a.revenue,s.resale),downside=flows(a.revenue*.7,s.resale*(1-a.haircut/100));const peak=f=>{let c=0,m=0;for(const x of f){c+=x;m=Math.max(m,-c);}return m;};return {...s,initial,wages,total,base,downside,npv:npv(base,a.discount/100),downsideNpv:npv(downside,a.discount/100),peakFunding:peak(downside),breakEvenResale:Math.max(0,-npv(flows(a.revenue,0),a.discount/100)*(1+a.discount/100)**a.years),feasible:initial<=a.budget&&total<=a.capital};}
+export function compare(a){return strategies.map(s=>simulate(a,s));}
+export function allocate(a,id){const r=compare(a).find(r=>r.id===id);if(!r||!r.feasible)throw Error('Allocation exceeds transfer budget or lifetime capital');return {fictional:true,modelVersion:MODEL_VERSION,assumptions:{...a},strategy:r,uncommittedCapital:a.capital-r.total};}
