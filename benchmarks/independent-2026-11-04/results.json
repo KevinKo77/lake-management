@@ -1,0 +1,453 @@
+{
+  "timestamp": "2026-11-04T12:11:36.421Z",
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "win32",
+    "release": "10.0.19045",
+    "cpu": "Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz"
+  },
+  "warmups": 1,
+  "repetitions": 20,
+  "results": [
+    {
+      "label": "Second-tier balanced window",
+      "best": {
+        "selection": [
+          "CB-value",
+          "ST-premium",
+          "W-loan",
+          "CM-free"
+        ],
+        "objective": 1555454.545454545,
+        "npv": -2317272.7272727275,
+        "points": 7.1,
+        "upfront": 1490000,
+        "squadCost": 6400000,
+        "cash": [
+          1510000,
+          600000
+        ]
+      },
+      "feasibleCount": 13,
+      "runs": [
+        {
+          "rep": 0,
+          "prepareMs": 0.742200000000139,
+          "engineMs": 0.5724999999997635,
+          "independentEnumerationMs": 0.2798999999999978
+        },
+        {
+          "rep": 1,
+          "prepareMs": 0.2685999999998785,
+          "engineMs": 0.49679999999989377,
+          "independentEnumerationMs": 0.3033999999997832
+        },
+        {
+          "rep": 2,
+          "prepareMs": 0.2829999999999018,
+          "engineMs": 0.44650000000001455,
+          "independentEnumerationMs": 0.24690000000009604
+        },
+        {
+          "rep": 3,
+          "prepareMs": 0.23799999999982901,
+          "engineMs": 0.3714999999997417,
+          "independentEnumerationMs": 0.3022999999998319
+        },
+        {
+          "rep": 4,
+          "prepareMs": 0.20499999999992724,
+          "engineMs": 4.676199999999881,
+          "independentEnumerationMs": 0.39019999999982247
+        },
+        {
+          "rep": 5,
+          "prepareMs": 0.27549999999973807,
+          "engineMs": 0.5381999999999607,
+          "independentEnumerationMs": 0.3083999999998923
+        },
+        {
+          "rep": 6,
+          "prepareMs": 0.3398000000001957,
+          "engineMs": 0.4104000000002088,
+          "independentEnumerationMs": 0.23529999999982465
+        },
+        {
+          "rep": 7,
+          "prepareMs": 0.20159999999987122,
+          "engineMs": 0.3645000000001346,
+          "independentEnumerationMs": 0.3130999999998494
+        },
+        {
+          "rep": 8,
+          "prepareMs": 0.2779000000000451,
+          "engineMs": 0.36530000000038854,
+          "independentEnumerationMs": 4.413400000000365
+        },
+        {
+          "rep": 9,
+          "prepareMs": 0.34740000000010696,
+          "engineMs": 0.6059999999997672,
+          "independentEnumerationMs": 0.37639999999964857
+        },
+        {
+          "rep": 10,
+          "prepareMs": 0.31539999999995416,
+          "engineMs": 0.3965000000002874,
+          "independentEnumerationMs": 0.25320000000010623
+        },
+        {
+          "rep": 11,
+          "prepareMs": 0.18719999999984793,
+          "engineMs": 0.3042000000000371,
+          "independentEnumerationMs": 0.2739999999998872
+        },
+        {
+          "rep": 12,
+          "prepareMs": 0.17770000000018626,
+          "engineMs": 0.30969999999979336,
+          "independentEnumerationMs": 0.2244999999998072
+        },
+        {
+          "rep": 13,
+          "prepareMs": 0.2820999999999003,
+          "engineMs": 8.629100000000108,
+          "independentEnumerationMs": 0.5088999999998123
+        },
+        {
+          "rep": 14,
+          "prepareMs": 0.32900000000017826,
+          "engineMs": 0.42650000000003274,
+          "independentEnumerationMs": 0.2692000000001826
+        },
+        {
+          "rep": 15,
+          "prepareMs": 0.17849999999998545,
+          "engineMs": 0.36169999999992797,
+          "independentEnumerationMs": 0.3207999999999629
+        },
+        {
+          "rep": 16,
+          "prepareMs": 0.21199999999998909,
+          "engineMs": 0.27959999999984575,
+          "independentEnumerationMs": 0.19709999999986394
+        },
+        {
+          "rep": 17,
+          "prepareMs": 0.17749999999978172,
+          "engineMs": 0.35290000000031796,
+          "independentEnumerationMs": 0.19499999999970896
+        },
+        {
+          "rep": 18,
+          "prepareMs": 0.7449000000001433,
+          "engineMs": 0.27289999999993597,
+          "independentEnumerationMs": 0.23519999999962238
+        },
+        {
+          "rep": 19,
+          "prepareMs": 0.16550000000006548,
+          "engineMs": 0.2765999999996893,
+          "independentEnumerationMs": 0.09130000000004657
+        }
+      ],
+      "infeasibleBudgetEdit": "pass"
+    },
+    {
+      "label": "Cash-constrained survival window",
+      "best": {
+        "selection": [
+          "CB-value",
+          "ST-value"
+        ],
+        "objective": 95454.54545454541,
+        "npv": -1140909.0909090908,
+        "points": 3.4,
+        "upfront": 750000,
+        "squadCost": 5180000,
+        "cash": [
+          750000,
+          320000
+        ]
+      },
+      "feasibleCount": 1,
+      "runs": [
+        {
+          "rep": 0,
+          "prepareMs": 0.35429999999996653,
+          "engineMs": 0.46469999999999345,
+          "independentEnumerationMs": 0.7312999999999192
+        },
+        {
+          "rep": 1,
+          "prepareMs": 0.38049999999975626,
+          "engineMs": 0.1633999999999105,
+          "independentEnumerationMs": 0.233600000000024
+        },
+        {
+          "rep": 2,
+          "prepareMs": 0.19680000000016662,
+          "engineMs": 0.2500999999997475,
+          "independentEnumerationMs": 0.2756000000003951
+        },
+        {
+          "rep": 3,
+          "prepareMs": 0.2116000000000895,
+          "engineMs": 0.13580000000001746,
+          "independentEnumerationMs": 0.22120000000040818
+        },
+        {
+          "rep": 4,
+          "prepareMs": 0.18849999999974898,
+          "engineMs": 0.16660000000001673,
+          "independentEnumerationMs": 39.99019999999973
+        },
+        {
+          "rep": 5,
+          "prepareMs": 0.39459999999962747,
+          "engineMs": 0.17230000000017753,
+          "independentEnumerationMs": 0.38719999999966603
+        },
+        {
+          "rep": 6,
+          "prepareMs": 0.35219999999981155,
+          "engineMs": 0.21909999999979846,
+          "independentEnumerationMs": 0.377100000000155
+        },
+        {
+          "rep": 7,
+          "prepareMs": 25.66300000000001,
+          "engineMs": 0.23799999999982901,
+          "independentEnumerationMs": 0.23720000000002983
+        },
+        {
+          "rep": 8,
+          "prepareMs": 0.2092000000002372,
+          "engineMs": 0.14210000000002765,
+          "independentEnumerationMs": 0.20839999999998327
+        },
+        {
+          "rep": 9,
+          "prepareMs": 0.16760000000022046,
+          "engineMs": 0.11959999999999127,
+          "independentEnumerationMs": 0.18560000000024957
+        },
+        {
+          "rep": 10,
+          "prepareMs": 0.2298000000000684,
+          "engineMs": 0.13779999999997017,
+          "independentEnumerationMs": 0.18720000000030268
+        },
+        {
+          "rep": 11,
+          "prepareMs": 0.38439999999991414,
+          "engineMs": 0.15579999999999927,
+          "independentEnumerationMs": 0.22379999999975553
+        },
+        {
+          "rep": 12,
+          "prepareMs": 0.20100000000002183,
+          "engineMs": 0.1196999999997388,
+          "independentEnumerationMs": 0.2950999999998203
+        },
+        {
+          "rep": 13,
+          "prepareMs": 0.7316999999998188,
+          "engineMs": 6.754799999999705,
+          "independentEnumerationMs": 0.1331000000000131
+        },
+        {
+          "rep": 14,
+          "prepareMs": 0.3602000000000771,
+          "engineMs": 0.14769999999998618,
+          "independentEnumerationMs": 0.11740000000008877
+        },
+        {
+          "rep": 15,
+          "prepareMs": 0.2757000000001426,
+          "engineMs": 0.15189999999984138,
+          "independentEnumerationMs": 0.10969999999997526
+        },
+        {
+          "rep": 16,
+          "prepareMs": 0.20409999999992579,
+          "engineMs": 0.11760000000003856,
+          "independentEnumerationMs": 0.10570000000006985
+        },
+        {
+          "rep": 17,
+          "prepareMs": 0.18260000000009313,
+          "engineMs": 0.11229999999977736,
+          "independentEnumerationMs": 0.1044000000001688
+        },
+        {
+          "rep": 18,
+          "prepareMs": 0.18040000000019063,
+          "engineMs": 0.1093999999998232,
+          "independentEnumerationMs": 0.10429999999996653
+        },
+        {
+          "rep": 19,
+          "prepareMs": 0.3856999999998152,
+          "engineMs": 0.17990000000008877,
+          "independentEnumerationMs": 0.12950000000000728
+        }
+      ],
+      "infeasibleBudgetEdit": "pass"
+    },
+    {
+      "label": "Promotion push with registration bottleneck",
+      "best": {
+        "selection": [
+          "CB-value",
+          "ST-premium"
+        ],
+        "objective": 4.8,
+        "npv": -1872727.272727273,
+        "points": 4.8,
+        "upfront": 1300000,
+        "squadCost": 5930000,
+        "cash": [
+          1700000,
+          1070000
+        ]
+      },
+      "feasibleCount": 3,
+      "runs": [
+        {
+          "rep": 0,
+          "prepareMs": 0.1455999999998312,
+          "engineMs": 0.1271999999999025,
+          "independentEnumerationMs": 0.19329999999990832
+        },
+        {
+          "rep": 1,
+          "prepareMs": 0.18269999999984066,
+          "engineMs": 0.14030000000002474,
+          "independentEnumerationMs": 0.2114000000001397
+        },
+        {
+          "rep": 2,
+          "prepareMs": 0.1398999999996704,
+          "engineMs": 0.12420000000020082,
+          "independentEnumerationMs": 0.19259999999985666
+        },
+        {
+          "rep": 3,
+          "prepareMs": 0.17849999999998545,
+          "engineMs": 0.12580000000025393,
+          "independentEnumerationMs": 0.20939999999973224
+        },
+        {
+          "rep": 4,
+          "prepareMs": 0.14509999999972933,
+          "engineMs": 25.2804000000001,
+          "independentEnumerationMs": 0.4520999999999731
+        },
+        {
+          "rep": 5,
+          "prepareMs": 0.2984000000001288,
+          "engineMs": 0.269800000000032,
+          "independentEnumerationMs": 0.4412999999999556
+        },
+        {
+          "rep": 6,
+          "prepareMs": 0.26499999999987267,
+          "engineMs": 0.2536000000000058,
+          "independentEnumerationMs": 0.36180000000013024
+        },
+        {
+          "rep": 7,
+          "prepareMs": 0.2545000000000073,
+          "engineMs": 0.23050000000012005,
+          "independentEnumerationMs": 0.3584000000000742
+        },
+        {
+          "rep": 8,
+          "prepareMs": 0.2383999999997286,
+          "engineMs": 0.22159999999985303,
+          "independentEnumerationMs": 0.35550000000012005
+        },
+        {
+          "rep": 9,
+          "prepareMs": 0.2527999999997519,
+          "engineMs": 0.23789999999962674,
+          "independentEnumerationMs": 0.3872999999998683
+        },
+        {
+          "rep": 10,
+          "prepareMs": 0.37019999999984066,
+          "engineMs": 0.37390000000004875,
+          "independentEnumerationMs": 0.5785999999998239
+        },
+        {
+          "rep": 11,
+          "prepareMs": 0.2844000000000051,
+          "engineMs": 0.23230000000012296,
+          "independentEnumerationMs": 0.24309999999968568
+        },
+        {
+          "rep": 12,
+          "prepareMs": 0.2814000000003034,
+          "engineMs": 0.26299999999991996,
+          "independentEnumerationMs": 0.1873000000000502
+        },
+        {
+          "rep": 13,
+          "prepareMs": 0.2669999999998254,
+          "engineMs": 0.3380000000001928,
+          "independentEnumerationMs": 0.1797999999998865
+        },
+        {
+          "rep": 14,
+          "prepareMs": 0.3140000000003056,
+          "engineMs": 0.5549999999998363,
+          "independentEnumerationMs": 0.1774000000000342
+        },
+        {
+          "rep": 15,
+          "prepareMs": 0.2503999999998996,
+          "engineMs": 1.2830000000003565,
+          "independentEnumerationMs": 0.3886999999999716
+        },
+        {
+          "rep": 16,
+          "prepareMs": 0.3038000000001375,
+          "engineMs": 0.2875999999996566,
+          "independentEnumerationMs": 0.19619999999986248
+        },
+        {
+          "rep": 17,
+          "prepareMs": 0.34780000000000655,
+          "engineMs": 0.310399999999845,
+          "independentEnumerationMs": 0.3075000000003456
+        },
+        {
+          "rep": 18,
+          "prepareMs": 0.6151999999997315,
+          "engineMs": 0.19840000000021973,
+          "independentEnumerationMs": 0.17380000000002838
+        },
+        {
+          "rep": 19,
+          "prepareMs": 0.22160000000030777,
+          "engineMs": 0.18190000000004147,
+          "independentEnumerationMs": 0.17270000000007713
+        }
+      ],
+      "infeasibleBudgetEdit": "pass"
+    }
+  ],
+  "checks": {
+    "scenarioRoundtrip": "pass",
+    "staleStateUnit": "pass"
+  },
+  "unmeasured": [
+    "Excel execution",
+    "human manual performance",
+    "browser integration",
+    "deployed parity",
+    "setup labour",
+    "reporting labour"
+  ]
+}
