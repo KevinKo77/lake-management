@@ -8,6 +8,7 @@ import {SCENARIOS} from '../v3/demo/scenarios.js';
 import {story as buildStory, eur} from '../v3/demo/explain.js';
 import {parseCsv, parseXlsx, suggestMapping, checkRows, toCandidates, FIELDS, MAX_BYTES, TEMPLATE_CSV} from './import.js';
 import {reportHtml} from './report.js';
+import {csvRow} from './csv.js';
 import {canonicalCandidate} from '../recruitment/scenario.js';
 
 const $ = id => document.getElementById(id);
@@ -17,7 +18,9 @@ const POS_ORDER = ['GK', 'CB', 'FB', 'DM', 'CM', 'AM', 'W', 'ST'];
 const DEAL = {permanent: 'Transfer', loan: 'Loan', free: 'Free agent'};
 const COUNT_IDS = ['squadSize', 'nonEU', 'maxSignings', 'positionNeed', 'exclusiveGroup'];
 const ENGINE_DEFAULTS = {discountRate: 0.1, resaleHaircut: 0.5, revenueHaircut: 0.3, upsideResale: 0.2, upsideRevenue: 0.2, samePositionFactor: 0.5};
-const S = {meta: null, original: null, modes: {}, candidates: [], form: null, needs: {}, result: null, fresh: false, A: null, seq: 0, worker: null, pendingRun: null, imp: null, caseId: null};
+const S = {meta: null, original: null, modes: {}, candidates: [], form: null, needs: {}, result: null, fresh: false, A: null, seq: 0, worker: null, pendingRun: null, imp: null, caseId: null, ver: 0, resultVer: -1};
+/** A result is current only if it was computed from the exact input version now on screen. */
+const isCurrent = () => Boolean(S.result && S.fresh && S.resultVer === S.ver);
 const needsText = n => Object.entries(n ?? {}).map(([p, k]) => `${k} ${POS[p].toLowerCase()}`).join(', ');
 const pctOf = (a, b) => b > 0 ? Math.max(0, Math.min(100, 100 * a / b)) : (a > 0 ? 100 : 0);
 
@@ -73,7 +76,8 @@ function openCase(meta, scenario) {
   stopWorker();
   scenario = {...scenario, candidates: scenario.candidates.map(canonicalCandidate)}; // engine's own normalisation: what you see is what is calculated
   if (meta.imported) S.caseId = null;
-  Object.assign(S, {meta, original: structuredClone(scenario), candidates: scenario.candidates, modes: {...(scenario.modes ?? {})}, result: null, fresh: false, A: null, pendingRun: null});
+  Object.assign(S, {meta, original: structuredClone(scenario), candidates: scenario.candidates, modes: {...(scenario.modes ?? {})}, result: null, fresh: false, A: null, pendingRun: null, resultVer: -1});
+  S.ver++;
   S.form = formFrom(scenario.context, meta.imported);
   S.needs = {...(scenario.context.positionNeeds ?? {})};
   S.extra = {upsideResale: scenario.context.stress?.upsideResale ?? ENGINE_DEFAULTS.upsideResale, upsideRevenue: scenario.context.stress?.upsideRevenue ?? ENGINE_DEFAULTS.upsideRevenue};
@@ -99,11 +103,11 @@ function renderFacts() {
 
 // ---------------- shortlist
 function renderShortlist() {
-  const rec = S.result && S.fresh ? new Set(S.result.analysis.result.best?.selection ?? []) : new Set();
+  const rec = isCurrent() ? new Set(S.result.analysis.result.best?.selection ?? []) : new Set();
   $('shortlist').innerHTML = `<table class="data stack"><thead><tr><th>Player</th><th>Position</th><th class="num">Fee</th><th class="num">Wage / season</th><th class="num">Seasons</th><th class="num">Expected points*</th><th>Choice</th></tr></thead><tbody>${S.candidates.map(p => {
     const m = S.modes[p.id] ?? 'optimise', wage = p.wage * (p.dealType === 'loan' ? p.wageShare : 1);
     return `<tr class="${m === 'must' ? 'row-must' : m === 'exclude' ? 'row-exclude' : ''}" data-row="${esc(p.id)}">
-      <td class="name-cell"><span class="name">${esc(p.name)}</span>${rec.has(p.id) ? ' <span class="tag ok">Recommended</span>' : ''}${m === 'must' ? ' <span class="tag must">Must sign</span>' : ''}<span class="sub">${DEAL[p.dealType]}${p.exitValue ? ` · resale ${eur(p.exitValue)} after season ${p.exitSeason}` : ''}${p.nonEU ? ' · non-EU' : ''}</span></td>
+      <td class="name-cell"><span class="name">${esc(p.name)}</span>${rec.has(p.id) ? ' <span class="tag ok">Recommended</span>' : ''}${m === 'must' ? ' <span class="tag must">Must sign</span>' : ''}<span class="sub">${DEAL[p.dealType]}${p.exitValue ? ` · resale ${eur(p.exitValue)} after season ${p.exitSeason}${p.exitValueDownside !== null && p.exitValueDownside !== undefined ? ` (bad case ${eur(p.exitValueDownside)})` : ''}` : ''}${p.nonEU ? ' · non-EU' : ''}</span></td>
       <td data-l="Position">${esc(POS[p.position])}</td>
       <td data-l="Fee" class="num">${eur(p.fee)}</td>
       <td data-l="Wage / season" class="num">${eur(wage)}${p.dealType === 'loan' && p.wageShare !== 1 ? `<span class="sub">${Math.round(p.wageShare * 100)}% of ${eur(p.wage)}</span>` : ''}</td>
@@ -253,11 +257,16 @@ function showErrors(errors) {
 
 // ---------------- changes and staleness
 function changed() {
+  S.ver++;
   $('review').hidden = true; S.pendingRun = null;
-  if (S.result) { S.fresh = false; document.body.dataset.stale = '1'; $('stale').hidden = false; setExports(false); runState('stale'); }
-  $('form-status').textContent = ''; $('form-status').className = 'status';
+  const running = Boolean(S.worker);
+  if (running) { stopWorker(); $('busy').hidden = true; } // the running analysis used the previous inputs: it can never become current
+  S.fresh = false; setExports(false); $('report').innerHTML = '';
+  if (S.result) { document.body.dataset.stale = '1'; $('stale').hidden = false; runState('stale'); }
+  else if ($('error').hidden) { $('results-empty').hidden = false; runState('idle'); }
+  $('form-status').textContent = running ? 'The running analysis was cancelled because the inputs changed. Run the analysis again.' : ''; $('form-status').className = 'status';
 }
-function setExports(on) { $('export-report').disabled = !on; $('export-csv').disabled = !on; }
+function setExports(on) { const ok = on && isCurrent(); $('export-report').disabled = !ok; $('export-csv').disabled = !ok; }
 
 // ---------------- analyse: review → confirm → worker
 function requestAnalysis() {
@@ -274,7 +283,7 @@ function requestAnalysis() {
     return;
   }
   const scenario = {schema: 'lanova-recruitment-v2', fictional: !S.meta.imported, label: S.meta.club, context: ctx, candidates: S.candidates, modes: {...S.modes}};
-  S.pendingRun = scenario;
+  S.pendingRun = {scenario, ver: S.ver};
   const must = S.candidates.filter(c => S.modes[c.id] === 'must').map(c => c.name), out = S.candidates.filter(c => S.modes[c.id] === 'exclude').map(c => c.name);
   const changes = S.A ? diffInputs(S.A.inputs, {context: ctx, modes: scenario.modes}) : [];
   $('review-list').innerHTML = [
@@ -293,36 +302,37 @@ $('analyse-bottom').addEventListener('click', requestAnalysis);
 $('review-ok').addEventListener('change', () => { $('review-run').disabled = !$('review-ok').checked; });
 $('review-cancel').addEventListener('click', () => { $('review').hidden = true; S.pendingRun = null; });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('review').hidden) { $('review').hidden = true; S.pendingRun = null; } });
-$('review-run').addEventListener('click', () => { if (!S.pendingRun || !$('review-ok').checked) return; const sc = S.pendingRun; S.pendingRun = null; $('review').hidden = true; compute(sc); });
+$('review-run').addEventListener('click', () => { if (!S.pendingRun || !$('review-ok').checked || S.pendingRun.ver !== S.ver) return; const {scenario, ver} = S.pendingRun; S.pendingRun = null; $('review').hidden = true; compute(scenario, ver); });
 
-function compute(scenario) {
+function compute(scenario, ver) {
   stopWorker();
   const id = ++S.seq;
+  const live = () => id === S.seq && ver === S.ver; // same run and same confirmed inputs
   $('report').innerHTML = '';
   S.fresh = false; setExports(false); runState('busy');
   $('busy').hidden = false; $('error').hidden = true; $('results-empty').hidden = true;
   if (S.result) { document.body.dataset.stale = '1'; $('stale').hidden = false; }
   show('dashboard');
   const w = new Worker('../v3/demo/worker.js', {type: 'module'}); S.worker = w;
-  const timer = setTimeout(() => { if (id === S.seq) failed('The analysis took longer than 15 seconds and was stopped. Try a shorter shortlist.'); }, 15000);
+  const timer = setTimeout(() => { if (live()) failed('The analysis took longer than 15 seconds and was stopped. Try a shorter shortlist.'); }, 15000);
   w.onmessage = ({data}) => {
-    if (id !== S.seq) return;
+    if (!live() || data.id !== id) return; // late, cancelled or out-of-order response
     clearTimeout(timer); w.terminate(); S.worker = null;
     if (data.error) return failed(`LANOVA could not analyse these inputs: ${data.error}`);
     const st = buildStory(S.meta, data.scenario, data.analysis, {robustness: data.robustness, fixes: data.fixes});
-    S.result = {scenario: data.scenario, analysis: data.analysis, story: st};
+    S.result = {scenario: data.scenario, analysis: data.analysis, story: st}; S.resultVer = ver;
     const inputs = {context: data.scenario.context, modes: data.scenario.modes};
     if (!S.A) S.A = {inputs, result: S.result};
     S.fresh = true;
     $('busy').hidden = true; $('stale').hidden = true; document.body.dataset.stale = '0';
     renderResult(); renderCompare(); renderShortlist(); setExports(true);
   };
-  w.onerror = e => { e.preventDefault?.(); if (id !== S.seq) return; clearTimeout(timer); failed('The analysis failed unexpectedly.'); };
+  w.onerror = e => { e.preventDefault?.(); if (!live()) return; clearTimeout(timer); failed('The analysis failed unexpectedly.'); };
   w.postMessage({id, scenario, now: new Date().toISOString()});
 }
 function failed(message) {
   S.worker?.terminate(); S.worker = null;
-  S.result = null; S.fresh = false; setExports(false); $('report').innerHTML = '';
+  S.result = null; S.fresh = false; S.resultVer = -1; setExports(false); $('report').innerHTML = '';
   for (const x of ['busy', 'results', 'stale']) $(x).hidden = true;
   document.body.dataset.stale = '0'; document.body.dataset.hasResult = '0'; runState('failed');
   $('error').hidden = false; $('error').textContent = `${message} No recommendation is shown.`;
@@ -424,7 +434,7 @@ function metrics(r) {
   return {sel: s.players.map(p => p.name).join(', ') || 'No signing', pay: eur(s.spend.atSigning), total: eur(s.spend.totalCommitment), sq: eur(s.spend.addedSquadCost[0]), cash: eur(low), score: eur(b.objective.primary)};
 }
 function comparison() {
-  if (!S.A || !S.result || !S.fresh || S.result === S.A.result) return null;
+  if (!S.A || !isCurrent() || S.result === S.A.result) return null;
   const a = metrics(S.A.result), b = metrics(S.result);
   const rows = [['Recommended signings', a.sel, b.sel], ['Pay at signing', a.pay, b.pay], ['Total contract commitments', a.total, b.total], ['Added squad cost, season 1', a.sq, b.sq], ['Lowest cash in a bad case', a.cash, b.cash], ['Overall score (advanced)', a.score, b.score]];
   return {rows: rows.map(([label, x, y]) => ({label, a: x, b: y})), changes: diffInputs(S.A.inputs, {context: S.result.scenario.context, modes: S.result.scenario.modes})};
@@ -440,7 +450,7 @@ function renderCompare() {
   $('make-a').addEventListener('click', () => { S.A = {inputs: {context: S.result.scenario.context, modes: S.result.scenario.modes}, result: S.result}; renderCompare(); });
   $('restore-a').addEventListener('click', () => {
     const A = S.A; S.modes = {...A.inputs.modes}; S.form = formFrom(A.inputs.context, false); S.needs = {...A.inputs.context.positionNeeds};
-    S.result = A.result; S.fresh = true; renderShortlist(); renderForm(); renderResult(); renderCompare();
+    stopWorker(); S.ver++; S.result = A.result; S.fresh = true; S.resultVer = S.ver; $('busy').hidden = true; renderShortlist(); renderForm(); renderResult(); renderCompare();
     $('stale').hidden = true; $('error').hidden = true; document.body.dataset.stale = '0'; setExports(true);
   });
 }
@@ -448,15 +458,15 @@ function renderCompare() {
 // ---------------- exports
 const today = () => new Date().toISOString().slice(0, 10);
 function buildReport() { return reportHtml({meta: S.meta, scenario: S.result.scenario, analysis: S.result.analysis, story: S.result.story, compare: comparison(), when: today()}); }
-window.addEventListener('beforeprint', () => { $('report').innerHTML = S.result && S.fresh ? buildReport() : '<p>No current LANOVA result to print. Analyse again first.</p>'; });
-$('export-report').addEventListener('click', () => { if (!S.result || !S.fresh) return; $('report').innerHTML = buildReport(); window.print(); });
+window.addEventListener('beforeprint', () => { $('report').innerHTML = isCurrent() ? buildReport() : '<p>No current LANOVA result to print. Analyse again first.</p>'; });
+$('export-report').addEventListener('click', () => { if (!isCurrent()) return; $('report').innerHTML = buildReport(); window.print(); });
 $('export-csv').addEventListener('click', () => {
-  if (!S.result || !S.fresh) return;
+  if (!isCurrent()) return;
   const {analysis} = S.result, best = new Set(analysis.result.best?.selection ?? []);
   const lines = [['Player', 'Recommended', 't (0 = signing)', 'Fee', 'Agent fee', 'Signing bonus', 'Wages', 'Bonuses', 'Exit obligations', 'Player revenue', 'Net sale proceeds', 'Net cash (base)', 'Net cash (bad case)', 'Squad cost (season t)'].join(',')];
   for (const e of analysis.economics) for (let t = 0; t <= e.T; t++) {
     const o = e.components.outflows, i = e.components.inflows;
-    lines.push([`"${e.candidate.name.replace(/"/g, '""')}"`, best.has(e.id) ? 'yes' : 'no', t, o.fee[t], o.agent[t], o.signing[t], o.wages[t], o.bonus[t], o.exit[t], i.revenue[t], i.sale[t], e.cash.base[t], e.cash.downside[t], t >= 1 ? (e.squadCost[t - 1] ?? 0) : ''].map(v => typeof v === 'number' ? Math.round(v * 100) / 100 : v).join(','));
+    lines.push(csvRow([e.candidate.name, best.has(e.id) ? 'yes' : 'no', t, o.fee[t], o.agent[t], o.signing[t], o.wages[t], o.bonus[t], o.exit[t], i.revenue[t], i.sale[t], e.cash.base[t], e.cash.downside[t], t >= 1 ? (e.squadCost[t - 1] ?? 0) : null]));
   }
   download(`lanova-schedules-${today()}.csv`, '﻿' + lines.join('\n') + '\n', 'text/csv');
 });
@@ -516,10 +526,11 @@ $('import-check').addEventListener('click', () => {
   $('mapping-status').textContent = '';
   S.imp.check = res;
   const bad = res.rows.filter(r => r.errors.length);
-  $('check-summary').innerHTML = bad.length ? `<span class="status">${bad.length} of ${res.rows.length} rows need attention.</span> Fix them in your file (or change the column matches) and import again. Nothing is guessed.` : `<span class="status ok">All ${res.rows.length} players are ready.</span> Check the converted values: wages are per season in euros, as your club pays them.`;
-  $('check-table').innerHTML = `<thead><tr><th>Row</th><th>Player</th><th>Position</th><th>Deal</th><th class="num">Fee (€)</th><th class="num">Wage / season (€)</th><th class="num">Seasons</th><th class="num">Points / season</th><th>Status</th></tr></thead><tbody>${res.rows.map(r => {
+  $('check-summary').innerHTML = bad.length ? `<span class="status">${bad.length} of ${res.rows.length} rows need attention.</span> Fix them in your file (or change the column matches) and import again. Nothing is guessed.` : `<span class="status ok">All ${res.rows.length} players are ready.</span> Check the converted values: wages are per season in euros, as your club pays them.`
+    + (res.unused?.length ? ` <span class="status">${res.unused.length} column${res.unused.length > 1 ? 's' : ''} in your file ${res.unused.length > 1 ? 'are' : 'is'} not used: ${res.unused.map(h => `“${esc(h)}”`).join(', ')}.</span>` : '');
+  $('check-table').innerHTML = `<thead><tr><th>Row</th><th>Player</th><th>Position</th><th>Deal</th><th class="num">Fee (€)</th><th class="num">Wage / season (€)</th><th class="num">Seasons</th><th class="num">Points / season</th><th class="num">Resale (base / bad case)</th><th>Status</th></tr></thead><tbody>${res.rows.map(r => {
     const c = r.candidate;
-    return `<tr class="${r.errors.length ? 'bad' : ''}"><td>${r.index}</td><td>${esc(r.name)}</td><td>${c ? esc(POS[c.position] ?? c.position) : '—'}</td><td>${c ? DEAL[c.dealType] ?? esc(c.dealType) : '—'}</td><td class="num">${c ? eur(c.fee) : '—'}</td><td class="num">${c ? eur(c.wage * (c.dealType === 'loan' ? (c.wageShare ?? 1) : 1)) : '—'}</td><td class="num">${c ? c.contractYears : '—'}</td><td class="num">${c ? Math.round(c.points * 100) / 100 : '—'}</td><td class="${r.errors.length ? 'err' : ''}">${r.errors.length ? esc(r.errors.join(' ')) : 'OK'}</td></tr>`;
+    return `<tr class="${r.errors.length ? 'bad' : ''}"><td>${r.index}</td><td>${esc(r.name)}</td><td>${c ? esc(POS[c.position] ?? c.position) : '—'}</td><td>${c ? DEAL[c.dealType] ?? esc(c.dealType) : '—'}</td><td class="num">${c ? eur(c.fee) : '—'}</td><td class="num">${c ? eur(c.wage * (c.dealType === 'loan' ? (c.wageShare ?? 1) : 1)) : '—'}</td><td class="num">${c ? c.contractYears : '—'}</td><td class="num">${c ? Math.round(c.points * 100) / 100 : '—'}</td><td class="num">${c && c.exitValue ? `${eur(c.exitValue)} / ${c.exitValueDownside !== undefined ? eur(c.exitValueDownside) : 'standard'}` : '—'}</td><td class="${r.errors.length ? 'err' : ''}">${r.errors.length ? esc(r.errors.join(' ')) : 'OK'}</td></tr>`;
   }).join('')}</tbody>`;
   const conv = [...new Set(res.rows.flatMap(r => r.changes).filter(x => /=|divided/.test(x)))].slice(0, 8);
   $('check-notes').innerHTML = [...res.notes, ...conv.map(x => `Conversion: ${x}`)].map(x => `<li>${esc(x)}</li>`).join('');

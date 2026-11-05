@@ -36,9 +36,16 @@ export const FIELDS = [
   {key: 'instalments', label: 'Fee instalments (e.g. 0.5|0.5)', syn: ['instalments', 'installments', 'payment schedule']},
   {key: 'exitSeason', label: 'Planned sale after season', numeric: true, syn: ['exit season', 'exitseason', 'sale season', 'sell after', 'sale after season', 'sell after season']},
   {key: 'exitValue', label: 'Expected resale value', numeric: true, syn: ['resale', 'resale value', 'exit value', 'exitvalue', 'sale value']},
+  {key: 'exitValueDownside', label: 'Bad-case resale value', numeric: true, syn: ['exit value downside', 'downside exit value', 'downside resale', 'bad case resale', 'bad-case resale', 'resale downside', 'resale bad case'], conv: 'resale value lowered by the bad-case haircut'},
+  {key: 'exitValueUpside', label: 'Good-case resale value', numeric: true, syn: ['exit value upside', 'upside exit value', 'upside resale', 'good case resale', 'good-case resale', 'resale upside', 'resale good case'], conv: 'resale value raised by the good-case uplift'},
   {key: 'sellOnPct', label: 'Sell-on share (fraction)', numeric: true, syn: ['sell-on', 'sell on', 'sellon', 'sellonpct']},
   {key: 'saleCostPct', label: 'Sale costs (fraction)', numeric: true, syn: ['sale cost', 'sale costs', 'salecostpct']},
 ];
+/** Contract terms the engine knows but this import does not carry. A column with one of these names is refused, never ignored. */
+const UNSUPPORTED_FINANCIAL = {revenue: 'Player revenue', 'player revenue': 'Player revenue', 'attributable revenue': 'Player revenue',
+  signingbonusonexit: 'Signing bonus on early exit', 'signing bonus on exit': 'Signing bonus on early exit',
+  releasecompensationpct: 'Release compensation', 'release compensation': 'Release compensation', 'release compensation pct': 'Release compensation',
+  group: 'Exclusive option group', 'exclusive group': 'Exclusive option group'};
 const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[_*]+/g, ' ').replace(/\s+/g, ' ').trim();
 
 /** CSV → {headers, rows: [[{v}]]}. Delimiter: “;” if the first line contains one, else “,”. */
@@ -116,6 +123,10 @@ export function checkRows(parsed, mapping, format) {
   const fmt = parsed.kind === 'xlsx' ? 'decimal-dot' : format; // Excel stores numbers with a decimal point
   const missing = FIELDS.filter(f => f.required && !mapping[f.key]).map(f => f.label);
   if (missing.length) return {fatal: `Match a column or a value for: ${missing.join('; ')}.`};
+  const usedCols = new Set(Object.values(mapping).filter(m => m && 'column' in m).map(m => m.column));
+  const unused = parsed.headers.filter((h, i) => !usedCols.has(i));
+  const refused = unused.filter(h => UNSUPPORTED_FINANCIAL[norm(h)]);
+  if (refused.length) return {fatal: `Your file contains financial terms this import cannot use: ${refused.map(h => `“${h}” (${UNSUPPORTED_FINANCIAL[norm(h)]})`).join(', ')}. They would change the result, so LANOVA will not ignore them. Remove these columns, or use a file without them after checking the contracts.`, unused};
   const notes = [];
   const rows = parsed.rows.map((cells, i) => {
     const r = {}, errors = [];
@@ -149,10 +160,17 @@ export function checkRows(parsed, mapping, format) {
   });
   const names = new Map();
   for (const row of rows) { const k = norm(row.name); if (names.has(k)) row.errors.push(`Same name as row ${names.get(k)}: give each player a unique name.`); else names.set(k, row.index); }
+  for (const f of FIELDS) {
+    const m = mapping[f.key];
+    if (f.required || !m || !('column' in m)) continue;
+    const blank = rows.filter(r => String(r.raw[f.key] ?? '') === '').map(r => r.name);
+    if (blank.length) notes.push(`${f.label}: empty for ${blank.join(', ')}, so LANOVA uses its standard convention there (${f.conv ?? 'none / no extra cost'}). An explicit 0 is used as 0.`);
+  }
+  if (unused.length) notes.unshift(`Columns in your file that LANOVA does not use (ignored): ${unused.map(h => `“${h}”`).join(', ')}.`);
   const provided = new Set(FIELDS.filter(f => mapping[f.key]).map(f => f.key));
   const absent = FIELDS.filter(f => !f.required && !provided.has(f.key) && f.key !== 'exchangeRate').map(f => f.label.replace(/ \(.*\)$/, ''));
-  if (absent.length) notes.push(`Not in your file, so LANOVA uses its standard conventions: ${absent.join(', ')} — no extra cost, flat wage, fee paid at signing, no planned sale. Add these columns if they apply.`);
-  return {rows, notes, ok: rows.every(x => !x.errors.length)};
+  if (absent.length) notes.push(`Not in your file, so LANOVA uses its standard conventions: ${absent.join(', ')} — no extra cost, flat wage, fee paid at signing, no planned sale, bad-case resale lowered and good-case resale raised by the standard percentages. Add these columns if they apply.`);
+  return {rows, notes, unused, ok: rows.every(x => !x.errors.length)};
 }
 
 /** Final candidates with stable ids, built only from rows without errors. */
