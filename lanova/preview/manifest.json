@@ -1,0 +1,74 @@
+{
+  "sourceCommit": "0626da1e2d4764d08f7d2e6dcd32920bc01ca01c",
+  "preparedAt": "2026-11-05T00:26:22.235Z",
+  "files": [
+    {
+      "path": "index.html",
+      "sha256": "9d1f0a1a9f4129708515fb945bcd99847dc4c7b195b684e641c7544d9cca7a3e"
+    },
+    {
+      "path": "recruitment/engine/analysis.js",
+      "sha256": "80f79090de8545e2094fdb13e13356dc2cac33cfab2177488f85d7180399116d"
+    },
+    {
+      "path": "recruitment/engine/baseline.js",
+      "sha256": "e623b9f4660bad144363058e168d4e9769966b757e129b7937d85d7a0099e361"
+    },
+    {
+      "path": "recruitment/engine/contract.js",
+      "sha256": "c2edc6bbd7557bc1aaa8207b62fb993e2ad27fafd1648ff925522ada038b470b"
+    },
+    {
+      "path": "recruitment/engine/optimizer.js",
+      "sha256": "cd1d0525c8a253bf7b4783f86e46850b49a0cb7f04361eaca57c065347b1d062"
+    },
+    {
+      "path": "recruitment/scenario.js",
+      "sha256": "b822f697aa7a9c013b11de92c994255491ff61ae78c3513a288ab2c96b22e3a7"
+    },
+    {
+      "path": "RELEASE.md",
+      "sha256": "63eaffcd0ddea1664d4480a282611e86975eaa2fef41ba7e16ead4605f3ed97e"
+    },
+    {
+      "path": "src/finance.js",
+      "sha256": "91927f42ad15c61702dfd2208382b64023c314eb2e66c42bbd7a401892795bec"
+    },
+    {
+      "path": "src/format.js",
+      "sha256": "3ecd4efb909a5461e6a7b27b8ce9c23d4ab8d29441ef04a58b4ea01a64ca1da4"
+    },
+    {
+      "path": "v3/app.js",
+      "sha256": "e31ef5a16a37b4b827e3c4798b7da87a684838475740ab7d0270fe193c4495f9"
+    },
+    {
+      "path": "v3/index.html",
+      "sha256": "ba60ddc7baba5aad76c6050c5f09c9fff488cb74e06f7c215c838e81168c4f2c"
+    },
+    {
+      "path": "v3/JSZIP-LICENSE.md",
+      "sha256": "898db6422f17d67ea32ea4eaaa1f8c745db2659dd130e9f42dd37f513f9a57c1"
+    },
+    {
+      "path": "v3/jszip.min.js",
+      "sha256": "d14e71a95ef3290dec66a9cfdd8a37c2dd624f6f2b594c4512f607d4a56e19fc"
+    },
+    {
+      "path": "v3/model.js",
+      "sha256": "982fc9160d0434228ab86ed907e8303c7c31d58c27823bca7eb1c31e7cfa4a7c"
+    },
+    {
+      "path": "v3/style.css",
+      "sha256": "f7137014ef43fa4e7083e729b5c1b75862015b7c755e0cd8aa74ffa29b6a2ca9"
+    },
+    {
+      "path": "v3/worker.js",
+      "sha256": "b558bb19c7dbf9d70a0ff6342897a8f7b279e7820638153179deeb9b54e79c0d"
+    },
+    {
+      "path": "v3/zip-worker.js",
+      "sha256": "57db3944ae6a41547c03f6aa9c645143d47b2a0044a7c3689728cb95755bf0db"
+    }
+  ]
+}

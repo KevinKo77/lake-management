@@ -1,0 +1,33 @@
+export const REQUIRED=['name','position','dealType','contractYears','fee','wage','currency','wagePeriod','wageBasis','points','pointsPeriod','registration'];
+export const OPTIONAL=['agentFee','signingBonus','bonusExpected','revenue','wageGrowth','wageShare','exitSeason','exitValue','exitValueDownside','exitValueUpside','sellOnPct','saleCostPct','group','instalments','exchangeRate','signingBonusOnExit','releaseCompensationPct'];
+export const COLUMNS=[...REQUIRED,...OPTIONAL];
+export function contextOverrides(base,extra){const allowed=new Set(['horizon','transferBudget','openingCash','squadCostLimit','committedSquadCost','operatingCashFlow','minCash','protectedReserve','currentSquadSize','maxSquadSize','currentNonEU','maxNonEU','maxSignings','discountRate','valuePerPoint','samePositionFactor','objective','positionNeeds','lifetimeCapital','maxDownsideLoss','minPortfolioNpv','stress']);if(!extra||typeof extra!=='object'||Array.isArray(extra))throw Error('Advanced overrides must be an object');for(const k of Object.keys(extra))if(!allowed.has(k))throw Error('Unsupported advanced field: '+k);if(extra.stress){const valid=['resaleHaircut','revenueHaircut','upsideResale','upsideRevenue'];for(const k of Object.keys(extra.stress))if(!valid.includes(k))throw Error('Unsupported stress field: '+k);}return {...base,...extra};}
+export function number(text,format='decimal-dot'){
+ const t=String(text??'').trim().replace(/[\u00a0\u202f ]/g,'');if(!t)throw Error('Amount missing');
+ const re=format==='decimal-comma'?/^[+-]?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?$/:/^[+-]?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/;
+ if(!re.test(t))throw Error('Number does not match the confirmed decimal format');const n=Number(format==='decimal-comma'?t.replaceAll('.','').replace(',','.'):t.replaceAll(',',''));if(!Number.isFinite(n)||Math.abs(n)>1e9)throw Error('Amount out of range');return n;
+}
+export function csv(text){
+ if(text.length>1000000)throw Error('File too large (1 MB maximum)');const lines=[],row=[];let value='',quoted=false;
+ const delimiter=text.split(/\r?\n/,1)[0].includes(';')?';':',';
+ for(let i=0;i<=text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){value+='"';i++;}else if(c==='"')quoted=false;else if(c===undefined)throw Error('Unclosed quote');else value+=c;}
+ else if(c==='"'){if(value)throw Error('Invalid CSV quote');quoted=true;}else if(c===delimiter){row.push(value);value='';}else if(c==='\n'||c===undefined){row.push(value.replace(/\r$/,''));if(row.some(v=>v.trim()))lines.push([...row]);row.length=0;value='';}else value+=c;}
+ return matrix(lines);
+}
+export function matrix(lines){if(lines.length<2||lines.length>41)throw Error('Use 1–40 players and one header row');const headers=lines[0].map(h=>h.trim().replace(/^\uFEFF/,''));if(new Set(headers).size!==headers.length||headers.some(h=>!h))throw Error('Duplicate or empty headers');if(headers.length>40)throw Error('At most 40 columns');const missing=REQUIRED.filter(h=>!headers.includes(h));if(missing.length)throw Error('Missing columns: '+missing.join(', '));return {headers,unknown:headers.filter(h=>!COLUMNS.includes(h)),rows:lines.slice(1).map(r=>{if(r.length!==headers.length)throw Error('Inconsistent row width');return Object.fromEntries(headers.map((h,i)=>[h,r[i]]));})};}
+export function convert(rows,format){
+ if(!rows.length||rows.length>40)throw Error('Add 1–40 players');const changes=[],ids=new Set();
+ const candidates=rows.map((r,i)=>{const fail=m=>{throw Error(`Row ${i+1} (${r.name||'unnamed'}): ${m}`);};for(const k of REQUIRED)if(String(r[k]??'').trim()==='')fail('Missing '+k);
+ const name=String(r.name).trim();if(ids.has(name.toLowerCase()))fail('Duplicate name');ids.add(name.toLowerCase());if(name.length>90)fail('Name too long');
+ const currency=r.currency.trim().toUpperCase();if(!/^[A-Z]{3}$/.test(currency))fail('Use an ISO currency code');const fx=currency==='EUR'?1:number(r.exchangeRate,format);if(fx<=0)fail('Exchange rate must be EUR per unit, greater than zero');if(currency!=='EUR')changes.push(`${name}: 1 ${currency} = ${fx} EUR (your supplied rate)`);
+ if(r.wageBasis.trim().toLowerCase()!=='gross')fail('Net or unknown salary: enter the confirmed gross salary; no tax conversion is assumed');const period=r.wagePeriod.trim().toLowerCase(),factor={season:1,year:1,month:12,week:52}[period];if(!factor)fail('Confirm wagePeriod: season, year, month or week');
+ const years=number(r.contractYears,format);if(!Number.isInteger(years)||years<1||years>6)fail('Contract must be 1–6 whole seasons');let points=number(r.points,format);const pp=r.pointsPeriod.trim().toLowerCase();if(pp==='contract'){points/=years;changes.push(`${name}: contract points divided by ${years} seasons`);}else if(pp!=='season')fail('Confirm pointsPeriod: season or contract');
+ const reg=r.registration.trim().toUpperCase();if(!['EU','NON-EU'].includes(reg))fail('Confirm registration: EU or NON-EU for this club; not inferred from nationality');
+ const c={id:'v3-'+(i+1),name,position:r.position.trim().toUpperCase(),dealType:r.dealType.trim().toLowerCase(),contractYears:years,fee:number(r.fee,format)*fx,wage:number(r.wage,format)*fx*factor,points,nonEU:reg==='NON-EU'};
+ for(const k of ['agentFee','signingBonus','bonusExpected','revenue','exitValue','exitValueDownside','exitValueUpside'])if(String(r[k]??'').trim())c[k]=number(r[k],format)*fx;
+ for(const k of ['wageGrowth','wageShare','sellOnPct','saleCostPct','exitSeason','releaseCompensationPct'])if(String(r[k]??'').trim())c[k]=number(r[k],format);if(r.signingBonusOnExit){if(!['payable','lapses'].includes(r.signingBonusOnExit))fail('signingBonusOnExit must be payable or lapses');c.signingBonusOnExit=r.signingBonusOnExit;}
+ if(c.dealType==='loan'&&['exitSeason','exitValue','exitValueDownside','exitValueUpside','sellOnPct','saleCostPct','instalments','signingBonusOnExit','releaseCompensationPct'].some(k=>String(r[k]??'').trim()))fail('Loan exit/resale/instalment terms are unsupported by this engine; remove them only after reviewing the contract');if(c.dealType!=='loan'&&String(r.wageShare??'').trim())fail('Wage share applies to loans only');if(c.dealType==='free'&&String(r.instalments??'').trim())fail('Instalments apply to permanent transfers only');
+ if(r.group)c.group=r.group;if(r.instalments)c.instalments=String(r.instalments).split('|').map(v=>number(v,format));
+ changes.push(`${name}: gross wage ${c.wage.toFixed(2)} EUR per season; ${points} points per season; ${reg}`);return c;});return {candidates,changes};
+}
+
