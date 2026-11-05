@@ -27,7 +27,7 @@ h3 { font-size: 16px; margin: 0 0 10px; }
 .section-title { margin-top: 30px; }
 .hero { padding: 10px 0 6px; }
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-.case { text-align: left; font: inherit; color: inherit; cursor: pointer; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; min-height: 220px; transition: border-color .15s, transform .15s; }
+.case { text-align: left; align-items: flex-start; justify-content: flex-start; font: inherit; color: inherit; cursor: pointer; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; min-height: 220px; transition: border-color .15s, transform .15s; }
 .case:hover, .case:focus-visible { border-color: var(--brand); transform: translateY(-1px); outline: none; }
 .case .tag { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; } .case .name { font-size: 20px; font-weight: 750; }
 .case .go { margin-top: auto; color: var(--brand); font-weight: 700; }
