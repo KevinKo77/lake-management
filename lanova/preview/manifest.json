@@ -1,10 +1,10 @@
 {
-  "sourceCommit": "0626da1e2d4764d08f7d2e6dcd32920bc01ca01c",
-  "preparedAt": "2026-11-05T00:26:22.235Z",
+  "sourceCommit": "861d11299cdd5979d35c91c7a73439a1d1d7bd68",
+  "preparedAt": "2026-11-05T00:42:10.019Z",
   "files": [
     {
       "path": "index.html",
-      "sha256": "9d1f0a1a9f4129708515fb945bcd99847dc4c7b195b684e641c7544d9cca7a3e"
+      "sha256": "ef94eb40e3fd35d21f776b3a3fc0a026398f6ec68a7bd698897ec96474f91423"
     },
     {
       "path": "recruitment/engine/analysis.js",
@@ -28,7 +28,7 @@
     },
     {
       "path": "RELEASE.md",
-      "sha256": "63eaffcd0ddea1664d4480a282611e86975eaa2fef41ba7e16ead4605f3ed97e"
+      "sha256": "1c7ad9de8a5276195233f3b105eabd0646c09f14289f7c621c264c09ff7ccb30"
     },
     {
       "path": "src/finance.js",
@@ -40,11 +40,35 @@
     },
     {
       "path": "v3/app.js",
-      "sha256": "e31ef5a16a37b4b827e3c4798b7da87a684838475740ab7d0270fe193c4495f9"
+      "sha256": "8e53be40639c39b73425e45dc5ee82cc0c67f836c77f280b92b95860512c17db"
+    },
+    {
+      "path": "v3/demo/config.js",
+      "sha256": "fcece1cd623aff257ad0e700485526661c02b209ce03bd6f26b1b8c3014ae92a"
+    },
+    {
+      "path": "v3/demo/explain.js",
+      "sha256": "9769a462a364affd911f059ab6bc5f0cd52372dbf0752435ecd4957c6dc12355"
+    },
+    {
+      "path": "v3/demo/scenarios.js",
+      "sha256": "268f2a5a0e1b5860c75e6c8c31eb10b78d8abf7c665decb326c918c9f4d63d5e"
+    },
+    {
+      "path": "v3/demo/try.css",
+      "sha256": "e0dfbae6d33f648327ccd772b43466ab3bb86b8aa9bd97e1a64a3e4dc3d79016"
+    },
+    {
+      "path": "v3/demo/try.js",
+      "sha256": "cfd5857add99e6222a2d08af292e1a9461654a156f86032ce47dcccb499fce69"
+    },
+    {
+      "path": "v3/demo/worker.js",
+      "sha256": "892685022b439174c90f036d1d9e9bc21a6d6cef3687770bc7317860a29cbcd5"
     },
     {
       "path": "v3/index.html",
-      "sha256": "ba60ddc7baba5aad76c6050c5f09c9fff488cb74e06f7c215c838e81168c4f2c"
+      "sha256": "87bd45397f343a9efb6fbf826faf200169d34ad63991100cd2a51f7742c68dc4"
     },
     {
       "path": "v3/JSZIP-LICENSE.md",
@@ -61,6 +85,10 @@
     {
       "path": "v3/style.css",
       "sha256": "f7137014ef43fa4e7083e729b5c1b75862015b7c755e0cd8aa74ffa29b6a2ca9"
+    },
+    {
+      "path": "v3/try.html",
+      "sha256": "48a07befef7c0efbc1deff08494e63fc257f8973e3d5a96dacfcd115011f5486"
     },
     {
       "path": "v3/worker.js",
