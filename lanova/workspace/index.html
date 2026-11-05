@@ -4,160 +4,192 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<meta name="description" content="LANOVA Sports Recruitment Workspace: compare recruitment options under a transfer budget, wage and cash limits, and export a decision report. Fictional demonstration clubs; your own shortlist stays in your browser.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0c0e">
+<meta name="description" content="LANOVA Sports Recruitment Workspace: compare recruitment options under a transfer budget, squad-cost and cash limits, and export a decision report. Fictional demonstration clubs; your own shortlist stays in your browser.">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>LANOVA Sports · Recruitment Workspace</title>
 <link rel="stylesheet" href="workspace.css">
 </head>
-<body data-view="home">
+<body data-view="home" data-club="none">
 <a class="skip" href="#main">Skip to content</a>
-<header class="topbar">
-  <a class="brand" href="./" aria-label="LANOVA Sports Recruitment Workspace — start">LA<span>NOVA</span><small>SPORTS</small></a>
-  <span class="product">Recruitment Workspace</span>
-  <nav class="topnav" aria-label="Workspace">
-    <button type="button" class="link" data-go="home">Cases</button>
-    <button type="button" class="link" data-go="import">Import your shortlist</button>
-    <a class="link" href="/#contact">Request a pilot</a>
-  </nav>
-</header>
-
-<main id="main">
-  <!-- ============ HOME ============ -->
-  <section id="view-home" class="view">
-    <div class="hero">
-      <p class="eyebrow">LANOVA Sports · Recruitment Workspace</p>
-      <h1>Decide your transfer window with numbers you can check.</h1>
-      <p class="lede">Compare every combination of a shortlist against your signing budget, squad-cost limit and cash. See what to sign, what it costs, why the others are left out, and what changes if your limits change. Then export a report for your sporting director and CFO.</p>
-    </div>
-    <h2 class="section-title">Try a fictional club</h2>
-    <div id="case-cards" class="cards"></div>
-    <div class="card import-teaser">
-      <div><h3>Use your own shortlist</h3><p class="muted">Import a CSV or Excel file. You choose which column is which, review every value, then enter your club’s limits. Your file is read in this browser and is not uploaded.</p></div>
-      <button type="button" class="primary" data-go="import">Import a shortlist</button>
-    </div>
-    <p class="fine">Demonstration clubs, players and numbers are fictional. “Expected points” are illustrative estimates written for these cases, not data about real players. LANOVA does not predict performance or value players.</p>
-  </section>
-
-  <!-- ============ IMPORT ============ -->
-  <section id="view-import" class="view" hidden>
-    <button type="button" class="back" data-go="home">← Cases</button>
-    <h1>Import your shortlist</h1>
-    <ol class="steps-line"><li data-istep="1" class="on">File</li><li data-istep="2">Columns</li><li data-istep="3">Check</li></ol>
-
-    <div class="card" id="import-step-1">
-      <h2>1 · Choose a file</h2>
-      <p class="muted">CSV or Excel (.xlsx, one sheet, values only), up to 40 players and 1 MB. Any column names: you match them in the next step. <a href="#" id="template-link">Download a template</a>.</p>
-      <div class="row">
-        <label class="field"><span>Number format in the file</span>
-          <select id="import-format"><option value="decimal-dot">1,234.56 (decimal point)</option><option value="decimal-comma">1.234,56 (decimal comma)</option></select></label>
-        <label class="field file-field"><span>File</span><input type="file" id="import-file" accept=".csv,.xlsx"></label>
-      </div>
-      <p id="import-file-status" class="status" role="status" aria-live="polite"></p>
-    </div>
-
-    <div class="card" id="import-step-2" hidden>
-      <h2>2 · Match your columns</h2>
-      <p class="muted">For each item, pick the column that contains it, or one value that applies to every player. Items marked * are required. We suggested matches from your column names — check them.</p>
-      <div id="mapping" class="mapping"></div>
-      <details class="preview"><summary>First rows of your file</summary><div class="scroll"><table id="raw-preview"></table></div></details>
-      <button type="button" class="primary" id="import-check">Check the data</button>
-      <p id="mapping-status" class="status" role="status" aria-live="polite"></p>
-    </div>
-
-    <div class="card" id="import-step-3" hidden>
-      <h2>3 · Check the converted values</h2>
-      <p id="check-summary" class="muted"></p>
-      <div class="scroll"><table id="check-table"></table></div>
-      <ul id="check-notes" class="bullets small"></ul>
-      <button type="button" class="primary" id="import-use" disabled>Use this shortlist</button>
-    </div>
-  </section>
-
-  <!-- ============ WORKSPACE ============ -->
-  <section id="view-work" class="view" hidden>
-    <button type="button" class="back" data-go="home">← Cases</button>
-    <div class="card situation">
-      <p class="eyebrow" id="w-tier"></p>
-      <h1 id="w-club"></h1>
-      <p class="question" id="w-decision"></p>
-      <ul class="facts" id="w-facts"></ul>
-    </div>
-
-    <nav class="tabs" aria-label="Workspace sections">
-      <a href="#sec-shortlist">Shortlist</a><a href="#sec-limits">Club limits</a><a href="#sec-results">Recommendation</a><a href="#sec-compare">Compare</a>
+<div class="app">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" aria-label="LANOVA navigation">
+    <a class="brand" href="./" aria-label="LANOVA Sports Recruitment Workspace — start"><span class="mark" aria-hidden="true"></span>LANOVA<span class="brand-sub">Sports</span></a>
+    <nav class="side-group" aria-label="Workspace views">
+      <p class="side-label">Workspace</p>
+      <button type="button" class="side-item" data-nav="dashboard"><span class="ico ico-dash" aria-hidden="true"></span>Decision dashboard</button>
+      <button type="button" class="side-item" data-nav="shortlist"><span class="ico ico-list" aria-hidden="true"></span>Shortlist<span class="count" id="nav-count"></span></button>
+      <button type="button" class="side-item" data-nav="inputs"><span class="ico ico-sliders" aria-hidden="true"></span>Scenario inputs</button>
+      <button type="button" class="side-item" data-nav="compare"><span class="ico ico-compare" aria-hidden="true"></span>Compare A / B</button>
     </nav>
-
-    <section class="card" id="sec-shortlist" aria-labelledby="h-shortlist">
-      <h2 id="h-shortlist">Shortlist</h2>
-      <p class="muted small">For each player choose: <b>Consider</b> (LANOVA decides), <b>Must sign</b> or <b>Leave out</b>. Wages are what your club pays per season. Expected points are the club’s own estimate of the league points the player adds per season.</p>
-      <div id="shortlist" class="shortlist"></div>
-    </section>
-
-    <section class="card" id="sec-limits" aria-labelledby="h-limits">
-      <h2 id="h-limits">Club limits</h2>
-      <p class="muted small">Amounts in euros. These limits are checked together for every combination.</p>
-      <div id="limits" class="form-grid"></div>
-      <h3>Positions you must sign</h3>
-      <div id="needs" class="needs"></div>
-      <h3>What matters most</h3>
-      <div id="goal" class="form-grid"></div>
-      <details class="advanced"><summary>More settings (cash flow, bad-case test, discounting)</summary><div id="limits-advanced" class="form-grid"></div></details>
-      <div class="analyse-bar">
-        <p id="form-status" class="status" role="status" aria-live="polite"></p>
-        <button type="button" class="primary big-btn" id="analyse">Analyse this shortlist</button>
-      </div>
-    </section>
-
-    <div id="review" class="card review" hidden role="dialog" aria-labelledby="h-review">
-      <h2 id="h-review">Confirm what LANOVA will use</h2>
-      <ul id="review-list" class="bullets"></ul>
-      <label class="check"><input type="checkbox" id="review-ok"> I have checked these inputs.</label>
-      <div class="row"><button type="button" class="primary" id="review-run" disabled>Confirm and analyse</button><button type="button" class="ghost" id="review-cancel">Back to editing</button></div>
+    <nav class="side-group" aria-label="Clubs">
+      <p class="side-label">Clubs</p>
+      <div id="side-cases"></div>
+      <button type="button" class="side-item" data-go="import"><span class="ico ico-upload" aria-hidden="true"></span>Import your shortlist</button>
+    </nav>
+    <div class="side-foot">
+      <a class="side-item" href="/#contact"><span class="ico ico-mail" aria-hidden="true"></span>Request a pilot</a>
+      <p class="side-note">Demonstration clubs are fictional. Calculations run in your browser; nothing is uploaded.</p>
     </div>
+  </aside>
 
-    <section id="sec-results" aria-labelledby="h-results">
-      <div id="results-empty" class="card empty"><h2 id="h-results">Recommendation</h2><p class="muted">Press “Analyse this shortlist” to see the recommendation.</p></div>
-      <div id="busy" class="card busy" hidden><span class="spinner" aria-hidden="true"></span> Comparing every combination of the shortlist…</div>
-      <div id="stale" class="stale" hidden>Inputs changed since this result. Press “Analyse” again — the figures below are out of date and cannot be exported.</div>
-      <div id="error" class="card errorbox" hidden role="alert"></div>
-      <div id="results" hidden>
-        <div class="card hero-result">
-          <p class="eyebrow">LANOVA recommends</p>
-          <h2 id="r-headline"></h2>
-          <div id="r-players" class="players"></div>
-          <p id="r-proof" class="muted small"></p>
-        </div>
-        <div class="grid2">
-          <div class="card"><h3>What the club would spend</h3><div id="r-spend"></div></div>
-          <div class="card"><h3>Limits</h3><div id="r-limits"></div></div>
-        </div>
-        <div class="grid2">
-          <div class="card"><h3>Why this choice</h3><ul id="r-why" class="bullets"></ul></div>
-          <div class="card warn"><h3>What could go wrong</h3><ul id="r-risks" class="bullets"></ul></div>
-        </div>
-        <div class="card"><h3>Next-best alternatives</h3><ol id="r-alts" class="bullets"></ol></div>
-        <div class="card"><h3>Why the other players are left out</h3><ul id="r-excluded" class="excluded"></ul></div>
-        <details class="card advanced-panel"><summary>Advanced figures (for analysts)</summary><div id="r-advanced"></div></details>
-        <div class="actions">
-          <button type="button" class="primary" id="export-report">Export the decision report (print / PDF)</button>
-          <button type="button" class="ghost" id="export-csv">Download contract schedules (CSV)</button>
-          <a class="ghost button" href="/#contact">Request a pilot</a>
-        </div>
+  <!-- ================= MAIN ================= -->
+  <div class="main">
+    <header class="topbar">
+      <div class="crumbs"><span id="crumb-club">Recruitment Workspace</span><span class="sep" aria-hidden="true">/</span><span id="crumb-view">Clubs</span></div>
+      <div class="top-actions">
+        <span class="status-chip" id="run-state" data-state="idle" role="status" aria-live="polite" hidden>Not analysed</span>
+        <button type="button" class="btn btn-ghost" id="export-csv" disabled>Schedules CSV</button>
+        <button type="button" class="btn btn-ghost" id="export-report" disabled>Decision report</button>
+        <button type="button" class="btn btn-primary" id="analyse" hidden>Run analysis</button>
       </div>
-    </section>
+    </header>
 
-    <section class="card" id="sec-compare" aria-labelledby="h-compare">
-      <h2 id="h-compare">Compare scenarios</h2>
-      <div id="compare"><p class="muted">The first analysis becomes scenario A. Change a limit or a player choice, analyse again, and scenario B is compared with A here.</p></div>
-    </section>
-  </section>
-</main>
+    <main id="main">
+      <!-- ============ HOME ============ -->
+      <section id="view-home" class="view">
+        <div class="page-head">
+          <p class="eyebrow">Recruitment Workspace</p>
+          <h1>Decide the transfer window with numbers you can check.</h1>
+          <p class="lede">LANOVA compares every combination of a shortlist against the signing budget, squad-cost limit and cash a club can really afford. It shows what to sign, what it costs, which limits decide, and what changes in another scenario.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Fictional demonstration clubs</h2><span class="muted small">Open one to see a full decision</span></div>
+          <div class="table-wrap"><table class="data cases-table"><thead><tr><th>Club</th><th>Situation</th><th class="num">Budget at signing</th><th>Must sign</th><th class="num">Shortlist</th><th></th></tr></thead><tbody id="case-rows"></tbody></table></div>
+        </div>
+        <div class="panel panel-row">
+          <div><h2>Use your own shortlist</h2><p class="muted small">CSV or Excel. You match the columns and review every value before anything is calculated. The file is read in this browser and is not uploaded.</p></div>
+          <button type="button" class="btn btn-secondary" data-go="import">Import a shortlist</button>
+        </div>
+        <p class="fine">Expected points are estimates entered by the club (illustrative here). LANOVA does not predict sporting performance or value players.</p>
+      </section>
+
+      <!-- ============ IMPORT ============ -->
+      <section id="view-import" class="view" hidden>
+        <div class="page-head"><p class="eyebrow">Import</p><h1>Import your shortlist</h1>
+          <ol class="stepper"><li data-istep="1" class="on"><span>1</span>File</li><li data-istep="2"><span>2</span>Columns</li><li data-istep="3"><span>3</span>Check</li></ol></div>
+        <div class="panel" id="import-step-1">
+          <div class="panel-head"><h2>File</h2></div>
+          <p class="muted small">CSV or Excel (.xlsx, one sheet, values only), up to 40 players and 1 MB. Any column names — you match them next. <a href="#" id="template-link">Download a template</a>.</p>
+          <div class="field-row">
+            <label class="field"><span class="label">Number format in the file</span>
+              <select id="import-format"><option value="decimal-dot">1,234.56 (decimal point)</option><option value="decimal-comma">1.234,56 (decimal comma)</option></select></label>
+            <label class="field"><span class="label">File</span><input type="file" id="import-file" accept=".csv,.xlsx"></label>
+          </div>
+          <p id="import-file-status" class="status" role="status" aria-live="polite"></p>
+        </div>
+        <div class="panel" id="import-step-2" hidden>
+          <div class="panel-head"><h2>Match your columns</h2><span class="muted small">* required</span></div>
+          <p class="muted small">For each item, pick the column that contains it, or one value for every player. Suggestions come from your column names — check them.</p>
+          <div id="mapping" class="mapping"></div>
+          <details class="disclosure"><summary>First rows of your file</summary><div class="table-wrap"><table class="data" id="raw-preview"></table></div></details>
+          <div class="panel-foot"><p id="mapping-status" class="status" role="status" aria-live="polite"></p><button type="button" class="btn btn-primary" id="import-check">Check the data</button></div>
+        </div>
+        <div class="panel" id="import-step-3" hidden>
+          <div class="panel-head"><h2>Converted values</h2></div>
+          <p id="check-summary" class="small"></p>
+          <div class="table-wrap"><table class="data" id="check-table"></table></div>
+          <ul id="check-notes" class="notes"></ul>
+          <div class="panel-foot"><span></span><button type="button" class="btn btn-primary" id="import-use" disabled>Use this shortlist</button></div>
+        </div>
+      </section>
+
+      <!-- ============ DASHBOARD ============ -->
+      <section id="view-dashboard" class="view" hidden>
+        <div class="case-head">
+          <div>
+            <p class="eyebrow" id="w-tier"></p>
+            <h1 id="w-club"></h1>
+            <p class="question" id="w-decision"></p>
+          </div>
+          <dl class="facts" id="w-facts"></dl>
+        </div>
+
+        <div id="results-empty" class="panel empty"><h2>No analysis yet</h2><p class="muted">Check the <button type="button" class="link" data-nav="shortlist">shortlist</button> and the <button type="button" class="link" data-nav="inputs">scenario inputs</button>, then press <b>Run analysis</b>. LANOVA compares every combination and shows the result here.</p></div>
+        <div id="busy" class="banner banner-info" hidden><span class="spinner" aria-hidden="true"></span>Comparing every combination of the shortlist…</div>
+        <div id="stale" class="banner banner-warn" hidden>Inputs changed since this result. Run the analysis again — the figures below are out of date and cannot be exported.</div>
+        <div id="error" class="banner banner-bad" hidden role="alert"></div>
+
+        <div id="results" hidden>
+          <p class="status" id="r-kpi-note"></p>
+          <div class="kpis" id="kpis"></div>
+          <div class="grid-main">
+            <section class="panel">
+              <div class="panel-head"><h2>Recommendation</h2><span class="muted small" id="r-proof"></span></div>
+              <p class="headline" id="r-headline"></p>
+              <div id="r-players"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><h2>Budget at signing</h2></div>
+              <div id="r-alloc"></div>
+              <div id="r-spend"></div>
+            </section>
+          </div>
+          <section class="panel">
+            <div class="panel-head"><h2>Constraints</h2><span class="muted small">Every limit is checked for every combination</span></div>
+            <div id="r-limits"></div>
+          </section>
+          <div class="grid-2">
+            <section class="panel"><div class="panel-head"><h2>Why this choice</h2></div><ul id="r-why" class="notes"></ul></section>
+            <section class="panel"><div class="panel-head"><h2>Risks</h2></div><ul id="r-risks" class="notes"></ul></section>
+          </div>
+          <div class="grid-2">
+            <section class="panel"><div class="panel-head"><h2>Next-best alternatives</h2><span class="muted small">Overall score below the recommendation</span></div><ol id="r-alts" class="alts"></ol></section>
+            <section class="panel"><div class="panel-head"><h2>Players not selected</h2></div><ul id="r-excluded" class="excluded"></ul></section>
+          </div>
+          <details class="panel disclosure advanced-panel"><summary>Advanced figures (for analysts)</summary><div id="r-advanced"></div></details>
+          <div class="next-actions">
+            <button type="button" class="btn btn-secondary" data-nav="inputs">Change the scenario</button>
+            <button type="button" class="btn btn-secondary" data-nav="compare">Compare with scenario A</button>
+            <a class="btn btn-ghost" href="/#contact">Request a pilot</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SHORTLIST ============ -->
+      <section id="view-shortlist" class="view" hidden>
+        <div class="page-head compact"><p class="eyebrow">Shortlist</p><h1 id="sl-title">Shortlist</h1>
+          <p class="muted small">Choose <b>Consider</b> (LANOVA decides), <b>Must sign</b> or <b>Leave out</b> for each player. Wages are what the club pays per season.</p></div>
+        <div class="panel flush"><div id="shortlist" class="table-wrap"></div></div>
+      </section>
+
+      <!-- ============ INPUTS ============ -->
+      <section id="view-inputs" class="view" hidden>
+        <div class="page-head compact"><p class="eyebrow">Scenario inputs</p><h1>Club limits</h1><p class="muted small">Amounts in euros. All limits are applied together to every combination.</p></div>
+        <p id="form-status" class="status" role="status" aria-live="polite"></p>
+        <div class="panel"><div class="panel-head"><h2>Budget, squad cost and cash</h2></div><div id="limits" class="form-grid"></div></div>
+        <div class="grid-2">
+          <div class="panel"><div class="panel-head"><h2>Positions to sign</h2></div><div id="needs" class="needs"></div></div>
+          <div class="panel"><div class="panel-head"><h2>Goal</h2></div><div id="goal" class="form-grid one"></div></div>
+        </div>
+        <details class="panel disclosure"><summary>More settings — club cash flow, bad-case test, discounting</summary><div id="limits-advanced" class="form-grid"></div></details>
+        <div class="next-actions"><button type="button" class="btn btn-primary" id="analyse-bottom">Run analysis</button></div>
+      </section>
+
+      <!-- ============ COMPARE ============ -->
+      <section id="view-compare" class="view" hidden>
+        <div class="page-head compact"><p class="eyebrow">Compare</p><h1>Scenario A vs scenario B</h1><p class="muted small">The first analysis of a club is scenario A. Change the shortlist choices or limits, run the analysis again, and the new result (B) is compared here.</p></div>
+        <div class="panel" id="compare"></div>
+      </section>
+    </main>
+    <footer class="foot">LANOVA Sports · Recruitment Workspace · Lake Management. Decision support only — not financial, legal or investment advice. <a href="/">lakecapitalmanagement.com</a> · <a href="/lanova/recruitment/">Advanced optimizer (beta)</a></footer>
+  </div>
+</div>
+
+<!-- confirmation dialog -->
+<div id="review" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="h-review">
+  <div class="modal-box">
+    <h2 id="h-review">Confirm the inputs</h2>
+    <p class="muted small">LANOVA only calculates with inputs you have checked.</p>
+    <ul id="review-list" class="notes"></ul>
+    <label class="check"><input type="checkbox" id="review-ok"> I have checked these inputs.</label>
+    <div class="modal-actions"><button type="button" class="btn btn-ghost" id="review-cancel">Back</button><button type="button" class="btn btn-primary" id="review-run" disabled>Confirm and analyse</button></div>
+  </div>
+</div>
 
 <section id="report" class="report" aria-hidden="true"></section>
-<footer class="foot">
-  <p>LANOVA Sports · Recruitment Workspace · by Lake Management. Calculations run in your browser with the LANOVA recruitment engine. Decision support only — not financial, legal or investment advice. Demonstration data is fictional.</p>
-  <p><a href="/">lakecapitalmanagement.com</a> · <a href="/lanova/recruitment/">Advanced optimizer (beta)</a></p>
-</footer>
 <script type="module" src="app.js"></script>
 </body>
 </html>

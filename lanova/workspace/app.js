@@ -1,8 +1,8 @@
 /**
  * LANOVA Sports — Recruitment Workspace.
- * One page: fictional cases or an imported shortlist → shortlist choices → club limits → confirmed analysis by the
- * unchanged LANOVA engine (worker) → recommendation, limits, alternatives, exclusions → scenario comparison → report.
- * Everything runs in the browser; nothing is uploaded or stored.
+ * App shell (sidebar + views): clubs → decision dashboard → shortlist → scenario inputs → compare A/B → report.
+ * Fictional cases or an imported shortlist are analysed, after confirmation, by the unchanged LANOVA engine (worker).
+ * Every figure shown comes from the engine result or from the (fictional or imported) inputs. Nothing is uploaded or stored.
  */
 import {SCENARIOS} from '../v3/demo/scenarios.js';
 import {story as buildStory, eur} from '../v3/demo/explain.js';
@@ -17,23 +17,54 @@ const POS_ORDER = ['GK', 'CB', 'FB', 'DM', 'CM', 'AM', 'W', 'ST'];
 const DEAL = {permanent: 'Transfer', loan: 'Loan', free: 'Free agent'};
 const COUNT_IDS = ['squadSize', 'nonEU', 'maxSignings', 'positionNeed', 'exclusiveGroup'];
 const ENGINE_DEFAULTS = {discountRate: 0.1, resaleHaircut: 0.5, revenueHaircut: 0.3, upsideResale: 0.2, upsideRevenue: 0.2, samePositionFactor: 0.5};
-const S = {meta: null, original: null, modes: {}, candidates: [], form: null, needs: {}, result: null, fresh: false, A: null, seq: 0, worker: null, pendingRun: null, imp: null};
+const S = {meta: null, original: null, modes: {}, candidates: [], form: null, needs: {}, result: null, fresh: false, A: null, seq: 0, worker: null, pendingRun: null, imp: null, caseId: null};
+const needsText = n => Object.entries(n ?? {}).map(([p, k]) => `${k} ${POS[p].toLowerCase()}`).join(', ');
+const pctOf = (a, b) => b > 0 ? Math.max(0, Math.min(100, 100 * a / b)) : (a > 0 ? 100 : 0);
 
 // ======================================================================= navigation
+const VIEWS = ['home', 'import', 'dashboard', 'shortlist', 'inputs', 'compare'];
+const VIEW_LABEL = {home: 'Clubs', import: 'Import', dashboard: 'Decision dashboard', shortlist: 'Shortlist', inputs: 'Scenario inputs', compare: 'Compare A / B'};
 function show(view) {
-  for (const v of ['home', 'import', 'work']) $(`view-${v}`).hidden = v !== view;
-  document.body.dataset.view = view; window.scrollTo({top: 0});
+  if (['dashboard', 'shortlist', 'inputs', 'compare'].includes(view) && !S.meta) view = 'home';
+  for (const v of VIEWS) $(`view-${v}`).hidden = v !== view;
+  document.body.dataset.view = view;
+  const caseView = S.meta && !['home', 'import'].includes(view);
+  document.querySelectorAll('.side-item[data-nav]').forEach(b => b.dataset.nav === view ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+  document.querySelectorAll('[data-side-case]').forEach(b => caseView && b.dataset.sideCase === S.caseId ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current'));
+  const imp = document.querySelector('.side-item[data-go="import"]');
+  if (view === 'import') imp.setAttribute('aria-current', 'page'); else imp.removeAttribute('aria-current');
+  $('crumb-club').textContent = S.meta && view !== 'home' && view !== 'import' ? S.meta.club : 'Recruitment Workspace';
+  $('crumb-view').textContent = VIEW_LABEL[view];
+  $('analyse').hidden = !S.meta || view === 'home' || view === 'import';
+  window.scrollTo({top: 0});
 }
-document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { if (b.dataset.go === 'import') openImport(); else { stopWorker(); show(b.dataset.go); } }));
+function navState() {
+  document.querySelectorAll('.side-item[data-nav]').forEach(b => { b.disabled = !S.meta; });
+  $('nav-count').textContent = S.meta ? String(S.candidates.length) : '';
+}
+document.addEventListener('click', e => {
+  const n = e.target.closest('[data-nav]'); if (n && !n.disabled) { show(n.dataset.nav); return; }
+  const g = e.target.closest('[data-go]'); if (g) { if (g.dataset.go === 'import') openImport(); else { stopWorker(); show(g.dataset.go); } }
+});
 function stopWorker() { S.worker?.terminate(); S.worker = null; S.seq++; }
+const RUN = {idle: 'Not analysed', busy: 'Analysing…', fresh: 'Result up to date', infeasible: 'No safe option', stale: 'Inputs changed — run again', failed: 'Analysis failed'};
+function runState(state) { const c = $('run-state'); c.dataset.state = state; c.textContent = RUN[state]; c.hidden = !S.meta; }
 
-// ======================================================================= home
-$('case-cards').innerHTML = SCENARIOS.map(s => {
-  const c = s.scenario.context, needs = Object.entries(c.positionNeeds).map(([p, n]) => `${n} ${POS[p].toLowerCase()}`).join(' + ');
-  return `<button type="button" class="case" data-case="${esc(s.id)}"><span class="tag">${esc(s.tier)}</span><span class="name">${esc(s.club)}</span><span>${esc(s.headline)}</span><span class="muted small">${eur(c.transferBudget)} to spend at signing · must sign ${esc(needs)} · ${s.scenario.candidates.length} players on the shortlist</span><span class="go">Open this club →</span></button>`;
+// ======================================================================= home + sidebar clubs
+$('case-rows').innerHTML = SCENARIOS.map(s => {
+  const c = s.scenario.context;
+  return `<tr><td data-l="Club" class="name-cell"><span class="name">${esc(s.club)}</span> <span class="tag fict">Fictional</span><span class="sub">${esc(s.tier)}</span></td>
+    <td data-l="Situation" class="span">${esc(s.headline)}</td>
+    <td data-l="Budget at signing" class="num">${eur(c.transferBudget)}</td>
+    <td data-l="Must sign">${esc(needsText(c.positionNeeds) || 'No specific position')}</td>
+    <td data-l="Shortlist" class="num">${s.scenario.candidates.length} players</td>
+    <td class="span num"><button type="button" class="btn btn-secondary" data-case="${esc(s.id)}">Open</button></td></tr>`;
 }).join('');
-document.querySelectorAll('[data-case]').forEach(b => b.addEventListener('click', () => {
-  const s = SCENARIOS.find(x => x.id === b.dataset.case);
+$('case-rows').closest('table').classList.add('stack');
+$('side-cases').innerHTML = SCENARIOS.map(s => `<button type="button" class="side-item case-item" data-side-case="${esc(s.id)}"><span class="dot" aria-hidden="true"></span><span>${esc(s.club)}<span class="sub">${esc(s.tier)}</span></span></button>`).join('');
+document.querySelectorAll('button[data-case], button[data-side-case]').forEach(b => b.addEventListener('click', () => {
+  const id = b.dataset.case ?? b.dataset.sideCase, s = SCENARIOS.find(x => x.id === id);
+  S.caseId = id;
   openCase({club: s.club, tier: s.tier, decision: s.decision, imported: false}, structuredClone(s.scenario));
 }));
 
@@ -41,43 +72,48 @@ document.querySelectorAll('[data-case]').forEach(b => b.addEventListener('click'
 function openCase(meta, scenario) {
   stopWorker();
   scenario = {...scenario, candidates: scenario.candidates.map(canonicalCandidate)}; // engine's own normalisation: what you see is what is calculated
+  if (meta.imported) S.caseId = null;
   Object.assign(S, {meta, original: structuredClone(scenario), candidates: scenario.candidates, modes: {...(scenario.modes ?? {})}, result: null, fresh: false, A: null, pendingRun: null});
   S.form = formFrom(scenario.context, meta.imported);
   S.needs = {...(scenario.context.positionNeeds ?? {})};
   S.extra = {upsideResale: scenario.context.stress?.upsideResale ?? ENGINE_DEFAULTS.upsideResale, upsideRevenue: scenario.context.stress?.upsideRevenue ?? ENGINE_DEFAULTS.upsideRevenue};
-  $('w-tier').innerHTML = `${esc(meta.tier)} ${meta.imported ? '' : '<span class="badge">Fictional</span>'}`;
+  $('w-tier').innerHTML = `${esc(meta.tier)}${meta.imported ? '' : ' <span class="tag fict">Fictional</span>'}`;
   $('w-club').textContent = meta.club;
   $('w-decision').textContent = meta.decision;
+  $('sl-title').textContent = `${meta.club} — ${scenario.candidates.length} players`;
+  document.body.dataset.club = meta.imported ? 'imported' : S.caseId;
   renderFacts(); renderShortlist(); renderForm();
   for (const id of ['results', 'busy', 'stale', 'error', 'review']) $(id).hidden = true;
-  $('results-empty').hidden = false; $('form-status').textContent = '';
-  document.body.dataset.stale = '0';
+  $('results-empty').hidden = false; $('form-status').textContent = ''; $('form-status').className = 'status';
+  document.body.dataset.stale = '0'; document.body.dataset.hasResult = '0';
+  setExports(false); navState(); runState('idle');
   renderCompare();
-  show('work');
+  show('dashboard');
 }
 function renderFacts() {
   const c = S.original.context, f = S.meta.imported;
-  $('w-facts').innerHTML = f ? `<li>Shortlist: <b>${S.candidates.length} players</b> (imported)</li><li>Enter your club’s limits below to analyse</li>`
-    : [['To spend at signing', eur(c.transferBudget)], ['Cash today', eur(c.openingCash)], ['Squad-cost limit', `${eur(c.squadCostLimit[0])} a season`], ['Must sign', Object.entries(c.positionNeeds).map(([p, n]) => `${n} ${POS[p].toLowerCase()}`).join(', ')], ['Shortlist', `${S.candidates.length} players`]].map(([k, v]) => `<li>${esc(k)}: <b>${esc(v)}</b></li>`).join('');
+  const items = f ? [['Shortlist', `${S.candidates.length} players (imported)`], ['Club limits', 'Enter them in Scenario inputs']]
+    : [['Budget at signing', eur(c.transferBudget)], ['Cash today', eur(c.openingCash)], ['Squad-cost limit, season 1', eur(c.squadCostLimit[0])], ['Already committed, season 1', eur(c.committedSquadCost[0])], ['Must sign', needsText(c.positionNeeds) || 'No specific position'], ['Shortlist', `${S.candidates.length} players · ${c.horizon} seasons`]];
+  $('w-facts').innerHTML = items.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
 }
 
 // ---------------- shortlist
 function renderShortlist() {
-  const head = `<div class="player-row head"><div>Player</div><div>Position</div><div class="num">Fee</div><div class="num">Wage / season</div><div class="num">Seasons</div><div class="num">Expected points*</div><div>Choice</div></div>`;
-  $('shortlist').innerHTML = head + S.candidates.map(p => {
+  const rec = S.result && S.fresh ? new Set(S.result.analysis.result.best?.selection ?? []) : new Set();
+  $('shortlist').innerHTML = `<table class="data stack"><thead><tr><th>Player</th><th>Position</th><th class="num">Fee</th><th class="num">Wage / season</th><th class="num">Seasons</th><th class="num">Expected points*</th><th>Choice</th></tr></thead><tbody>${S.candidates.map(p => {
     const m = S.modes[p.id] ?? 'optimise', wage = p.wage * (p.dealType === 'loan' ? p.wageShare : 1);
-    return `<div class="player-row ${m === 'must' ? 'must' : m === 'exclude' ? 'exclude' : ''}" data-row="${esc(p.id)}">
-      <div class="nm-cell"><div class="nm">${esc(p.name)}</div><div class="sub">${DEAL[p.dealType]}${p.exitValue ? ` · resale ${eur(p.exitValue)} after season ${p.exitSeason}` : ''}${p.nonEU ? ' · non-EU' : ''}</div></div>
-      <div><span class="lbl">Position</span>${esc(POS[p.position])}</div>
-      <div class="num"><span class="lbl">Fee</span>${eur(p.fee)}</div>
-      <div class="num"><span class="lbl">Wage / season</span>${eur(wage)}${p.dealType === 'loan' && p.wageShare !== 1 ? `<div class="sub">${Math.round(p.wageShare * 100)}% of ${eur(p.wage)}</div>` : ''}</div>
-      <div class="num"><span class="lbl">Seasons</span>${p.contractYears}</div>
-      <div class="num"><span class="lbl">Expected points*</span>${p.points}</div>
-      <div class="mode-cell"><div class="seg" role="group" aria-label="Choice for ${esc(p.name)}">${[['optimise', 'Consider'], ['must', 'Must sign'], ['exclude', 'Leave out']].map(([v, l]) => `<button type="button" data-mode="${v}" aria-pressed="${m === v}">${l}</button>`).join('')}</div></div></div>`;
-  }).join('') + `<p class="muted small">* ${S.meta.imported ? 'Your own estimate of the league points the player adds per season.' : 'Illustrative estimate written for this fictional case, not real data.'}</p>`;
+    return `<tr class="${m === 'must' ? 'row-must' : m === 'exclude' ? 'row-exclude' : ''}" data-row="${esc(p.id)}">
+      <td class="name-cell"><span class="name">${esc(p.name)}</span>${rec.has(p.id) ? ' <span class="tag ok">Recommended</span>' : ''}${m === 'must' ? ' <span class="tag must">Must sign</span>' : ''}<span class="sub">${DEAL[p.dealType]}${p.exitValue ? ` · resale ${eur(p.exitValue)} after season ${p.exitSeason}` : ''}${p.nonEU ? ' · non-EU' : ''}</span></td>
+      <td data-l="Position">${esc(POS[p.position])}</td>
+      <td data-l="Fee" class="num">${eur(p.fee)}</td>
+      <td data-l="Wage / season" class="num">${eur(wage)}${p.dealType === 'loan' && p.wageShare !== 1 ? `<span class="sub">${Math.round(p.wageShare * 100)}% of ${eur(p.wage)}</span>` : ''}</td>
+      <td data-l="Seasons" class="num">${p.contractYears}</td>
+      <td data-l="Expected points*" class="num">${p.points}</td>
+      <td class="span"><div class="seg" role="group" aria-label="Choice for ${esc(p.name)}">${[['optimise', 'Consider'], ['must', 'Must sign'], ['exclude', 'Leave out']].map(([v, l]) => `<button type="button" data-mode="${v}" aria-pressed="${m === v}">${l}</button>`).join('')}</div></td></tr>`;
+  }).join('')}</tbody></table><p class="foot-note">* ${S.meta.imported ? 'Your own estimate of the league points the player adds per season.' : 'Illustrative estimate written for this fictional case, not real data. LANOVA does not predict sporting performance.'}</p>`;
   $('shortlist').querySelectorAll('[data-row]').forEach(row => row.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => {
     const id = row.dataset.row; if (b.dataset.mode === 'optimise') delete S.modes[id]; else S.modes[id] = b.dataset.mode;
-    renderShortlist(); changed();
+    changed(); renderShortlist();
   })));
 }
 
@@ -138,7 +174,7 @@ function fieldHtml(d) {
 function renderForm() {
   $('limits').innerHTML = BASIC.map(fieldHtml).join('');
   $('limits-advanced').innerHTML = ADVANCED.map(fieldHtml).join('');
-  $('needs').innerHTML = POS_ORDER.map(p => `<div class="need"><span>${esc(POS[p])}</span><button type="button" data-need="${p}" data-d="-1" aria-label="One fewer ${esc(POS[p])}">−</button><span class="n" id="need-${p}">${S.needs[p] ?? 0}</span><button type="button" data-need="${p}" data-d="1" aria-label="One more ${esc(POS[p])}">+</button></div>`).join('');
+  $('needs').innerHTML = POS_ORDER.map(p => `<div class="need ${S.needs[p] ? 'on' : ''}" data-need-box="${p}"><span>${esc(POS[p])}</span><span class="ctrl"><button type="button" data-need="${p}" data-d="-1" aria-label="One fewer ${esc(POS[p])}">−</button><span class="n" id="need-${p}">${S.needs[p] ?? 0}</span><button type="button" data-need="${p}" data-d="1" aria-label="One more ${esc(POS[p])}">+</button></span></div>`).join('');
   $('goal').innerHTML = `<label class="field" data-field="objective"><span>Choose the goal</span><select data-key="objective">
       <option value="" ${!S.form.objective ? 'selected' : ''} disabled>Choose…</option>
       <option value="blended" ${S.form.objective === 'blended' ? 'selected' : ''}>Balance sporting value and money</option>
@@ -148,15 +184,15 @@ function renderForm() {
   bindForm();
 }
 function bindForm() {
-  document.querySelectorAll('#sec-limits [data-key]').forEach(el => el.addEventListener('input', () => {
+  document.querySelectorAll('#view-inputs [data-key]').forEach(el => el.addEventListener('input', () => {
     S.form[el.dataset.key] = el.value;
     const a = document.querySelector(`[data-amt="${el.dataset.key}"]`); if (a) a.textContent = amt(el.value);
     if (el.dataset.key === 'objective') { renderForm(); }
     if (el.dataset.key === 'horizon') { resizeSeries(); renderForm(); document.querySelector('[data-key="horizon"]')?.focus(); }
     changed();
   }));
-  document.querySelectorAll('#sec-limits [data-series]').forEach(el => el.addEventListener('input', () => { S.form[el.dataset.series].values[Number(el.dataset.i)] = el.value; const a = document.querySelector(`[data-amt="${el.dataset.series}"]`); if (a) a.textContent = S.form[el.dataset.series].values.map(amt).join(' / '); changed(); }));
-  document.querySelectorAll('#sec-limits [data-same]').forEach(el => el.addEventListener('change', () => {
+  document.querySelectorAll('#view-inputs [data-series]').forEach(el => el.addEventListener('input', () => { S.form[el.dataset.series].values[Number(el.dataset.i)] = el.value; const a = document.querySelector(`[data-amt="${el.dataset.series}"]`); if (a) a.textContent = S.form[el.dataset.series].values.map(amt).join(' / '); changed(); }));
+  document.querySelectorAll('#view-inputs [data-same]').forEach(el => el.addEventListener('change', () => {
     const s = S.form[el.dataset.same]; s.same = el.checked;
     if (s.same) s.values = [s.values[0] ?? '']; else { const H = Number(S.form.horizon) || 1; s.values = Array.from({length: H}, (_, i) => s.values[i] ?? s.values[0] ?? ''); }
     renderForm(); changed();
@@ -164,7 +200,7 @@ function bindForm() {
   document.querySelectorAll('[data-need]').forEach(b => b.addEventListener('click', () => {
     const p = b.dataset.need, n = Math.max(0, Math.min(10, (S.needs[p] ?? 0) + Number(b.dataset.d)));
     if (n) S.needs[p] = n; else delete S.needs[p];
-    $(`need-${p}`).textContent = String(n); changed();
+    $(`need-${p}`).textContent = String(n); document.querySelector(`[data-need-box="${p}"]`).classList.toggle('on', n > 0); changed();
   }));
 }
 function resizeSeries() {
@@ -207,7 +243,7 @@ function readForm() {
   return {ctx, errors};
 }
 function showErrors(errors) {
-  document.querySelectorAll('#sec-limits .field').forEach(el => {
+  document.querySelectorAll('#view-inputs .field').forEach(el => {
     const k = el.dataset.field, e = errors[k];
     el.classList.toggle('invalid', Boolean(e));
     const h = el.querySelector('.hint'); if (!h) return;
@@ -218,18 +254,21 @@ function showErrors(errors) {
 // ---------------- changes and staleness
 function changed() {
   $('review').hidden = true; S.pendingRun = null;
-  if (S.result) { S.fresh = false; document.body.dataset.stale = '1'; $('stale').hidden = false; setExports(false); }
-  $('form-status').textContent = '';
+  if (S.result) { S.fresh = false; document.body.dataset.stale = '1'; $('stale').hidden = false; setExports(false); runState('stale'); }
+  $('form-status').textContent = ''; $('form-status').className = 'status';
 }
 function setExports(on) { $('export-report').disabled = !on; $('export-csv').disabled = !on; }
 
 // ---------------- analyse: review → confirm → worker
-$('analyse').addEventListener('click', () => {
+function requestAnalysis() {
+  if (!S.meta) return;
   const {ctx, errors} = readForm();
   showErrors(errors);
   if (Object.keys(errors).length) {
-    const first = document.querySelector('#sec-limits .field.invalid');
+    show('inputs');
+    const first = document.querySelector('#view-inputs .field.invalid');
     if (first?.closest('details')) first.closest('details').open = true;
+    $('form-status').className = 'status';
     $('form-status').textContent = errors.needs ?? `Complete the ${Object.keys(errors).length} highlighted field${Object.keys(errors).length > 1 ? 's' : ''} first.`;
     first?.scrollIntoView({block: 'center'});
     return;
@@ -242,25 +281,28 @@ $('analyse').addEventListener('click', () => {
     `${S.candidates.length} players on the shortlist${must.length ? `; must sign: ${must.join(', ')}` : ''}${out.length ? `; left out: ${out.join(', ')}` : ''}.`,
     `Budget at signing ${eur(ctx.transferBudget)}; squad-cost limit ${ctx.squadCostLimit.map(eur).join(' / ')}; already committed ${ctx.committedSquadCost.map(eur).join(' / ')}.`,
     `Cash today ${eur(ctx.openingCash)}; must always remain ${eur(ctx.minCash + ctx.protectedReserve)}; club cash flow ${ctx.operatingCashFlow.map(eur).join(' / ')}.`,
-    `At most ${ctx.maxSignings} signings; squad ${ctx.currentSquadSize}/${ctx.maxSquadSize}; non-EU ${ctx.currentNonEU}/${ctx.maxNonEU}; must sign ${Object.entries(ctx.positionNeeds).map(([p, n]) => `${n} ${POS[p].toLowerCase()}`).join(', ') || 'no specific position'}.`,
+    `At most ${ctx.maxSignings} signings; squad ${ctx.currentSquadSize}/${ctx.maxSquadSize}; non-EU ${ctx.currentNonEU}/${ctx.maxNonEU}; must sign ${needsText(ctx.positionNeeds) || 'no specific position'}.`,
     `Goal: ${ctx.objective === 'blended' ? `balance sporting value and money (${eur(ctx.valuePerPoint)} per league point)` : ctx.objective === 'npv' ? 'money only' : 'most expected points'}.`,
     ...(changes.length ? [`Changed since scenario A: ${changes.join('; ')}.`] : []),
   ].map(x => `<li>${esc(x)}</li>`).join('');
   $('review-ok').checked = false; $('review-run').disabled = true; $('review').hidden = false;
-  $('review').scrollIntoView({block: 'center'});
-});
+  $('review-ok').focus();
+}
+$('analyse').addEventListener('click', requestAnalysis);
+$('analyse-bottom').addEventListener('click', requestAnalysis);
 $('review-ok').addEventListener('change', () => { $('review-run').disabled = !$('review-ok').checked; });
 $('review-cancel').addEventListener('click', () => { $('review').hidden = true; S.pendingRun = null; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('review').hidden) { $('review').hidden = true; S.pendingRun = null; } });
 $('review-run').addEventListener('click', () => { if (!S.pendingRun || !$('review-ok').checked) return; const sc = S.pendingRun; S.pendingRun = null; $('review').hidden = true; compute(sc); });
 
 function compute(scenario) {
   stopWorker();
   const id = ++S.seq;
   $('report').innerHTML = '';
-  S.fresh = false; setExports(false);
+  S.fresh = false; setExports(false); runState('busy');
   $('busy').hidden = false; $('error').hidden = true; $('results-empty').hidden = true;
   if (S.result) { document.body.dataset.stale = '1'; $('stale').hidden = false; }
-  $('busy').scrollIntoView({block: 'center'});
+  show('dashboard');
   const w = new Worker('../v3/demo/worker.js', {type: 'module'}); S.worker = w;
   const timer = setTimeout(() => { if (id === S.seq) failed('The analysis took longer than 15 seconds and was stopped. Try a shorter shortlist.'); }, 15000);
   w.onmessage = ({data}) => {
@@ -273,68 +315,83 @@ function compute(scenario) {
     if (!S.A) S.A = {inputs, result: S.result};
     S.fresh = true;
     $('busy').hidden = true; $('stale').hidden = true; document.body.dataset.stale = '0';
-    renderResult(); renderCompare(); setExports(true);
-    $('sec-results').scrollIntoView({block: 'start'});
+    renderResult(); renderCompare(); renderShortlist(); setExports(true);
   };
-  w.onerror = e => { e.preventDefault?.(); if (id !== S.seq) return; clearTimeout(timer); failed('The analysis failed unexpectedly. No result is shown.'); };
+  w.onerror = e => { e.preventDefault?.(); if (id !== S.seq) return; clearTimeout(timer); failed('The analysis failed unexpectedly.'); };
   w.postMessage({id, scenario, now: new Date().toISOString()});
 }
 function failed(message) {
   S.worker?.terminate(); S.worker = null;
   S.result = null; S.fresh = false; setExports(false); $('report').innerHTML = '';
   for (const x of ['busy', 'results', 'stale']) $(x).hidden = true;
-  document.body.dataset.stale = '0';
+  document.body.dataset.stale = '0'; document.body.dataset.hasResult = '0'; runState('failed');
   $('error').hidden = false; $('error').textContent = `${message} No recommendation is shown.`;
-  renderCompare();
+  renderCompare(); renderShortlist();
 }
 
-// ---------------- results
+// ---------------- decision dashboard
+/** Engine usage rows → one list used by the KPI strip and the constraints table. */
+function constraintRows(ev, ctx) {
+  const u = ev.usage, binding = new Set((S.result?.analysis.binding ?? []).map(x => `${x.id}:${x.season}`));
+  const rows = [], get = (id, season = null) => u.find(x => x.id === id && x.season === season);
+  const add = (x, label, money, flip = false) => {
+    const used = flip ? -x.used : x.used, limit = flip ? -x.limit : x.limit, sense = flip ? '<=' : x.sense;
+    const head = sense === '<=' ? limit - used : used - limit;
+    const status = head < -0.01 ? 'broken' : binding.has(`${x.id}:${x.season}`) ? 'tight' : 'ok';
+    rows.push({id: x.id, season: x.season, label, used, limit, sense, head, money, status});
+  };
+  const tb = get('transferBudget'); if (tb) add(tb, 'Budget at signing', true);
+  for (const x of u.filter(x => x.id === 'squadCost')) add(x, `Squad cost, season ${x.season}`, true);
+  const cash = u.filter(x => x.id === 'cashFloor');
+  if (cash.length) { const low = cash.reduce((m, x) => x.used < m.used ? x : m, cash[0]); add(low, `Lowest cash, bad case (${low.season === 0 ? 'at signing' : `end of season ${low.season}`})`, true); }
+  for (const [id, label] of [['maxSignings', 'New signings'], ['squadSize', 'Registered squad'], ['nonEU', 'Non-EU places']]) { const x = get(id); if (x) add(x, label, false); }
+  for (const x of u.filter(x => x.id === 'positionNeed')) add(x, x.label.replace(/^Minimum (\w+) signings$/, (m, p) => `Required ${POS[p]?.toLowerCase() ?? p} signings`), false);
+  const lc = get('lifetimeCapital'); if (lc) add(lc, 'Total commitments vs cap', true);
+  const ml = get('maxLoss'); if (ml) add(ml, 'Bad-case loss (present value)', true, true);
+  return rows;
+}
+const STATUS = {ok: '<span class="tag ok">OK</span>', tight: '<span class="tag tight">Binding</span>', broken: '<span class="tag broken">Broken</span>'};
+const fmt = (r, v) => r.money ? eur(v) : String(v);
 function renderResult() {
-  const {story: s, analysis: a, scenario} = S.result, b = a.result.best, ctx = a.context;
-  $('results').hidden = false;
+  const {story: s, analysis: a, scenario} = S.result, b = a.result.best, ctx = a.context, ev = b ?? a.noSigningEvaluation;
+  $('results').hidden = false; document.body.dataset.hasResult = '1';
+  runState(s.feasible ? 'fresh' : 'infeasible');
+  const rows = ev ? constraintRows(ev, ctx) : [];
+  const find = id => rows.find(r => r.id === id);
+  // KPI strip — every number is an engine output for the recommended combination (or for signing nobody).
+  const k = [];
+  const kpi = (label, value, sub, row) => k.push(`<div class="kpi"><div class="k"><span>${esc(label)}</span>${row ? STATUS[row.status] : ''}</div><div class="v">${esc(value)}</div><div class="s">${esc(sub)}</div>${row && row.sense === '<=' ? `<div class="bar ${row.status}"><span data-w="${pctOf(row.used, row.limit).toFixed(1)}"></span></div>` : ''}</div>`);
+  const tb = find('transferBudget'), sq = rows.find(r => r.id === 'squadCost' && r.season === 1), cash = find('cashFloor'), sg = find('maxSignings');
+  if (tb) kpi('Budget at signing', eur(tb.used), `of ${eur(tb.limit)} · ${eur(tb.head)} left`, tb);
+  if (sq) kpi('Squad cost, season 1', eur(sq.used), `of ${eur(sq.limit)} limit`, sq);
+  kpi('Total contract commitments', s.feasible ? eur(s.spend.totalCommitment) : '—', s.feasible ? `${s.players.length} signing${s.players.length === 1 ? '' : 's'}, all seasons` : 'No safe combination', null);
+  if (cash) kpi('Lowest cash, bad case', eur(cash.used), `vs ${eur(cash.limit)} to keep`, cash);
+  if (sg) kpi('New signings', `${sg.used} of ${sg.limit}`, needsText(ctx.positionNeeds) ? `Must sign ${needsText(ctx.positionNeeds)}` : 'No required position', sg);
+  $('kpis').innerHTML = k.join('');
+  $('r-kpi-note').textContent = s.feasible ? '' : 'No safe combination exists under these limits. The figures below show what happens if the club signs nobody.';
   $('r-headline').textContent = s.headline;
   if (s.feasible) {
-    $('r-players').innerHTML = s.players.map(p => `<div class="pcard"><div class="nm">${esc(p.name)}</div><div class="sub">${esc(POS[p.position])} · ${esc(p.deal)} · ${p.years} season${p.years > 1 ? 's' : ''}</div>
-      <dl class="kv"><dt>Pay at signing</dt><dd>${eur(p.atSigning)}</dd><dt>Wages, first season</dt><dd>${eur(p.wagesPerSeason)}</dd><dt>Total commitment</dt><dd>${eur(p.totalCommitment)}</dd><dt>Expected points / season</dt><dd>${p.points}</dd></dl></div>`).join('') || '<p>No signing.</p>';
-    $('r-proof').textContent = `${s.proven ? 'Checked against all' : 'Best found among'} ${s.searchSpace.toLocaleString('en-GB')} possible combinations of the shortlist, with every limit applied together.`;
-    const sp = s.spend, pctBudget = sp.budget ? Math.min(100, 100 * sp.atSigning / sp.budget) : 0;
-    $('r-spend').innerHTML = `<p class="bignum">${eur(sp.atSigning)}</p><p class="muted small">paid at signing, out of ${eur(sp.budget)} available</p><div class="meter"><span id="m-budget"></span></div>
-      <dl class="kv spaced">${sp.addedSquadCost.map((x, i) => `<dt>Added squad cost, season ${i + 1}</dt><dd>${eur(x)}</dd>`).join('')}<dt>Total contract commitments</dt><dd>${eur(sp.totalCommitment)}</dd></dl>
-      <p class="muted small">Squad cost = wages, bonuses and fees spread over each contract.</p>`;
-    $('m-budget').style.width = `${pctBudget.toFixed(0)}%`;
+    $('r-proof').textContent = `${s.proven ? 'Checked against all' : 'Best found among'} ${s.searchSpace.toLocaleString('en-GB')} combinations`;
+    $('r-players').innerHTML = s.players.length ? `<div class="table-wrap"><table class="data stack"><thead><tr><th>Player</th><th class="num">Paid at signing</th><th class="num">Wages, season 1</th><th class="num">Total commitment</th><th class="num">Exp. points / season</th></tr></thead><tbody>${s.players.map(p => `<tr><td class="name-cell"><span class="name">${esc(p.name)}</span><span class="sub">${esc(POS[p.position])} · ${esc(p.deal)} · ${p.years} season${p.years > 1 ? 's' : ''}</span></td><td data-l="Paid at signing" class="num">${eur(p.atSigning)}</td><td data-l="Wages, season 1" class="num">${eur(p.wagesPerSeason)}</td><td data-l="Total commitment" class="num">${eur(p.totalCommitment)}</td><td data-l="Exp. points / season" class="num">${p.points}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">No signing.</p>';
+    const sp = s.spend;
+    $('r-alloc').innerHTML = `<div class="alloc">${s.players.map(p => `<div class="alloc-row"><div class="top"><span>${esc(p.name)}</span><b>${eur(p.atSigning)}</b></div><div class="bar"><span data-w="${pctOf(p.atSigning, sp.budget).toFixed(1)}"></span></div></div>`).join('')}
+      <div class="alloc-row free"><div class="top"><span class="muted">Not spent</span><b>${eur(Math.max(0, sp.budget - sp.atSigning))}</b></div><div class="bar"><span data-w="${pctOf(Math.max(0, sp.budget - sp.atSigning), sp.budget).toFixed(1)}"></span></div></div></div>`;
+    $('r-spend').innerHTML = `<dl class="spend-list"><dt>Paid at signing</dt><dd>${eur(sp.atSigning)} of ${eur(sp.budget)}</dd>${sp.addedSquadCost.map((x, i) => `<dt>Added squad cost, season ${i + 1}</dt><dd>${eur(x)}</dd>`).join('')}<dt>Total contract commitments</dt><dd>${eur(sp.totalCommitment)}</dd></dl><p class="muted small">Squad cost = wages, bonuses and fees spread over each contract.</p>`;
   } else {
-    $('r-players').innerHTML = `<div class="pcard"><div class="nm">What would make a safe choice possible</div><ul class="bullets small">${s.fixes.map(f => `<li>${esc(f.label)}: ${f.works ? `yes → ${esc(f.names.join(' + ') || 'no signing')}` : 'not enough on its own'}</li>`).join('')}</ul><p class="muted small">Each line is a separate re-calculation with one change. Possibilities to discuss, not recommendations.</p></div>`;
-    $('r-proof').textContent = s.proven ? `All ${s.searchSpace.toLocaleString('en-GB')} combinations were checked.` : '';
-    $('r-spend').innerHTML = '<p>Nothing: no combination can be signed safely within these limits.</p>';
+    $('r-proof').textContent = s.proven ? `All ${s.searchSpace.toLocaleString('en-GB')} combinations checked` : '';
+    $('r-players').innerHTML = `<h3>What would make a safe choice possible</h3><div class="table-wrap"><table class="data stack"><thead><tr><th>One change, re-calculated</th><th>Outcome</th></tr></thead><tbody>${s.fixes.map(f => `<tr><td class="name-cell">${esc(f.label)}</td><td data-l="Outcome">${f.works ? `<span class="tag ok">Possible</span> ${esc(f.names.join(' + ') || 'no signing')}` : '<span class="tag broken">Not enough alone</span>'}</td></tr>`).join('')}</tbody></table></div><p class="muted small">Each line is a separate calculation with one change. Options to discuss, not recommendations.</p>`;
+    $('r-alloc').innerHTML = '';
+    $('r-spend').innerHTML = `<p class="muted">Nothing: no combination can be signed safely within these limits. Budget available: ${eur(ctx.transferBudget)}.</p>`;
   }
-  $('r-limits').innerHTML = limitsHtml(b ?? a.noSigningEvaluation, ctx, !b);
-  document.querySelectorAll('[data-meter]').forEach(el => { el.style.width = `${el.dataset.meter}%`; });
+  $('r-limits').innerHTML = (b ? '' : '<p class="status">Even signing nobody breaks the limits marked “Broken”, or every way to fill the required positions breaks one. Figures below are for signing nobody.</p>')
+    + `<div class="table-wrap"><table class="data stack"><thead><tr><th>Constraint</th><th class="num">${b ? 'Recommended' : 'No signing'}</th><th class="num">Limit</th><th class="num">Headroom</th><th>Status</th></tr></thead><tbody>${rows.map(r => `<tr><td class="name-cell">${esc(r.label)}</td><td data-l="${b ? 'Recommended' : 'No signing'}" class="num">${fmt(r, r.used)}</td><td data-l="Limit" class="num">${r.sense === '<=' ? '≤' : '≥'} ${fmt(r, r.limit)}</td><td data-l="Headroom" class="num">${fmt(r, Math.round(r.head * 100) / 100)}</td><td data-l="Status">${STATUS[r.status]}</td></tr>`).join('')}</tbody></table></div>
+    <p class="muted small">Bad case = every season goes badly: resale −${Math.round(ctx.stress.resaleHaircut * 100)}%, player revenue −${Math.round(ctx.stress.revenueHaircut * 100)}%. “Binding” = the limit decides the choice.</p>`;
+  document.querySelectorAll('#results [data-w]').forEach(el => { el.style.width = `${el.dataset.w}%`; });
   $('r-why').innerHTML = s.why.map(x => `<li>${esc(x)}</li>`).join('');
   $('r-risks').innerHTML = s.risks.map(x => `<li>${esc(x)}</li>`).join('');
-  $('r-alts').innerHTML = s.feasible ? (s.alternatives.length ? s.alternatives.map(o => `<li><b>${esc(o.names.join(' + ') || 'No signing')}</b> — ${eur(o.gap)} less overall; ${eur(o.atSigning)} at signing.</li>`).join('') : '<li>None: no other combination stays within every limit.</li>') : '<li>No feasible combination.</li>';
-  $('r-excluded').innerHTML = (s.notChosen ?? []).map(n => `<li><b>${esc(n.name)}</b>${esc(n.reason)}</li>`).join('') || '<li>Every player on the shortlist is in the recommendation.</li>';
+  $('r-alts').innerHTML = s.feasible ? (s.alternatives.length ? s.alternatives.map(o => `<li><span><b>${esc(o.names.join(' + ') || 'No signing')}</b><span class="sub muted">${eur(o.atSigning)} at signing</span></span><span class="gap">−${eur(o.gap)}</span></li>`).join('') : '<li><span>None: no other combination stays within every limit.</span><span></span></li>') : '<li><span>No feasible combination.</span><span></span></li>';
+  $('r-excluded').innerHTML = !s.feasible ? '<li>No player can be recommended under these limits; see what would make a safe choice possible.</li>' : (s.notChosen ?? []).map(n => `<li><b>${esc(n.name)}</b>${esc(n.reason)}</li>`).join('') || '<li>Every player on the shortlist is in the recommendation.</li>';
   $('r-advanced').innerHTML = advancedHtml(a, scenario);
-}
-function limitsHtml(ev, ctx, infeasible) {
-  if (!ev) return '';
-  const u = ev.usage, row = (label, used, limit, sense, money, warn) => {
-    const ratio = sense === '<=' ? (limit > 0 ? used / limit : used > 0 ? 2 : 0) : (used !== 0 ? limit / used : 0);
-    const pct = Math.max(0, Math.min(100, 100 * (sense === '<=' ? ratio : (used >= limit ? Math.max(0, 1 - (used - limit) / Math.max(1, Math.abs(used))) : 1))));
-    const over = sense === '<=' ? used > limit + 0.01 : used < limit - 0.01, tight = !over && warn;
-    return `<div class="limit"><div class="top"><span>${esc(label)}${over ? '<span class="tag">broken</span>' : tight ? '<span class="tag">tight</span>' : ''}</span><b>${money ? eur(used) : used} ${sense === '<=' ? 'of' : 'vs minimum'} ${money ? eur(limit) : limit}</b></div><div class="meter ${over ? 'over' : tight ? 'tight' : ''}"><span data-meter="${pct.toFixed(0)}"></span></div></div>`;
-  };
-  const binding = new Set((S.result?.analysis.binding ?? []).map(x => `${x.id}:${x.season}`));
-  const get = (id, season = null) => u.find(x => x.id === id && x.season === season);
-  const parts = [];
-  const tb = get('transferBudget'); parts.push(row('Budget at signing', tb.used, tb.limit, '<=', true, binding.has('transferBudget:null')));
-  for (const x of u.filter(x => x.id === 'squadCost')) parts.push(row(`Squad cost, season ${x.season}`, x.used, x.limit, '<=', true, binding.has(`squadCost:${x.season}`)));
-  const cash = u.filter(x => x.id === 'cashFloor'), low = cash.reduce((m, x) => x.used < m.used ? x : m, cash[0]);
-  parts.push(`<div class="limit"><div class="top"><span>Lowest cash in a bad case${low.used < low.limit - 0.01 ? '<span class="tag">broken</span>' : ''}</span><b>${eur(low.used)} vs ${eur(low.limit)} to keep</b></div><p class="muted small tight">${low.season === 0 ? 'At signing' : `End of season ${low.season}`}; bad case = resale −${Math.round(ctx.stress.resaleHaircut * 100)}%, player revenue −${Math.round(ctx.stress.revenueHaircut * 100)}%.</p></div>`);
-  const cnt = (id, label) => { const x = get(id); if (x) parts.push(row(label, x.used, x.limit, '<=', false, binding.has(`${id}:null`))); };
-  cnt('maxSignings', 'Signings'); cnt('squadSize', 'Registered squad'); cnt('nonEU', 'Non-EU places');
-  for (const x of u.filter(x => x.id === 'positionNeed')) parts.push(row(x.label.replace(/^Minimum (\w+) signings$/, (m, p) => `Required ${POS[p]?.toLowerCase() ?? p}`), x.used, x.limit, '>=', false, false));
-  for (const id of ['lifetimeCapital', 'maxLoss']) { const x = get(id); if (x) parts.push(row(id === 'lifetimeCapital' ? 'Total commitments vs cap' : 'Bad-case loss (present value)', id === 'maxLoss' ? -x.used : x.used, id === 'maxLoss' ? -x.limit : x.limit, '<=', true, binding.has(`${id}:null`))); }
-  return (infeasible ? '<p class="status">Even signing nobody breaks the limits marked “broken”, or every way to fill the required positions breaks one.</p>' : '') + parts.join('');
 }
 function advancedHtml(a, scenario) {
   const b = a.result.best, ctx = a.context;
@@ -345,11 +402,10 @@ function advancedHtml(a, scenario) {
     <dt>Squad-adjusted points per season</dt><dd>${b.pointsBySeason.map(p => p.toFixed(2)).join(' / ') || '—'}</dd>
     <dt>Club cash at each season end, bad case (t = 0…${ctx.horizon})</dt><dd>${b.cashDownside.map(eur).join(' / ')}</dd>
     <dt>Discount rate · same-position factor</dt><dd>${Math.round(ctx.discountRate * 1000) / 10}% · ${Math.round(ctx.samePositionFactor * 100)}%</dd></dl>
-    <div class="scroll"><table><thead><tr><th>Limit</th><th class="num">Used</th><th></th><th class="num">Limit</th></tr></thead><tbody>${b.usage.map(u => `<tr><td>${esc(u.label)}${u.season !== null ? ` (${u.id === 'cashFloor' ? 't=' : 's'}${u.season})` : ''}</td><td class="num">${COUNT_IDS.includes(u.id) ? u.used : eur(u.used)}</td><td>${u.sense === '<=' ? '≤' : '≥'}</td><td class="num">${COUNT_IDS.includes(u.id) ? u.limit : eur(u.limit)}</td></tr>`).join('')}</tbody></table></div>
+    <div class="table-wrap"><table class="data"><thead><tr><th>Limit</th><th class="num">Used</th><th></th><th class="num">Limit</th></tr></thead><tbody>${b.usage.map(u => `<tr><td>${esc(u.label)}${u.season !== null ? ` (${u.id === 'cashFloor' ? 't=' : 's'}${u.season})` : ''}</td><td class="num">${COUNT_IDS.includes(u.id) ? u.used : eur(u.used)}</td><td>${u.sense === '<=' ? '≤' : '≥'}</td><td class="num">${COUNT_IDS.includes(u.id) ? u.limit : eur(u.limit)}</td></tr>`).join('')}</tbody></table></div>
     <p class="muted small">Engine ${esc(a.engineVersion)}. Search ${a.result.provenOptimal ? 'complete (proven best)' : 'stopped at its limit'} · ${a.result.nodes.toLocaleString('en-GB')} steps.</p>`;
 }
 
-// ---------------- scenario comparison
 const LABEL = {transferBudget: 'Budget at signing', squadCostLimit: 'Squad-cost limit', committedSquadCost: 'Already committed', openingCash: 'Cash today', protectedReserve: 'Cash to keep', maxSignings: 'Max signings', currentSquadSize: 'Squad now', maxSquadSize: 'Squad max', currentNonEU: 'Non-EU now', maxNonEU: 'Non-EU max', operatingCashFlow: 'Club cash flow', minCash: 'Cash floor', lifetimeCapital: 'Commitment cap', maxDownsideLoss: 'Max bad-case loss', discountRate: 'Discount rate', samePositionFactor: 'Same-position factor', valuePerPoint: 'Value per point', objective: 'Goal', horizon: 'Planning period'};
 const fmtV = (k, v) => v === null || v === undefined ? 'none' : Array.isArray(v) ? v.map(x => fmtV(k, x)).join(' / ') : ['discountRate', 'samePositionFactor'].includes(k) ? `${Math.round(v * 1000) / 10}%` : typeof v === 'number' && !['maxSignings', 'currentSquadSize', 'maxSquadSize', 'currentNonEU', 'maxNonEU', 'horizon'].includes(k) ? eur(v) : String(v);
 function diffInputs(A, B) {
@@ -375,17 +431,17 @@ function comparison() {
 }
 function renderCompare() {
   const box = $('compare');
-  if (!S.A) { box.innerHTML = '<p class="muted">The first analysis becomes scenario A. Change a limit or a player choice, analyse again, and the new result (scenario B) is compared with A here.</p>'; return; }
+  if (!S.A) { box.innerHTML = '<p class="muted">No scenario saved yet. The first analysis of this club becomes scenario A. Then change a limit or a player choice, run the analysis again, and the new result (scenario B) is compared with A here.</p>'; return; }
   const c = comparison();
-  if (!c) { box.innerHTML = `<p><b>Scenario A</b> is saved: ${esc(metrics(S.A.result).sel)}.</p><p class="muted">Change a limit or a player choice and analyse again to compare.</p>`; return; }
-  box.innerHTML = `<div class="compare-grid"><div class="h"></div><div class="h">Scenario A</div><div class="h">Scenario B (current)</div>${c.rows.map(r => `<div class="k">${esc(r.label)}</div><div>${esc(r.a)}</div><div class="${r.a !== r.b ? 'changed' : ''}">${esc(r.b)}</div>`).join('')}</div>
-    <p class="small"><b>What changed from A to B:</b> ${esc(c.changes.join('; ') || 'nothing (same inputs)')}.</p>
-    <div class="row"><button type="button" class="ghost" id="make-a">Make B the new scenario A</button><button type="button" class="ghost" id="restore-a">Go back to scenario A’s inputs</button></div>`;
+  if (!c) { box.innerHTML = `<div class="panel-head"><h2>Scenario A saved</h2></div><p>${esc(metrics(S.A.result).sel)}</p><p class="muted small">Change a limit or a player choice and run the analysis again to compare. <button type="button" class="link" data-nav="inputs">Open scenario inputs</button></p>`; return; }
+  box.innerHTML = `<div class="table-wrap"><table class="data compare-table stack"><thead><tr><th></th><th>Scenario A</th><th>Scenario B (current)</th></tr></thead><tbody>${c.rows.map(r => `<tr><td class="name-cell"><span class="name">${esc(r.label)}</span></td><td data-l="Scenario A">${esc(r.a)}</td><td data-l="Scenario B" class="${r.a !== r.b ? 'changed' : ''}">${esc(r.b)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="changes"><b>What changed from A to B:</b> ${esc(c.changes.join('; ') || 'nothing (same inputs)')}.</p>
+    <div class="panel-foot"><span class="muted small">Highlighted values differ from scenario A.</span><span class="next-actions"><button type="button" class="btn btn-secondary" id="make-a">Make B the new scenario A</button><button type="button" class="btn btn-ghost" id="restore-a">Go back to scenario A’s inputs</button></span></div>`;
   $('make-a').addEventListener('click', () => { S.A = {inputs: {context: S.result.scenario.context, modes: S.result.scenario.modes}, result: S.result}; renderCompare(); });
   $('restore-a').addEventListener('click', () => {
     const A = S.A; S.modes = {...A.inputs.modes}; S.form = formFrom(A.inputs.context, false); S.needs = {...A.inputs.context.positionNeeds};
     S.result = A.result; S.fresh = true; renderShortlist(); renderForm(); renderResult(); renderCompare();
-    $('stale').hidden = true; document.body.dataset.stale = '0'; setExports(true);
+    $('stale').hidden = true; $('error').hidden = true; document.body.dataset.stale = '0'; setExports(true);
   });
 }
 
@@ -477,8 +533,9 @@ $('import-use').addEventListener('click', () => {
   const H = Math.max(...candidates.map(c => c.contractYears));
   openCase({club: 'Your club', tier: 'Your imported shortlist', decision: `Which of your ${candidates.length} shortlisted players should the club sign within its budget, wage and cash limits?`, imported: true},
     {schema: 'lanova-recruitment-v2', candidates, modes: {}, context: {horizon: H, positionNeeds: {}, stress: {}}});
-  $('form-status').textContent = 'Enter your club’s limits, then press “Analyse this shortlist”.';
+  show('inputs');
+  $('form-status').textContent = 'Shortlist imported. Enter your club’s limits, then press “Run analysis”.';
   $('form-status').className = 'status ok';
-  $('sec-limits').scrollIntoView({block: 'start'});
 });
+navState(); runState('idle');
 document.body.dataset.ready = '1';
