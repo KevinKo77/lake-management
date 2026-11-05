@@ -83,7 +83,7 @@ export const SCENARIOS = [
     club: 'Deportivo Norte Alto',
     tier: 'Fictional second-division club',
     headline: 'A club under financial pressure that needs alternative routes',
-    decision: 'Norte Alto must replace two first-team players while cash is tight. Which mix of loans, free agents and transfers keeps the club safe in a bad season?',
+    decision: 'Norte Alto must replace two first-team players while cash is tight. Which mix of loans, free agents and transfers keeps the club safe if the seasons go badly?',
     scenario: {
       schema: 'lanova-recruitment-v2', fictional: true, label: 'Deportivo Norte Alto (FICTIONAL) — cash squeeze',
       context: {

@@ -17,7 +17,7 @@ $('cases').innerHTML = SCENARIOS.map(s => {
     <span class="muted small">${eur(c.transferBudget)} to spend at signing · needs ${esc(needs)} · ${s.scenario.candidates.length} shortlisted players</span><span class="open">Open this case →</span></button>`;
 }).join('');
 document.querySelectorAll('[data-case]').forEach(b => b.addEventListener('click', () => openCase(b.dataset.case)));
-$('back').addEventListener('click', () => { stopWorker(); state.seq++; show('home'); });
+$('back').addEventListener('click', () => { stopWorker(); state.seq++; state.story = null; state.fresh = false; $('report').innerHTML = ''; show('home'); });
 
 function show(view) { document.body.dataset.view = view; $('home').hidden = view !== 'home'; $('case').hidden = view !== 'case'; window.scrollTo({top: 0}); }
 function stopWorker() { state.worker?.terminate(); state.worker = null; }
@@ -50,9 +50,9 @@ function renderInputs(s) {
   const c = s.context;
   const L = [['Planning period', `${c.horizon} seasons`], ['Budget at signing', eur(c.transferBudget)], ['Cash today', eur(c.openingCash)], ['Club cash flow without signings', c.operatingCashFlow.map(eur).join(' / ')],
     ['Squad-cost limit per season', c.squadCostLimit.map(eur).join(' / ')], ['Already committed per season', c.committedSquadCost.map(eur).join(' / ')], ['Cash that must always remain', eur(c.minCash + c.protectedReserve)],
-    ['Total-commitment cap', c.lifetimeCapital === null ? 'none' : eur(c.lifetimeCapital)], ['Largest acceptable loss in a bad season', c.maxDownsideLoss === null ? 'none' : eur(c.maxDownsideLoss)],
+    ['Total-commitment cap', c.lifetimeCapital === null ? 'none' : eur(c.lifetimeCapital)], ['Largest acceptable bad-case loss (present value over all seasons)', c.maxDownsideLoss === null ? 'none' : eur(c.maxDownsideLoss)],
     ['Squad places', `${c.currentSquadSize} of ${c.maxSquadSize} used`], ['Non-EU places', `${c.currentNonEU} of ${c.maxNonEU} used`], ['Maximum signings', String(c.maxSignings)],
-    ['Value of one league point', eur(c.valuePerPoint)], ['A bad season means', `resale −${Math.round(c.stress.resaleHaircut * 100)}%, player revenue −${Math.round(c.stress.revenueHaircut * 100)}%`]];
+    ['Value of one league point', eur(c.valuePerPoint)], ['The bad case means (applied to every season)', `resale −${Math.round(c.stress.resaleHaircut * 100)}%, player revenue −${Math.round(c.stress.revenueHaircut * 100)}%`]];
   $('inputs-limits').innerHTML = L.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('') + '<div><dt>* Expected points</dt><dd>Illustrative estimates for this fictional case</dd></div>';
 }
 
@@ -67,18 +67,29 @@ function setStale(on) {
   $('print').disabled = on || !state.story;
   document.querySelectorAll('[data-whatif], #whatif-reset').forEach(b => { b.disabled = on; });
 }
+/** A failed calculation leaves NO result on screen, in the report or in print: never an older result presented as current. */
+function failed(message) {
+  stopWorker();
+  Object.assign(state, {story: null, result: null, whatIf: null, pending: null, current: structuredClone(state.base)});
+  $('result').hidden = true; $('report').innerHTML = ''; $('whatif-confirm').hidden = true; $('whatif-result').hidden = true;
+  delete document.body.dataset.result;
+  $('run-status').textContent = `${message} No recommendation is shown. Press “Show LANOVA’s recommendation” to recalculate the original case.`;
+  $('run').disabled = !$('confirm').checked;
+  setStale(false);
+}
 function compute(scenario, purpose) {
   stopWorker();
   const id = ++state.seq;
+  $('report').innerHTML = ''; // a report is only ever built from a fresh result, at print time
   setStale(true);
   if (purpose === 'base') { $('run').disabled = true; $('run-status').textContent = 'Comparing every combination…'; }
   const w = new Worker('demo/worker.js', {type: 'module'});
   state.worker = w;
-  const timer = setTimeout(() => { if (id === state.seq) { stopWorker(); $('run-status').textContent = 'The calculation took too long and was stopped.'; setStale(false); } }, 15000);
+  const timer = setTimeout(() => { if (id === state.seq) failed('The calculation took too long and was stopped.'); }, 15000);
   w.onmessage = ({data}) => {
     if (id !== state.seq) return; // an older request: ignore
     clearTimeout(timer); stopWorker();
-    if (data.error) { $('run-status').textContent = `The engine rejected the inputs: ${data.error}`; setStale(false); $('run').disabled = !$('confirm').checked; return; }
+    if (data.error) { failed(`The engine rejected the inputs: ${data.error}.`); return; }
     state.current = data.scenario; state.result = data;
     state.story = story(state.meta, data.scenario, data.analysis, {robustness: data.robustness, fixes: data.fixes});
     if (purpose === 'base') state.baseStory = state.story;
@@ -86,7 +97,7 @@ function compute(scenario, purpose) {
     render(purpose);
     setStale(false);
   };
-  w.onerror = () => { if (id !== state.seq) return; clearTimeout(timer); stopWorker(); $('run-status').textContent = 'The calculation failed; no recommendation is shown.'; setStale(false); };
+  w.onerror = e => { e.preventDefault?.(); if (id !== state.seq) return; clearTimeout(timer); failed('The calculation failed.'); };
   w.postMessage({id, scenario, now: new Date().toISOString()});
 }
 
@@ -135,9 +146,9 @@ function renderDetail(a) {
   if (!b) { $('detail-body').innerHTML = `<p>${esc(a.summary)}</p>` + (a.noSigningEvaluation ? `<p class="small">Violated even by signing nobody: ${esc(a.noSigningEvaluation.violations.map(v => v.label).join('; '))}</p>` : ''); return; }
   const usage = b.usage.map(u => `<tr><td>${esc(u.label)}${u.season !== null ? ` (${u.id === 'cashFloor' ? 't=' : 's'}${u.season})` : ''}</td><td class="num">${['squadSize', 'nonEU', 'maxSignings', 'positionNeed', 'exclusiveGroup'].includes(u.id) ? u.used : eur(u.used)}</td><td>${u.sense === '<=' ? '≤' : '≥'}</td><td class="num">${['squadSize', 'nonEU', 'maxSignings', 'positionNeed', 'exclusiveGroup'].includes(u.id) ? u.limit : eur(u.limit)}</td></tr>`).join('');
   $('detail-body').innerHTML = `<dl class="kv"><dt>Objective (NPV + ${eur(ctx.valuePerPoint)} × discounted squad-adjusted points)</dt><dd>${eur(b.objective.primary)}</dd>
-    <dt>Net present value of the signings: base / bad season / good season</dt><dd>${eur(b.npv)} / ${eur(b.npvDownside)} / ${eur(b.npvUpside)}</dd>
+    <dt>Net present value of the signings over all seasons: base / bad case / good case</dt><dd>${eur(b.npv)} / ${eur(b.npvDownside)} / ${eur(b.npvUpside)}</dd>
     <dt>Discount rate</dt><dd>${Math.round(ctx.discountRate * 1000) / 10}%</dd><dt>Squad-adjusted points per season</dt><dd>${b.pointsBySeason.map(p => p.toFixed(2)).join(' / ')}</dd>
-    <dt>Bad-season cash path (t = 0…${ctx.horizon})</dt><dd>${b.cashDownside.map(eur).join(' / ')}</dd></dl>
+    <dt>Bad-case club cash at each season end (t = 0…${ctx.horizon})</dt><dd>${b.cashDownside.map(eur).join(' / ')}</dd></dl>
     <h3 class="spaced">Every club limit</h3><div class="scroll"><table><thead><tr><th>Limit</th><th class="num">Used</th><th></th><th class="num">Limit</th></tr></thead><tbody>${usage}</tbody></table></div>
     <p class="small muted">Engine ${esc(a.engineVersion)}. Amortisation, instalments, wage growth, resale, sell-on and exit obligations are modelled per player; see the recruitment engine documentation.</p>`;
 }
@@ -155,6 +166,8 @@ $('whatif-cancel').addEventListener('click', () => { state.pending = null; $('wh
 $('whatif-reset').addEventListener('click', () => { state.whatIf = null; compute(state.base, 'base'); });
 
 // ---------------- printable report
+// Browser print (Ctrl+P) also only ever prints the current, fresh result.
+window.addEventListener('beforeprint', () => { $('report').innerHTML = state.story && state.fresh ? reportHtml() : '<p>No current LANOVA result to print. Recalculate first.</p>'; });
 $('print').addEventListener('click', () => {
   if (!state.story || !state.fresh) return;
   $('report').innerHTML = reportHtml();
@@ -176,8 +189,8 @@ function reportHtml() {
   ${sec('Inputs used (fictional)', `<table><thead><tr><th>Player</th><th>Pos</th><th>Deal</th><th>Fee</th><th>Wage/season</th><th>Seasons</th><th>Points/season</th><th>Resale</th></tr></thead><tbody>${inputs}</tbody></table>
     ${ul([`Planning period ${ctx.horizon} seasons; budget at signing ${eur(ctx.transferBudget)}; cash today ${eur(ctx.openingCash)}; club cash flow ${ctx.operatingCashFlow.map(eur).join(' / ')}.`,
       `Squad-cost limit ${ctx.squadCostLimit.map(eur).join(' / ')}; already committed ${ctx.committedSquadCost.map(eur).join(' / ')}; cash that must remain ${eur(ctx.minCash + ctx.protectedReserve)}.`,
-      `Total-commitment cap ${ctx.lifetimeCapital === null ? 'none' : eur(ctx.lifetimeCapital)}; largest acceptable bad-season loss ${ctx.maxDownsideLoss === null ? 'none' : eur(ctx.maxDownsideLoss)}; required positions ${Object.entries(ctx.positionNeeds).map(([p, n]) => n + ' ' + p).join(', ') || 'none'}.`,
-      `Value of a league point ${eur(ctx.valuePerPoint)}; discount rate ${Math.round(ctx.discountRate * 1000) / 10}%; a second player in the same position counts ${Math.round(ctx.samePositionFactor * 100)}%; bad season: resale −${Math.round(ctx.stress.resaleHaircut * 100)}%, player revenue −${Math.round(ctx.stress.revenueHaircut * 100)}%.`])}`)}
+      `Total-commitment cap ${ctx.lifetimeCapital === null ? 'none' : eur(ctx.lifetimeCapital)}; largest acceptable bad-case loss (present value) ${ctx.maxDownsideLoss === null ? 'none' : eur(ctx.maxDownsideLoss)}; required positions ${Object.entries(ctx.positionNeeds).map(([p, n]) => n + ' ' + p).join(', ') || 'none'}.`,
+      `Value of a league point ${eur(ctx.valuePerPoint)}; discount rate ${Math.round(ctx.discountRate * 1000) / 10}%; a second player in the same position counts ${Math.round(ctx.samePositionFactor * 100)}%; bad case (every season): resale −${Math.round(ctx.stress.resaleHaircut * 100)}%, player revenue −${Math.round(ctx.stress.revenueHaircut * 100)}%.`])}`)}
   ${sec('Assumptions and limitations', ul(['All clubs, players and figures are fictional; expected points are illustrative estimates, not predictions or real performance data.',
     'Blank contract terms follow the engine conventions: no wage growth or player revenue unless stated, fee paid at signing unless instalments are given, loan wage paid in full unless a share is given, stay until contract end unless an exit is given. These are conventions, not guarantees of prudence.',
     'Cash is modelled once per season (start and end), not month by month. No tax, employer charges, currency risk or league-specific financial regulations are modelled.',

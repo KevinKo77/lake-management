@@ -19,7 +19,7 @@ export function convert(rows,format){
  if(!rows.length||rows.length>40)throw Error('Add 1–40 players');const changes=[],ids=new Set();
  const candidates=rows.map((r,i)=>{const fail=m=>{throw Error(`Row ${i+1} (${r.name||'unnamed'}): ${m}`);};for(const k of REQUIRED)if(String(r[k]??'').trim()==='')fail('Missing '+k);
  const name=String(r.name).trim();if(ids.has(name.toLowerCase()))fail('Duplicate name');ids.add(name.toLowerCase());if(name.length>90)fail('Name too long');
- const currency=r.currency.trim().toUpperCase();if(!/^[A-Z]{3}$/.test(currency))fail('Use an ISO currency code');const fx=currency==='EUR'?1:number(r.exchangeRate,format);if(fx<=0)fail('Exchange rate must be EUR per unit, greater than zero');if(currency!=='EUR')changes.push(`${name}: 1 ${currency} = ${fx} EUR (your supplied rate)`);
+ const currency=r.currency.trim().toUpperCase();if(!/^[A-Z]{3}$/.test(currency))fail('Use an ISO currency code');const rateGiven=String(r.exchangeRate??'').trim()!=='';if(currency==='EUR'&&rateGiven&&number(r.exchangeRate,format)!==1)fail(`Currency EUR contradicts exchange rate ${r.exchangeRate}: EUR amounts take no exchange rate. Correct the currency or remove the rate`);const fx=currency==='EUR'?1:number(r.exchangeRate,format);if(fx<=0)fail('Exchange rate must be EUR per unit, greater than zero');if(currency!=='EUR')changes.push(`${name}: 1 ${currency} = ${fx} EUR (your supplied rate)`);
  if(r.wageBasis.trim().toLowerCase()!=='gross')fail('Net or unknown salary: enter the confirmed gross salary; no tax conversion is assumed');const period=r.wagePeriod.trim().toLowerCase(),factor={season:1,year:1,month:12,week:52}[period];if(!factor)fail('Confirm wagePeriod: season, year, month or week');
  const years=number(r.contractYears,format);if(!Number.isInteger(years)||years<1||years>6)fail('Contract must be 1–6 whole seasons');let points=number(r.points,format);const pp=r.pointsPeriod.trim().toLowerCase();if(pp==='contract'){points/=years;changes.push(`${name}: contract points divided by ${years} seasons`);}else if(pp!=='season')fail('Confirm pointsPeriod: season or contract');
  const reg=r.registration.trim().toUpperCase();if(!['EU','NON-EU'].includes(reg))fail('Confirm registration: EU or NON-EU for this club; not inferred from nationality');
@@ -30,4 +30,3 @@ export function convert(rows,format){
  if(r.group)c.group=r.group;if(r.instalments)c.instalments=String(r.instalments).split('|').map(v=>number(v,format));
  changes.push(`${name}: gross wage ${c.wage.toFixed(2)} EUR per season; ${points} points per season; ${reg}`);return c;});return {candidates,changes};
 }
-

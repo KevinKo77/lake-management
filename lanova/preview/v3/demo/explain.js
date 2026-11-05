@@ -28,7 +28,7 @@ export function robustness(scenario, selection) {
   const probes = [
     ['Every expected-points estimate 20% lower', C.map(c => ({...c, points: c.points * 0.8})), X],
     ['Every expected-points estimate 20% higher', C.map(c => ({...c, points: Math.min(50, c.points * 1.2)})), X],
-    ['Resale values 20 points worse in a bad season', C, {...X, stress: {...X.stress, resaleHaircut: clamp(X.stress.resaleHaircut + 0.2, 0, 1)}}],
+    ['Bad-case resale haircut 20 points deeper', C, {...X, stress: {...X.stress, resaleHaircut: clamp(X.stress.resaleHaircut + 0.2, 0, 1)}}],
     ['Discount rate 2 points higher', C, {...X, discountRate: clamp(X.discountRate + 0.02, 0, 1)}],
   ];
   if (X.objective === 'blended') probes.push(['A league point worth 25% less', C, {...X, valuePerPoint: X.valuePerPoint * 0.75}], ['A league point worth 25% more', C, {...X, valuePerPoint: X.valuePerPoint * 1.25}]);
@@ -98,8 +98,8 @@ export function story(meta, scenario, analysis, extras = {}) {
   // Risks
   const risks = [];
   const low = b.cashDownside.reduce((m, x, t) => x < m.v ? {v: x, t} : m, {v: Infinity, t: 0});
-  risks.push(`In a bad season (resale ${Math.round(ctx.stress.resaleHaircut * 100)}% lower, extra revenue ${Math.round(ctx.stress.revenueHaircut * 100)}% lower) cash would fall to ${eur(low.v)} at its lowest point (${low.t === 0 ? 'at signing' : `end of season ${low.t}`}), against a safety level of ${eur(b.cashFloor)}.`);
-  if (b.npvDownside < 0) risks.push(`In that bad season the signings would cost the club ${eur(-b.npvDownside)} more than they bring back in money (before counting the value of league points).`);
+  risks.push(`In the bad case (every season goes badly: resale ${Math.round(ctx.stress.resaleHaircut * 100)}% lower, player revenue ${Math.round(ctx.stress.revenueHaircut * 100)}% lower), the club’s cash would reach its lowest point of ${eur(low.v)} ${low.t === 0 ? 'at signing' : `at the end of season ${low.t}`}, against a safety level of ${eur(b.cashFloor)}.`);
+  if (b.npvDownside < 0) risks.push(`In that bad case, the signings’ net present value over their whole contracts would be ${eur(b.npvDownside)}: all their payments and receipts, discounted to today and added up across every season. This is not a one-season loss, and it leaves out the value of league points.`);
   risks.push('Expected points are estimates entered by the club (here: fictional). If a player under-performs, the sporting benefit shrinks; the costs do not.');
   const flips = (extras.robustness ?? []).filter(r => r.changes);
   if (extras.robustness) risks.push(flips.length
@@ -117,10 +117,10 @@ export function story(meta, scenario, analysis, extras = {}) {
 }
 
 function goalText(ctx) {
-  return {blended: `money plus ${eur(ctx.valuePerPoint)} per expected league point`, npv: 'best financial value', points: 'most expected league points', downside: 'best value in a bad season'}[ctx.objective];
+  return {blended: `money plus ${eur(ctx.valuePerPoint)} per expected league point`, npv: 'best financial value', points: 'most expected league points', downside: 'best value in the bad case (present value over all seasons)'}[ctx.objective];
 }
 function plainLimit(v) {
-  const L = {transferBudget: 'the signing budget', squadCost: `the squad-cost limit in season ${v.season}`, cashFloor: v.season === 0 ? 'the cash safety level at signing' : `the cash safety level in season ${v.season}`, lifetimeCapital: 'the total-commitment cap', maxLoss: 'the maximum acceptable loss in a bad season', squadSize: 'the squad-size limit', nonEU: 'the non-EU slots', maxSignings: 'the maximum number of signings', exclusiveGroup: 'one option per player'};
+  const L = {transferBudget: 'the signing budget', squadCost: `the squad-cost limit in season ${v.season}`, cashFloor: v.season === 0 ? 'the cash safety level at signing' : `the cash safety level in season ${v.season}`, lifetimeCapital: 'the total-commitment cap', maxLoss: 'the maximum acceptable bad-case loss (present value)', squadSize: 'the squad-size limit', nonEU: 'the non-EU slots', maxSignings: 'the maximum number of signings', exclusiveGroup: 'one option per player'};
   return L[v.id] ?? v.label;
 }
 function plainBinding(u) {
