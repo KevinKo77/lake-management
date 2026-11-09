@@ -1,3 +1,3 @@
-LANOVA Sports Recruitment Workspace
-Source: KevinKo77/lake-intelligence 87ccb4d400679d468feed3709893cb76c8af1532
+Source: KevinKo77/lake-intelligence 3e80fd3 (fix/lanova-demo-import-template)
+Only workspace/import.js changed from 87ccb4d: the template has a "Wage basis" column (gross).
 Engine: unchanged recruitment engine (identical to d6994aa)
