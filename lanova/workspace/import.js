@@ -179,7 +179,7 @@ export function toCandidates(check) {
 }
 
 export const TEMPLATE_CSV = [
-  'Player,Position,Deal,Contract seasons,Fee,Gross wage,Wage per,Currency,Expected points,Points per,Registration,Agent fee,Resale value,Sale after season',
-  'Example defender (fictional),CB,transfer,3,300000,180000,season,EUR,1.5,season,EU,30000,400000,3',
-  'Example striker (fictional),ST,loan,1,50000,20000,month,EUR,1.2,season,NON-EU,0,,',
+  'Player,Position,Deal,Contract seasons,Fee,Gross wage,Wage basis,Wage per,Currency,Expected points,Points per,Registration,Agent fee,Resale value,Sale after season',
+  'Example defender (fictional),CB,transfer,3,300000,180000,gross,season,EUR,1.5,season,EU,30000,400000,3',
+  'Example striker (fictional),ST,loan,1,50000,20000,gross,month,EUR,1.2,season,NON-EU,0,,',
 ].join('\n') + '\n';
