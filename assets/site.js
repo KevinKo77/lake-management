@@ -34,7 +34,7 @@
     var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 4000);
     fetch(APP + '/healthz', {mode: 'cors', credentials: 'omit', cache: 'no-store', signal: ctl ? ctl.signal : undefined})
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (h) { clearTimeout(timer); useApp(!!(h && h.ok && h.billing && h.billing !== 'off')); })
+      .then(function (h) { clearTimeout(timer); useApp(!!(h && h.ok && (h.billing === 'test' || h.billing === 'live'))); }) // not 'off', 'unverified' or 'misconfigured'
       .catch(function () { clearTimeout(timer); });
   }
 
