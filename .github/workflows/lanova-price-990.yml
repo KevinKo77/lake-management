@@ -1,0 +1,18 @@
+name: LANOVA EUR 990 public pricing
+on:
+  push:
+    branches: [fix/private-onboarding-pricing-20261112]
+permissions:
+  contents: read
+jobs:
+  price-regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/lanova-price-990.test.mjs
