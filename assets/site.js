@@ -1,8 +1,9 @@
 /* LANOVA Sports — marketing site behaviour. */
 (function () {
-  // Address of the private club workspace (app server). Empty until the server is deployed:
-  // pages then show "request access" instead of a sign-in button.
-  window.LANOVA_APP_URL = window.LANOVA_APP_URL || '';
+  // Address of the private club workspace (app server). The buttons switch from "Request access" to
+  // "Sign in / Subscribe" only when that server answers /healthz with billing configured; otherwise (not deployed yet,
+  // down, or unreachable) the pages keep the e-mail "Request access" path.
+  var APP = (window.LANOVA_APP_URL !== undefined ? window.LANOVA_APP_URL : 'https://app.lakecapitalmanagement.com').replace(/\/$/, '');
 
   var btn = document.querySelector('.menu-btn');
   var nav = document.getElementById('nav');
@@ -19,13 +20,23 @@
     if (target === here) a.setAttribute('aria-current', 'page');
   });
 
-  // Sign-in / subscribe links follow LANOVA_APP_URL when it is configured.
-  var app = window.LANOVA_APP_URL;
-  document.querySelectorAll('[data-app-path]').forEach(function (el) {
-    if (app) { el.setAttribute('href', app.replace(/\/$/, '') + el.getAttribute('data-app-path')); el.removeAttribute('hidden'); }
-  });
-  document.querySelectorAll('[data-app-ready]').forEach(function (el) { el.hidden = !app; });
-  document.querySelectorAll('[data-app-pending]').forEach(function (el) { el.hidden = !!app; });
+  // Sign-in / subscribe links follow the app server once it is confirmed live.
+  function useApp(on) {
+    document.querySelectorAll('[data-app-path]').forEach(function (el) {
+      if (on) { el.setAttribute('href', APP + el.getAttribute('data-app-path')); el.removeAttribute('hidden'); }
+    });
+    document.querySelectorAll('[data-app-ready]').forEach(function (el) { el.hidden = !on; });
+    document.querySelectorAll('[data-app-pending]').forEach(function (el) { el.hidden = !!on; });
+  }
+  useApp(false);
+  if (APP && window.fetch && document.querySelector('[data-app-path],[data-app-ready]')) {
+    var ctl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 4000);
+    fetch(APP + '/healthz', {mode: 'cors', credentials: 'omit', cache: 'no-store', signal: ctl ? ctl.signal : undefined})
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (h) { clearTimeout(timer); useApp(!!(h && h.ok && (h.billing === 'live' || (window.LANOVA_ALLOW_TEST_BILLING === true && h.billing === 'test')))); }) // not 'off', 'unverified' or 'misconfigured'
+      .catch(function () { clearTimeout(timer); });
+  }
 
   // Demo request form: composes an email (no data is sent to any server).
   var form = document.getElementById('demo-form');
