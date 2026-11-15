@@ -1,0 +1,32 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+
+const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const script=read('assets/site.js');
+const pages=['index.html','pricing.html','login.html','legal.html','platform.html','how-it-works.html','founder.html','404.html'];
+const app='https://lake-intelligence-production.up.railway.app';
+function element(attrs={}){return{attrs:{...attrs},hidden:'hidden'in attrs,textContent:'Subscribe',getAttribute(k){return this.attrs[k]??null},setAttribute(k,v){this.attrs[k]=v},removeAttribute(k){delete this.attrs[k];if(k==='hidden')this.hidden=false}};}
+function attributes(text){const out={};for(const m of text.matchAll(/([\w-]+)="([^"]*)"/g))out[m[1]]=m[2];for(const k of ['data-app-ready','data-app-pending','data-app-auth','hidden'])if(new RegExp('\\b'+k+'(?:\\s|>|$)').test(text))out[k]='';return out;}
+function nodes(html){return[...html.matchAll(/<(a|div|p)\b([^>]*\bdata-app-[^>]*)>/g)].map(m=>element(attributes(m[2])));}
+async function run({html=read('pricing.html'),health={ok:true,billing:'live',signup:false},error=false,status=200,allowTest=false,override,extra=[]}={}){
+ const els=[...nodes(html),...extra],calls=[];
+ const fetch=async(url,options)=>{calls.push({url,options});if(error)throw Error('synthetic network failure');return{ok:status===200,json:async()=>health}};
+ const document={getElementById(){return null},querySelector(s){return s==='[data-app-path],[data-app-ready]'?els.find(x=>'data-app-path'in x.attrs||'data-app-ready'in x.attrs)??null:null},querySelectorAll(s){if(s==='.nav a'||s==='.reveal')return[];const key=s.slice(1,-1);return els.filter(x=>key in x.attrs)}};
+ const window={fetch,LANOVA_ALLOW_TEST_BILLING:allowTest,matchMedia:()=>({matches:true})};if(override!==undefined)window.LANOVA_APP_URL=override;
+ vm.runInNewContext(script,{window,document,fetch,location:{pathname:'/pricing.html',href:'https://www.lakecapitalmanagement.com/pricing.html'},URL,setTimeout:()=>1,clearTimeout:()=>{}});
+ await new Promise(r=>setImmediate(r));return{els,calls,paths:els.filter(x=>'data-app-path'in x.attrs),ready:els.filter(x=>'data-app-ready'in x.attrs),pending:els.filter(x=>'data-app-pending'in x.attrs)};
+}
+
+test('all public account links use login; no public registration is advertised',()=>{for(const p of pages){const html=read(p);for(const e of nodes(html).filter(x=>'data-app-path'in x.attrs))assert.equal(e.attrs['data-app-path'],'/login',p);assert.doesNotMatch(html,/(?:href|data-app-path)="(?:https?:\/\/[^/]+)?\/signup(?:[/?#"])/,p);}assert.doesNotMatch(read('login.html'),/Create an organisation account/);assert.match(read('login.html'),/accounts are created privately/);});
+test('every affected marketing page loads the corrected shared-script version',()=>{for(const p of pages){assert.match(read(p),/\/assets\/site\.js\?v=20261115-private-login-990/,p);assert.doesNotMatch(read(p),/\/assets\/site\.js\?v=20261109/,p);}});
+test('live billing with signup=false sends all account links to verified hosted login',async()=>{for(const p of pages){const r=await run({html:read(p)});for(const a of r.paths)assert.equal(a.attrs.href,app+'/login',p);for(const e of r.ready)assert.equal(e.hidden,false,p);}});
+test('legacy signup paths, trailing slashes and query/hash suffixes fail closed',async()=>{for(const signup of [false,undefined,null,'false',0]){const extra=['/signup','/signup/','/signup?plan=pro','/signup/#terms'].map(p=>element({'data-app-path':p}));await run({health:{ok:true,billing:'live',signup},extra});assert.deepEqual(extra.map(e=>e.attrs.href),[app+'/login',app+'/login',app+'/login?plan=pro',app+'/login#terms']);}});
+test('legacy registration is retained only when backend explicitly reports signup=true',async()=>{const extra=[element({'data-app-path':'/signup?plan=pro'})];await run({health:{ok:true,billing:'live',signup:true},extra});assert.equal(extra[0].attrs.href,app+'/signup?plan=pro');});
+test('Test billing never exposes public subscription CTAs by default',async()=>{const r=await run({health:{ok:true,billing:'test',signup:false}});assert.ok(r.ready.length);for(const e of r.ready)assert.equal(e.hidden,true);for(const e of r.pending)assert.equal(e.hidden,false);for(const e of r.paths)assert.equal(e.attrs.href,app+'/login');});
+test('existing customers can sign in even while billing is Test, off or misconfigured',async()=>{for(const billing of ['test','off','misconfigured']){const r=await run({html:read('login.html'),health:{ok:true,billing,signup:false}});assert.ok(r.ready.length);for(const e of r.ready)assert.equal(e.hidden,false);for(const e of r.pending)assert.equal(e.hidden,true);for(const e of r.paths)assert.equal(e.attrs.href,app+'/login');}});
+test('explicit private Test preview can show login but does not enable registration',async()=>{const extra=[element({'data-app-path':'/signup'})],r=await run({allowTest:true,health:{ok:true,billing:'test',signup:false},extra});assert.equal(extra[0].attrs.href,app+'/login');for(const e of r.ready)assert.equal(e.hidden,false);});
+test('unreachable, failed or unverified health keeps billing CTAs unavailable',async()=>{for(const options of [{error:true},{status:500},{health:null},{health:{ok:true,billing:'misconfigured',signup:false}},{health:{ok:false,billing:'live',signup:false}}]){const r=await run(options);for(const e of r.ready)assert.equal(e.hidden,true);for(const e of r.pending)assert.equal(e.hidden,false);}});
+test('existing explicit app URL override remains supported and normalized',async()=>{const r=await run({override:'https://approved.example/'});for(const e of r.paths)assert.equal(e.attrs.href,'https://approved.example/login');assert.equal(r.calls[0].url,'https://approved.example/healthz');});
+test('marketing checks only public health without authentication or a write request',async()=>{const r=await run();assert.equal(r.calls.length,1);assert.equal(r.calls[0].url,app+'/healthz');assert.equal(r.calls[0].options.credentials,'omit');assert.equal(r.calls[0].options.mode,'cors');assert.equal(r.calls[0].options.method,undefined);for(const p of pages)assert.doesNotMatch(read(p),/LANOVA_ALLOW_TEST_BILLING\s*=\s*true/);});

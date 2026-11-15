@@ -24,7 +24,7 @@
   <div class="wrap">
     <a class="brand" href="/" aria-label="LANOVA Sports home"><span class="brand-mark" aria-hidden="true"></span>LANOVA <small>SPORTS</small></a>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
-    <nav class="nav" id="nav" aria-label="Main"><a href="/">Home</a><a href="/platform.html">Platform</a><a href="/how-it-works.html">How It Works</a><a href="/pricing.html">Pricing</a><a href="/founder.html">Founder</a><a class="nav-login" href="/login.html">Login</a></nav>
+    <nav class="nav" id="nav" aria-label="Main"><a href="/">Home</a><a href="/platform.html">Platform</a><a href="/how-it-works.html">How It Works</a><a href="/pricing.html">Pricing</a><a href="/founder.html">Founder</a><a class="nav-login" data-app-path="/login" href="/login.html">Login</a></nav>
   </div>
 </header>
 <main id="main">
@@ -38,14 +38,15 @@
         <p class="lead" style="margin-top:20px">Subscribing clubs sign in to a workspace that only their organisation can see.</p>
       </div>
       <div class="card">
-        <div data-app-ready hidden>
+        <div data-app-ready data-app-auth hidden>
           <h3>Sign in</h3>
           <p>Continue to the LANOVA workspace sign-in page.</p>
-          <div class="btn-row" style="margin-top:20px"><a class="btn btn-primary" data-app-path="/login" href="#">Sign in</a><a class="btn btn-ghost" data-app-path="/signup" href="#">Create an organisation account</a></div>
+          <p>Organisation accounts are created privately. <a href="mailto:kevin@lake-am.com?subject=LANOVA%20Sports%20organisation%20access">Request organisation access</a>.</p>
+          <div class="btn-row" style="margin-top:20px"><a class="btn btn-primary" data-app-path="/login" href="/login.html">Sign in</a></div>
         </div>
-        <div data-app-pending>
+        <div data-app-pending data-app-auth>
           <h3>Club accounts are activated personally</h3>
-          <p>Online sign-in is being activated. Clubs currently onboarding receive their access directly from us. To request access, or if you are an existing pilot club, write to <a href="mailto:kevin@lake-am.com?subject=LANOVA%20Sports%20workspace%20access">kevin@lake-am.com</a>.</p>
+          <p>Online sign-in is currently unavailable. Organisation accounts are created privately. To request access, or if you are an existing customer, write to <a href="mailto:kevin@lake-am.com?subject=LANOVA%20Sports%20workspace%20access">kevin@lake-am.com</a>.</p>
           <div class="btn-row" style="margin-top:20px"><a class="btn btn-primary" href="mailto:kevin@lake-am.com?subject=LANOVA%20Sports%20workspace%20access">Request access</a><a class="btn btn-ghost" href="/lanova/workspace/">Try the live demonstration</a></div>
         </div>
       </div>
@@ -71,6 +72,7 @@
     </div>
   </div>
 </footer>
-<script src="/assets/site.js?v=20261109"></script>
+<script src="/assets/site.js?v=20261115-private-login-990"></script>
 </body>
 </html>
+
