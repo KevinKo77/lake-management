@@ -1,3 +1,5 @@
+/* Preserve native hidden semantics over component display rules. */
+[hidden] { display: none !important; }
 /* LANOVA Sports — marketing site. No framework, no build step. */
 :root {
   --bg: #0b0d12;
@@ -203,3 +205,4 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
   .site-footer .cols { grid-template-columns: minmax(0, 1fr); }
   .btn-row .btn { flex: 1 1 100%; }
 }
+
