@@ -34,6 +34,10 @@
     });
     document.querySelectorAll('[data-app-ready]').forEach(function (el) { el.hidden = !(el.getAttribute('data-app-auth') !== null ? loginReady : on); });
     document.querySelectorAll('[data-app-pending]').forEach(function (el) { el.hidden = !!(el.getAttribute('data-app-auth') !== null ? loginReady : on); });
+    // Self-service sign-up is offered only when the server reports it open and live billing ready.
+    var signupOpen = !!(on && health && health.signup === true);
+    document.querySelectorAll('[data-app-signup]').forEach(function (el) { el.hidden = !signupOpen; });
+    document.querySelectorAll('[data-app-private]').forEach(function (el) { el.hidden = signupOpen; });
   }
   useApp(false);
   if (APP && window.fetch && document.querySelector('[data-app-path],[data-app-ready]')) {

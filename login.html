@@ -41,8 +41,9 @@
         <div data-app-ready data-app-auth hidden>
           <h3>Sign in</h3>
           <p>Continue to the LANOVA workspace sign-in page.</p>
-          <p>Organisation accounts are created privately. <a href="mailto:kevin@lake-am.com?subject=LANOVA%20Sports%20organisation%20access">Request organisation access</a>.</p>
-          <div class="btn-row" style="margin-top:20px"><a class="btn btn-primary" data-app-path="/login" href="/login.html">Sign in</a></div>
+          <p data-app-signup hidden>New organisation? Create your account, then subscribe online at €990 per month, excluding VAT. Access opens as soon as Stripe confirms the payment.</p>
+          <p data-app-private>Organisation accounts are created privately. <a href="mailto:kevin@lake-am.com?subject=LANOVA%20Sports%20organisation%20access">Request organisation access</a>.</p>
+          <div class="btn-row" style="margin-top:20px"><a class="btn btn-primary" data-app-path="/login" href="/login.html">Sign in</a><a class="btn btn-ghost" data-app-signup data-app-path="/signup" href="/login.html" hidden>Create an organisation account</a></div>
         </div>
         <div data-app-pending data-app-auth>
           <h3>Club accounts are activated personally</h3>
