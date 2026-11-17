@@ -4,3 +4,7 @@ Engine: unchanged recruitment engine (identical to d6994aa)
 Public-demo changes made in this repository only (2026-11-17): the first fictional club opens already analysed
 (fictional inputs need no confirmation; imported data still does), decision summary first, detailed tables in a
 collapsible section, "View Pricing" / "Create Your Account" instead of "Request a pilot". Calculations unchanged.
+Product experience V2 (2026-11-17, this repository only): decision dashboard with financial charts (payments by
+season and type, squad cost vs limit, cash expected vs bad case, limit usage), economic justification and stress
+tests, alternatives and exclusions, assumptions used, A/B chart and verdict, top bar that wraps (no horizontal
+scroll). New file: charts.js (inline SVG, no dependency). Engine files unchanged; outputs identical.

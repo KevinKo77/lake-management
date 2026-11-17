@@ -45,8 +45,6 @@
         <span class="status-chip" id="run-state" data-state="idle" role="status" aria-live="polite" hidden>Not analysed</span>
         <a class="btn btn-secondary convert-link" href="/pricing.html">View Pricing</a>
         <a class="btn btn-primary convert-link" href="https://lake-intelligence-production.up.railway.app/signup">Create Your Account</a>
-        <button type="button" class="btn btn-ghost" id="export-csv" disabled>Schedules CSV</button>
-        <button type="button" class="btn btn-ghost" id="export-report" disabled>Decision report</button>
         <button type="button" class="btn btn-secondary" id="analyse" hidden>Run analysis</button>
       </div>
     </header>
@@ -118,18 +116,42 @@
 
         <div id="results" hidden>
           <section class="panel summary" id="r-summary" aria-labelledby="h-summary"></section>
+          <div class="export-row"><span class="muted small">Share this decision:</span><button type="button" class="btn btn-secondary" id="export-report" disabled>Decision report (print or PDF)</button><button type="button" class="btn btn-ghost" id="export-csv" disabled>Schedules CSV</button></div>
+          <p class="status" id="r-kpi-note"></p>
+          <div class="kpis" id="kpis"></div>
+
+          <section class="panel">
+            <div class="panel-head"><h2>Recommended signings</h2><span class="muted small" id="r-proof"></span></div>
+            <p class="headline" id="r-headline" hidden></p>
+            <div id="r-players"></div>
+          </section>
+
+          <h2 class="section-title" id="h-picture">Financial picture</h2>
+          <div class="grid-2 charts" id="r-charts" aria-labelledby="h-picture">
+            <section class="panel"><div class="panel-head"><h3>Payments by season</h3><span class="help" tabindex="0" data-tip="Cash the club pays for the recommended signings, at signing and in each season of their contracts, split by type. The bars add up to the total contract commitments.">?</span></div><div id="r-chart-pay"></div></section>
+            <section class="panel"><div class="panel-head"><h3>Squad cost against the limit</h3><span class="help" tabindex="0" data-tip="Squad cost = wages, bonuses and fees spread over each contract. The line is the club's limit for the season.">?</span></div><div id="r-chart-squad"></div></section>
+            <section class="panel"><div class="panel-head"><h3>Club cash, expected and bad case</h3><span class="help" tabindex="0" data-tip="Club cash at each season end with the signings. Bad case: every season goes badly (lower resale and player revenue). The dashed line is the cash that must always remain.">?</span></div><div id="r-chart-cash"></div></section>
+            <section class="panel"><div class="panel-head"><h3>How much of each limit is used</h3><span class="help" tabindex="0" data-tip="Most-used limits first. A limit marked “decides the choice” is the reason a more expensive or larger combination was not recommended.">?</span></div><div id="r-chart-limits"></div></section>
+          </div>
+
+          <h2 class="section-title">Why this decision</h2>
+          <div class="grid-2">
+            <section class="panel"><div class="panel-head"><h3>Economic justification</h3></div><ul id="r-why" class="notes"></ul></section>
+            <section class="panel"><div class="panel-head"><h3>Risks and stress tests</h3></div><ul id="r-risks" class="notes"></ul><div id="r-robust"></div></section>
+          </div>
+          <div class="grid-2">
+            <section class="panel"><div class="panel-head"><h3>Next-best alternatives</h3><span class="muted small">How much lower each scores</span></div><ol id="r-alts" class="alts"></ol></section>
+            <section class="panel"><div class="panel-head"><h3>Why the other players are not selected</h3></div><ul id="r-excluded" class="excluded"></ul></section>
+          </div>
+
+          <section class="panel" id="r-assumptions" aria-labelledby="h-assumptions"></section>
+
           <div class="convert-bar" id="convert-bar">
             <p><b>Run this analysis on your own shortlist.</b> Organisation Access: €990 per month per organisation, excluding VAT. Cancel any time.</p>
             <div class="convert-actions"><a class="btn btn-secondary" href="/pricing.html">View Pricing</a><a class="btn btn-primary" href="https://lake-intelligence-production.up.railway.app/signup">Create Your Account</a></div>
           </div>
-          <p class="status" id="r-kpi-note"></p>
-          <div class="kpis" id="kpis"></div>
-          <section class="panel">
-            <div class="panel-head"><h2>Recommendation</h2><span class="muted small" id="r-proof"></span></div>
-            <p class="headline" id="r-headline"></p>
-            <div id="r-players"></div>
-          </section>
-          <details class="panel disclosure" id="r-details"><summary>Full analysis: budget, every constraint, reasoning, risks and alternatives</summary>
+
+          <details class="panel disclosure" id="r-details"><summary>Detailed tables: budget at signing and every constraint</summary>
             <section class="panel">
               <div class="panel-head"><h2>Budget at signing</h2></div>
               <div id="r-alloc"></div>
@@ -139,14 +161,6 @@
               <div class="panel-head"><h2>Constraints</h2><span class="muted small">Every limit is checked for every combination</span></div>
               <div id="r-limits"></div>
             </section>
-            <div class="grid-2">
-              <section class="panel"><div class="panel-head"><h2>Why this choice</h2></div><ul id="r-why" class="notes"></ul></section>
-              <section class="panel"><div class="panel-head"><h2>Risks</h2></div><ul id="r-risks" class="notes"></ul></section>
-            </div>
-            <div class="grid-2">
-              <section class="panel"><div class="panel-head"><h2>Next-best alternatives</h2><span class="muted small">Overall score below the recommendation</span></div><ol id="r-alts" class="alts"></ol></section>
-              <section class="panel"><div class="panel-head"><h2>Players not selected</h2></div><ul id="r-excluded" class="excluded"></ul></section>
-            </div>
           </details>
           <details class="panel disclosure advanced-panel"><summary>Advanced figures (for analysts)</summary><div id="r-advanced"></div></details>
           <div class="next-actions">
@@ -161,13 +175,15 @@
       <!-- ============ SHORTLIST ============ -->
       <section id="view-shortlist" class="view" hidden>
         <div class="page-head compact"><p class="eyebrow">Shortlist</p><h1 id="sl-title">Shortlist</h1>
-          <p class="muted small">Choose <b>Consider</b> (LANOVA decides), <b>Must sign</b> or <b>Leave out</b> for each player. Wages are what the club pays per season.</p></div>
+          <p class="muted small">Choose <b>Consider</b> (LANOVA decides), <b>Must sign</b> or <b>Leave out</b> for each player. Wages are what the club pays per season.</p>
+          <p class="guide">Forcing or excluding a player is a quick way to test an alternative: run the analysis again and open <button type="button" class="link" data-nav="compare">Compare A / B</button>. <button type="button" class="link" data-nav="dashboard">Back to the decision</button></p></div>
         <div class="panel flush"><div id="shortlist" class="table-wrap"></div></div>
       </section>
 
       <!-- ============ INPUTS ============ -->
       <section id="view-inputs" class="view" hidden>
-        <div class="page-head compact"><p class="eyebrow">Scenario inputs</p><h1>Club limits</h1><p class="muted small">Amounts in euros. All limits are applied together to every combination.</p></div>
+        <div class="page-head compact"><p class="eyebrow">Scenario inputs</p><h1>Club limits</h1><p class="muted small">Amounts in euros. All limits are applied together to every combination.</p>
+          <p class="guide">Change any limit and press <b>Run analysis</b>. The first result stays as scenario A, so <button type="button" class="link" data-nav="compare">Compare A / B</button> shows exactly what your change did to the decision and its cost. <button type="button" class="link" data-nav="dashboard">Back to the decision</button></p></div>
         <p id="form-status" class="status" role="status" aria-live="polite"></p>
         <div class="panel"><div class="panel-head"><h2>Budget, squad cost and cash</h2></div><div id="limits" class="form-grid"></div></div>
         <div class="grid-2">

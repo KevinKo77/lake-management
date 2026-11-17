@@ -10,6 +10,7 @@ import {story as buildStory, eur} from '../v3/demo/explain.js';
 import {parseCsv, parseXlsx, suggestMapping, checkRows, toCandidates, FIELDS, MAX_BYTES, TEMPLATE_CSV} from './import.js';
 import {reportHtml} from './report.js';
 import {csvRow} from './csv.js';
+import {paymentsData, paymentsChart, squadCostChart, cashChart, limitsChart, compareChart} from './charts.js';
 import {canonicalCandidate} from '../recruitment/scenario.js';
 
 const $ = id => document.getElementById(id);
@@ -397,7 +398,7 @@ function renderResult() {
   $('r-headline').textContent = s.headline;
   if (s.feasible) {
     $('r-proof').textContent = `${s.proven ? 'Checked against all' : 'Best found among'} ${s.searchSpace.toLocaleString('en-GB')} combinations`;
-    $('r-players').innerHTML = s.players.length ? `<div class="table-wrap"><table class="data stack"><thead><tr><th>Player</th><th class="num">Paid at signing</th><th class="num">Wages, season 1</th><th class="num">Total commitment</th><th class="num">Exp. points / season</th></tr></thead><tbody>${s.players.map(p => `<tr><td class="name-cell"><span class="name">${esc(p.name)}</span><span class="sub">${esc(POS[p.position])} · ${esc(p.deal)} · ${p.years} season${p.years > 1 ? 's' : ''}</span></td><td data-l="Paid at signing" class="num">${eur(p.atSigning)}</td><td data-l="Wages, season 1" class="num">${eur(p.wagesPerSeason)}</td><td data-l="Total commitment" class="num">${eur(p.totalCommitment)}</td><td data-l="Exp. points / season" class="num">${p.points}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">No signing.</p>';
+    $('r-players').innerHTML = s.players.length ? `<div class="table-wrap"><table class="data stack"><thead><tr><th>Player</th><th class="num">Paid at signing</th><th class="num">Wages, season 1</th><th class="num">Total commitment <span class="th-key"><i class="sw now"></i>at signing <i class="sw later"></i>later</span></th><th class="num">Exp. points / season</th></tr></thead><tbody>${s.players.map(p => `<tr><td class="name-cell"><span class="name">${esc(p.name)}</span><span class="sub">${esc(POS[p.position])} · ${esc(p.deal)} · ${p.years} season${p.years > 1 ? 's' : ''}</span></td><td data-l="Paid at signing" class="num">${eur(p.atSigning)}</td><td data-l="Wages, season 1" class="num">${eur(p.wagesPerSeason)}</td><td data-l="Total commitment" class="num">${eur(p.totalCommitment)}<span class="split" role="img" aria-label="${esc(eur(p.atSigning))} at signing, ${esc(eur(p.totalCommitment - p.atSigning))} later"><span class="now" data-w="${pctOf(p.atSigning, p.totalCommitment).toFixed(1)}"></span></span></td><td data-l="Exp. points / season" class="num">${p.points}</td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">No signing.</p>';
     const sp = s.spend;
     $('r-alloc').innerHTML = `<div class="alloc">${s.players.map(p => `<div class="alloc-row"><div class="top"><span>${esc(p.name)}</span><b>${eur(p.atSigning)}</b></div><div class="bar"><span data-w="${pctOf(p.atSigning, sp.budget).toFixed(1)}"></span></div></div>`).join('')}
       <div class="alloc-row free"><div class="top"><span class="muted">Not spent</span><b>${eur(Math.max(0, sp.budget - sp.atSigning))}</b></div><div class="bar"><span data-w="${pctOf(Math.max(0, sp.budget - sp.atSigning), sp.budget).toFixed(1)}"></span></div></div></div>`;
@@ -417,6 +418,48 @@ function renderResult() {
   $('r-alts').innerHTML = s.feasible ? (s.alternatives.length ? s.alternatives.map(o => `<li><span><b>${esc(o.names.join(' + ') || 'No signing')}</b><span class="sub muted">${eur(o.atSigning)} at signing</span></span><span class="gap">−${eur(o.gap)}</span></li>`).join('') : '<li><span>None: no other combination stays within every limit.</span><span></span></li>') : '<li><span>No feasible combination.</span><span></span></li>';
   $('r-excluded').innerHTML = !s.feasible ? '<li>No player can be recommended under these limits; see what would make a safe choice possible.</li>' : (s.notChosen ?? []).map(n => `<li><b>${esc(n.name)}</b>${esc(n.reason)}</li>`).join('') || '<li>Every player on the shortlist is in the recommendation.</li>';
   $('r-advanced').innerHTML = advancedHtml(a, scenario);
+  renderPicture(s, a, rows);
+  $('r-robust').innerHTML = robustHtml(s);
+  $('r-assumptions').innerHTML = assumptionsHtml(ctx);
+  document.querySelectorAll('#results [data-w]').forEach(el => { el.style.width = `${el.dataset.w}%`; });
+}
+/** Financial picture: engine outputs only (payments by type and season, squad cost vs limit, cash path, limit use). */
+function renderPicture(s, a, rows) {
+  const b = a.result.best, ctx = a.context;
+  for (const id of ['r-chart-pay', 'r-chart-squad', 'r-chart-cash']) $(id).closest('.panel').hidden = !b;
+  $('r-chart-limits').innerHTML = limitsChart(rows) + (b ? '' : '<p class="muted small">Figures for signing nobody: no combination fits every limit.</p>');
+  if (!b) return;
+  const pay = paymentsData(b.selection, a.economics), w = id => Math.min(640, $(id).clientWidth || 560); // drawn at the real width: text stays legible
+  $('r-chart-pay').innerHTML = b.selection.length ? paymentsChart(pay, ctx.horizon, w('r-chart-pay')) : '<p class="muted">No signing, no payment.</p>';
+  $('r-chart-squad').innerHTML = squadCostChart(s.spend, w('r-chart-squad'));
+  $('r-chart-cash').innerHTML = cashChart(b.cashBase, b.cashDownside, b.cashFloor, w('r-chart-cash'));
+}
+/** What would change the decision: the engine's stress tests, each recalculated in full. */
+function robustHtml(s) {
+  if (!s.feasible || !s.robustness?.length) return '';
+  const name = new Map(S.candidates.map(c => [c.id, c.name]));
+  return `<h4 class="sub-title">Stress tests <span class="muted small">each recalculated with one change</span></h4><ul class="robust">${s.robustness.map(r => `<li class="${r.changes ? 'flip' : 'same'}"><span>${esc(r.label)}</span><b>${r.changes ? (r.selection ? `Choice changes → ${esc(r.selection.map(id => name.get(id)).join(', ') || 'no signing')}` : 'No safe option') : 'Same choice'}</b></li>`).join('')}</ul>`;
+}
+/** The inputs this result was calculated with (from the engine's normalised context). */
+function assumptionsHtml(ctx) {
+  const goal = ctx.objective === 'blended' ? `Balance sporting value and money (${eur(ctx.valuePerPoint)} per expected league point)` : ctx.objective === 'npv' ? 'Money only (best financial value)' : ctx.objective === 'points' ? 'Most expected league points' : 'Best value in the bad case';
+  const items = [
+    ['Planning period', `${ctx.horizon} season${ctx.horizon > 1 ? 's' : ''}`],
+    ['Budget at signing', eur(ctx.transferBudget)],
+    ['Cash today', eur(ctx.openingCash)],
+    ['Cash that must always remain', eur(ctx.minCash + ctx.protectedReserve)],
+    ['Squad-cost limit per season', ctx.squadCostLimit.map(eur).join(' / ')],
+    ['Already committed per season', ctx.committedSquadCost.map(eur).join(' / ')],
+    ['Club cash flow per season, without signings', ctx.operatingCashFlow.map(eur).join(' / ')],
+    ['Signings and places', `At most ${ctx.maxSignings} signings · squad ${ctx.currentSquadSize}/${ctx.maxSquadSize} · non-EU ${ctx.currentNonEU}/${ctx.maxNonEU}`],
+    ['Positions that must be signed', needsText(ctx.positionNeeds) || 'None'],
+    ['Goal', goal],
+    ['Bad case', `Resale ${Math.round(ctx.stress.resaleHaircut * 100)}% lower and player revenue ${Math.round(ctx.stress.revenueHaircut * 100)}% lower, every season`],
+    ['Discount rate', `${Math.round(ctx.discountRate * 1000) / 10}% a year`],
+  ];
+  return `<div class="panel-head"><h2 id="h-assumptions">Assumptions used</h2><button type="button" class="btn btn-secondary" data-nav="inputs">Change the assumptions</button></div>
+    <dl class="assume">${items.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+    <p class="muted small">${S.meta.imported ? 'Shortlist and limits as you entered them.' : 'Fictional club: every figure is illustrative.'} Change any assumption and run the analysis again; the previous result is kept as scenario A for comparison.</p>`;
 }
 /** Decision first: what to do, what it costs, which limits decide, the main risk. Engine outputs only. */
 function summaryHtml(s, rows, ctx) {
@@ -425,10 +468,13 @@ function summaryHtml(s, rows, ctx) {
   const limitsText = deciding.length ? deciding.map(r => `${esc(r.label)}: ${esc(fmt(r, r.used))} ${r.sense === '<=' ? 'of' : 'vs minimum'} ${esc(fmt(r, r.limit))}${r.status === 'broken' ? ' (broken)' : ''}`).join('<br>') : 'No limit is binding: every limit keeps headroom.';
   const cash = rows.find(r => r.id === 'cashFloor');
   const risk = s.risks[0] ?? 'No specific risk flagged beyond the bad-case test.';
+  const best = S.result.analysis.result.best;
+  const pay = s.feasible && best?.selection.length ? paymentsData(best.selection, S.result.analysis.economics) : null;
+  const peak = pay ? pay.rows.reduce((m, r, t) => { const v = r.fees + r.wages + r.other; return v > m.v ? {v, t} : m; }, {v: -1, t: 0}) : null;
   const cost = s.feasible
-    ? `<b>${esc(eur(s.spend.atSigning))} at signing</b><small>${esc(eur(s.spend.totalCommitment))} in total contract commitments over ${ctx.horizon} seasons</small>`
+    ? `<b>${esc(eur(s.spend.atSigning))} at signing</b><small>${esc(eur(s.spend.totalCommitment))} in total contract commitments${peak ? `; largest yearly payment ${esc(eur(peak.v))} ${peak.t === 0 ? 'at signing' : `in season ${peak.t}`}` : ''}</small>`
     : `<b>No safe option</b><small>No combination fits every limit; see what would make one possible below.</small>`;
-  return `<div class="summary-top"><h2 id="h-summary">Recommended decision${fict}</h2><span class="muted small">${esc(S.meta.club)}</span></div>
+  return `<div class="summary-top"><h2 id="h-summary">Recommended decision${fict}</h2><span class="muted small">${s.proven ? 'Checked against all' : 'Best found among'} ${esc(s.searchSpace.toLocaleString('en-GB'))} combinations</span></div>
     <p class="summary-headline">${esc(s.headline)}</p>
     <div class="summary-grid">
       <div class="sum"><span>What it costs</span>${cost}</div>
@@ -462,9 +508,10 @@ function diffInputs(A, B) {
 }
 function metrics(r) {
   const s = r.story, b = r.analysis.result.best;
-  if (!b) return {sel: 'No safe combination', pay: '—', total: '—', sq: '—', cash: '—', score: '—'};
+  if (!b) return {sel: 'No safe combination', pay: '—', total: '—', sq: '—', cash: '—', score: '—', n: null};
   const low = Math.min(...b.cashDownside);
-  return {sel: s.players.map(p => p.name).join(', ') || 'No signing', pay: eur(s.spend.atSigning), total: eur(s.spend.totalCommitment), sq: eur(s.spend.addedSquadCost[0]), cash: eur(low), score: eur(b.objective.primary)};
+  return {sel: s.players.map(p => p.name).join(', ') || 'No signing', pay: eur(s.spend.atSigning), total: eur(s.spend.totalCommitment), sq: eur(s.spend.addedSquadCost[0]), cash: eur(low), score: eur(b.objective.primary),
+    n: {pay: s.spend.atSigning, total: s.spend.totalCommitment, sq: s.spend.addedSquadCost[0], cash: low}};
 }
 function comparison() {
   if (!S.A || !isCurrent() || S.result === S.A.result) return null;
@@ -477,9 +524,18 @@ function renderCompare() {
   if (!S.A) { box.innerHTML = '<p class="muted">No scenario saved yet. The first analysis of this club becomes scenario A. Then change a limit or a player choice, run the analysis again, and the new result (scenario B) is compared with A here.</p>'; return; }
   const c = comparison();
   if (!c) { box.innerHTML = `<div class="panel-head"><h2>Scenario A saved</h2></div><p>${esc(metrics(S.A.result).sel)}</p><p class="muted small">Change a limit or a player choice and run the analysis again to compare. <button type="button" class="link" data-nav="inputs">Open scenario inputs</button></p>`; return; }
-  box.innerHTML = `<div class="table-wrap"><table class="data compare-table stack"><thead><tr><th></th><th>Scenario A</th><th>Scenario B (current)</th></tr></thead><tbody>${c.rows.map(r => `<tr><td class="name-cell"><span class="name">${esc(r.label)}</span></td><td data-l="Scenario A">${esc(r.a)}</td><td data-l="Scenario B" class="${r.a !== r.b ? 'changed' : ''}">${esc(r.b)}</td></tr>`).join('')}</tbody></table></div>
-    <p class="changes"><b>What changed from A to B:</b> ${esc(c.changes.join('; ') || 'nothing (same inputs)')}.</p>
+  const A = metrics(S.A.result).n, B = metrics(S.result).n;
+  const chart = A && B ? compareChart([['Paid at signing', A.pay, B.pay, false], ['Total contract commitments', A.total, B.total, false], ['Added squad cost, season 1', A.sq, B.sq, false], ['Lowest cash in a bad case', A.cash, B.cash, true]]) : '';
+  const selA = S.A.result.analysis.result.best?.selection ?? null, selB = S.result.analysis.result.best?.selection ?? null;
+  const nm = new Map(S.candidates.map(x => [x.id, x.name]));
+  const verdict = !selA || !selB ? (selB ? 'B finds a safe combination where A had none.' : selA ? 'B has no safe combination: the change makes the shortlist unaffordable.' : 'Neither scenario has a safe combination.')
+    : JSON.stringify([...selA].sort()) === JSON.stringify([...selB].sort()) ? 'Same recommendation: this change does not alter the decision.'
+    : `The recommendation changes: ${[...selB.filter(x => !selA.includes(x)).map(x => `+ ${nm.get(x)}`), ...selA.filter(x => !selB.includes(x)).map(x => `− ${nm.get(x)}`)].join(', ')}.`;
+  box.innerHTML = `<p class="ab-verdict">${esc(verdict)}</p><div class="panel-head"><h2>What moved between A and B</h2><span class="muted small">Green = better for the club's finances, red = worse</span></div>${chart}
+    <p class="changes"><b>Inputs changed from A to B:</b> ${esc(c.changes.join('; ') || 'nothing (same inputs)')}.</p>
+    <div class="table-wrap"><table class="data compare-table stack"><thead><tr><th></th><th>Scenario A</th><th>Scenario B (current)</th></tr></thead><tbody>${c.rows.map(r => `<tr><td class="name-cell"><span class="name">${esc(r.label)}</span></td><td data-l="Scenario A">${esc(r.a)}</td><td data-l="Scenario B" class="${r.a !== r.b ? 'changed' : ''}">${esc(r.b)}</td></tr>`).join('')}</tbody></table></div>
     <div class="panel-foot"><span class="muted small">Highlighted values differ from scenario A.</span><span class="next-actions"><button type="button" class="btn btn-secondary" id="make-a">Make B the new scenario A</button><button type="button" class="btn btn-ghost" id="restore-a">Go back to scenario A’s inputs</button></span></div>`;
+  box.querySelectorAll('[data-w]').forEach(el => { el.style.width = `${el.dataset.w}%`; });
   $('make-a').addEventListener('click', () => { S.A = {inputs: {context: S.result.scenario.context, modes: S.result.scenario.modes}, result: S.result}; renderCompare(); });
   $('restore-a').addEventListener('click', () => {
     const A = S.A; S.modes = {...A.inputs.modes}; S.form = formFrom(A.inputs.context, false); S.needs = {...A.inputs.context.positionNeeds};
@@ -583,5 +639,8 @@ $('import-use').addEventListener('click', () => {
 });
 navState(); runState('idle');
 document.body.dataset.ready = '1';
+
+let resizeTimer = null, lastWidth = innerWidth;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (Math.abs(innerWidth - lastWidth) > 30 && S.result && !$('results').hidden) { lastWidth = innerWidth; renderPicture(S.result.story, S.result.analysis, (() => { const ev = S.result.analysis.result.best ?? S.result.analysis.noSigningEvaluation; return ev ? constraintRows(ev, S.result.analysis.context) : []; })()); document.querySelectorAll('#r-charts [data-w]').forEach(el => { el.style.width = `${el.dataset.w}%`; }); } }, 200); });
 
 boot();
