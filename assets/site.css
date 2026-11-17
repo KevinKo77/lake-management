@@ -181,6 +181,24 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } .btn:hover { transform: none; } }
 
+/* Simplified home and conversion (2026-11) */
+.hero-simple { padding: 88px 0 56px; }
+.hero-simple h1 { max-width: 860px; font-size: clamp(2.3rem, 5vw, 4rem); }
+.hero-simple .lead { margin: 22px 0 32px; max-width: 640px; }
+.hero-simple .hero-shot { margin-top: 48px; }
+.btn-strong { border-color: var(--accent); color: var(--accent-2); }
+.btn-strong:hover { border-color: var(--accent-2); color: var(--text); }
+.availability { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.avail-main { margin: 0; font: 600 1.35rem/1.3 var(--serif); color: var(--text); }
+.help-row { gap: 40px; align-items: start; }
+.help-row h3 { font-size: 1.05rem; }
+.price-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 22px 0 0; }
+.price-meta div { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: rgba(255,255,255,.02); }
+.price-meta dt { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.price-meta dd { margin: 4px 0 0; font-weight: 600; color: var(--text); font-size: 15px; }
+.price-card .btn + .btn { margin-top: 10px; }
+.price-sub { margin: 14px 0 0; text-align: center; }
+
 /* Responsive */
 @media (max-width: 980px) {
   .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -204,5 +222,9 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
   .step { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .site-footer .cols { grid-template-columns: minmax(0, 1fr); }
   .btn-row .btn { flex: 1 1 100%; }
+  .hero-simple { padding: 56px 0 40px; }
+  .hero-simple .hero-shot { margin-top: 32px; }
+  .availability { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .price-meta { grid-template-columns: minmax(0, 1fr); }
 }
 

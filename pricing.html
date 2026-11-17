@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=20261115-private-login-990">
+<link rel="stylesheet" href="/assets/site.css?v=20261117-simplify">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -32,30 +32,36 @@
 <section class="page-hero">
   <div class="wrap">
     <p class="eyebrow">Pricing</p>
-    <h1>One plan. Everything included.</h1>
-    <p class="lead">Organisation Access gives your organisation a private LANOVA workspace, billed monthly. Cancel at any time.</p>
+    <h1>One plan for your whole organisation.</h1>
+    <p class="lead">Subscribe online in a few minutes. Access opens as soon as the payment is confirmed.</p>
   </div>
 </section>
 
-<section style="padding-top:16px">
+<section style="padding-top:8px">
   <div class="wrap">
     <div class="price-card reveal">
       <p class="eyebrow" style="margin:0">LANOVA Sports — Organisation Access</p>
-      <div class="price"><strong>€990</strong><span>per month, excl. VAT</span></div>
-      <p class="muted" style="margin:0">Monthly recurring subscription for one organisation, billed in euros. Price excluding VAT and other applicable taxes.</p>
+      <div class="price"><strong>€990</strong><span>per month per organisation, excl. VAT</span></div>
+      <dl class="price-meta">
+        <div><dt>Users</dt><dd>Up to 5 named users</dd></div>
+        <div><dt>Billing</dt><dd>Monthly, by card via Stripe</dd></div>
+        <div><dt>Commitment</dt><dd>None, cancel any time</dd></div>
+      </dl>
+      <p class="eyebrow" style="margin:26px 0 0">Available today</p>
       <ul class="checks">
-        <li>Private workspace for your organisation, with server-side data separation</li>
-        <li>Up to 5 named users from your organisation</li>
-        <li>Unlimited saved analyses and scenarios</li>
-        <li>The modules available today: Recruitment Economics for football (Recruitment Workspace and Recruitment Optimizer V2)</li>
-        <li>Budget optimisation, scenario comparison and bad-case analysis</li>
+        <li>Recruitment Economics for football: Recruitment Workspace and Recruitment Optimizer V2</li>
+        <li>Best combination under budget, squad-cost and cash limits</li>
+        <li>Scenario comparison and bad-case cash analysis</li>
         <li>Decision reports, CSV schedules and JSON exports</li>
-        <li>A 60-minute onboarding session</li>
-        <li>Email support on business days</li>
+        <li>Private workspace with server-side data separation; unlimited saved scenarios</li>
+        <li>Email support on business days; optional 60-minute onboarding session</li>
       </ul>
-      <a class="btn btn-primary" data-app-pending href="mailto:kevin@lake-am.com?subject=LANOVA%20Sports%20Club%20Access">Request access</a>
+      <p class="small" style="margin:16px 0 0">Other sports and analyses beyond recruitment are not available yet.</p>
       <a class="btn btn-primary" data-app-ready data-app-path="/signup" href="/login.html" hidden>Subscribe</a>
-      <p class="small" style="margin:14px 0 0;text-align:center" data-app-pending>Online subscription is being activated. Until then, we set up each organisation's access personally.</p>
+      <a class="btn btn-primary" data-app-pending href="mailto:kevin@lake-am.com?subject=LANOVA%20Sports%20Organisation%20Access">Request access</a>
+      <p class="small price-sub" data-app-pending>Online subscription is temporarily unavailable. Write to us and we will open your access.</p>
+      <a class="btn btn-ghost" href="/lanova/workspace/">Explore Free Demo first</a>
+      <p class="small price-sub">The subscription renews automatically every month until cancelled; cancellation takes effect at the end of the paid month. VAT is added where applicable.</p>
     </div>
   </div>
 </section>
@@ -78,18 +84,16 @@
 <section>
   <div class="wrap">
     <div class="section-head reveal"><p class="eyebrow">Questions</p><h2>Frequently asked.</h2></div>
-    <details><summary>Which sports does LANOVA support?</summary><p>LANOVA Sports is designed for financial decisions across sports. The module available today covers recruitment economics in football. Basketball, rugby, tennis, motorsport and other disciplines are not supported yet; if you work in one of them, tell us which decision you need to analyse.</p></details>
-    <details><summary>Can we try it before subscribing?</summary><p>Yes. The <a href="/lanova/workspace/">live demonstration</a> is free and uses fictional clubs. We also run a 30-minute demo with your own shortlist on request.</p></details>
-    <details><summary>Does LANOVA provide player data?</summary><p>No. LANOVA is a financial decision tool. You enter or import your shortlist and its contract terms; LANOVA calculates the financial consequences.</p></details>
-    <details><summary>Does LANOVA predict how a player will perform?</summary><p>No. Expected league points are the club's own estimates. LANOVA shows how much the recommendation depends on them.</p></details>
-    <details><summary>Is there a long-term contract?</summary><p>No. Organisation Access is billed month to month and can be cancelled at any time, effective at the end of the paid month.</p></details>
+    <details><summary>Can we try it before subscribing?</summary><p>Yes. The <a href="/lanova/workspace/">free demo</a> shows a complete analysis for a fictional club, with no account needed.</p></details>
+    <details><summary>Which sports does LANOVA support?</summary><p>The module available today covers recruitment economics in football. Other sports are not supported yet; if you work in one of them, <a href="/#other-sports">tell us which decision you need to analyse</a>.</p></details>
+    <details><summary>Does LANOVA provide player data or predict performance?</summary><p>No. You enter or import your shortlist and its contract terms; expected league points are your own estimates. LANOVA calculates the financial consequences.</p></details>
     <details><summary>Who can see our analyses?</summary><p>Only the users of your organisation. Access to saved data is checked on the server for every request.</p></details>
   </div>
 </section>
 
 <section class="cta">
-  <div class="wrap reveal"><h2>Questions about your organisation's case?</h2><p>Book a demo with your own numbers before deciding.</p>
-  <div class="btn-row"><a class="btn btn-primary" href="/#demo">Request a Demo</a></div></div>
+  <div class="wrap reveal"><h2>Ready when you are.</h2><p>See a full analysis in the free demo, or subscribe now. A guided walkthrough is available on request, but not required.</p>
+  <div class="btn-row"><a class="btn btn-primary" data-app-path="/signup" href="/login.html">Subscribe</a><a class="btn btn-ghost" href="/lanova/workspace/">Explore Free Demo</a></div></div>
 </section>
 
 </main>
@@ -101,7 +105,7 @@
         <p style="margin-top:16px;max-width:360px">Financial intelligence for sports decisions. Available today: recruitment economics for football. LANOVA Sports is developed and operated by Lake Management.</p>
       </div>
       <div><h4>Product</h4><a href="/platform.html">Platform</a><a href="/how-it-works.html">How It Works</a><a href="/pricing.html">Pricing</a><a href="/lanova/workspace/">Live demonstration</a></div>
-      <div><h4>Company</h4><a href="/founder.html">Founder</a><a href="/#demo">Request a demo</a><a href="mailto:kevin@lake-am.com">kevin@lake-am.com</a></div>
+      <div><h4>Company</h4><a href="/founder.html">Founder</a><a href="/lanova/workspace/">Free demo</a><a href="mailto:kevin@lake-am.com">kevin@lake-am.com</a></div>
       <div><h4>Legal</h4><a href="/legal.html">Legal notice</a><a href="/legal.html#privacy">Privacy</a><a href="/legal.html#terms">Subscription terms</a></div>
     </div>
     <div class="legal-line">

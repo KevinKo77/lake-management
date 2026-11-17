@@ -27,11 +27,13 @@
     <nav class="side-group" aria-label="Clubs">
       <p class="side-label">Clubs</p>
       <div id="side-cases"></div>
+      <button type="button" class="side-item" data-go="home"><span class="ico ico-list" aria-hidden="true"></span>All demo clubs</button>
       <button type="button" class="side-item" data-go="import"><span class="ico ico-upload" aria-hidden="true"></span>Import your shortlist</button>
     </nav>
     <div class="side-foot">
-      <a class="side-item" href="/#contact"><span class="ico ico-mail" aria-hidden="true"></span>Request a pilot</a>
-      <p class="side-note">Demonstration clubs are fictional. Calculations run in your browser; nothing is uploaded.</p>
+      <a class="btn btn-primary side-cta" href="https://lake-intelligence-production.up.railway.app/signup">Create Your Account</a>
+      <a class="btn btn-secondary side-cta" href="/pricing.html">View Pricing</a>
+      <p class="side-note">Demonstration clubs are fictional. Calculations run in your browser; nothing is uploaded. Questions? <a href="mailto:kevin@lake-am.com">kevin@lake-am.com</a></p>
     </div>
   </aside>
 
@@ -41,9 +43,11 @@
       <div class="crumbs"><span id="crumb-club">Recruitment Workspace</span><span class="sep" aria-hidden="true">/</span><span id="crumb-view">Clubs</span></div>
       <div class="top-actions">
         <span class="status-chip" id="run-state" data-state="idle" role="status" aria-live="polite" hidden>Not analysed</span>
+        <a class="btn btn-secondary convert-link" href="/pricing.html">View Pricing</a>
+        <a class="btn btn-primary convert-link" href="https://lake-intelligence-production.up.railway.app/signup">Create Your Account</a>
         <button type="button" class="btn btn-ghost" id="export-csv" disabled>Schedules CSV</button>
         <button type="button" class="btn btn-ghost" id="export-report" disabled>Decision report</button>
-        <button type="button" class="btn btn-primary" id="analyse" hidden>Run analysis</button>
+        <button type="button" class="btn btn-secondary" id="analyse" hidden>Run analysis</button>
       </div>
     </header>
 
@@ -107,43 +111,49 @@
           <dl class="facts" id="w-facts"></dl>
         </div>
 
-        <div id="results-empty" class="panel empty"><h2>No analysis yet</h2><p class="muted">Check the <button type="button" class="link" data-nav="shortlist">shortlist</button> and the <button type="button" class="link" data-nav="inputs">scenario inputs</button>, then press <b>Run analysis</b>. LANOVA compares every combination and shows the result here.</p></div>
+        <div id="results-empty" class="panel empty"><h2>No analysis yet</h2><p class="muted">Enter the club's limits in <button type="button" class="link" data-nav="inputs">scenario inputs</button> and check the <button type="button" class="link" data-nav="shortlist">shortlist</button>, then press <b>Run analysis</b>. You confirm your data before anything is calculated.</p></div>
         <div id="busy" class="banner banner-info" hidden><span class="spinner" aria-hidden="true"></span>Comparing every combination of the shortlist…</div>
         <div id="stale" class="banner banner-warn" hidden>Inputs changed since this result. Run the analysis again — the figures below are out of date and cannot be exported.</div>
         <div id="error" class="banner banner-bad" hidden role="alert"></div>
 
         <div id="results" hidden>
+          <section class="panel summary" id="r-summary" aria-labelledby="h-summary"></section>
+          <div class="convert-bar" id="convert-bar">
+            <p><b>Run this analysis on your own shortlist.</b> Organisation Access: €990 per month per organisation, excluding VAT. Cancel any time.</p>
+            <div class="convert-actions"><a class="btn btn-secondary" href="/pricing.html">View Pricing</a><a class="btn btn-primary" href="https://lake-intelligence-production.up.railway.app/signup">Create Your Account</a></div>
+          </div>
           <p class="status" id="r-kpi-note"></p>
           <div class="kpis" id="kpis"></div>
-          <div class="grid-main">
-            <section class="panel">
-              <div class="panel-head"><h2>Recommendation</h2><span class="muted small" id="r-proof"></span></div>
-              <p class="headline" id="r-headline"></p>
-              <div id="r-players"></div>
-            </section>
+          <section class="panel">
+            <div class="panel-head"><h2>Recommendation</h2><span class="muted small" id="r-proof"></span></div>
+            <p class="headline" id="r-headline"></p>
+            <div id="r-players"></div>
+          </section>
+          <details class="panel disclosure" id="r-details"><summary>Full analysis: budget, every constraint, reasoning, risks and alternatives</summary>
             <section class="panel">
               <div class="panel-head"><h2>Budget at signing</h2></div>
               <div id="r-alloc"></div>
               <div id="r-spend"></div>
             </section>
-          </div>
-          <section class="panel">
-            <div class="panel-head"><h2>Constraints</h2><span class="muted small">Every limit is checked for every combination</span></div>
-            <div id="r-limits"></div>
-          </section>
-          <div class="grid-2">
-            <section class="panel"><div class="panel-head"><h2>Why this choice</h2></div><ul id="r-why" class="notes"></ul></section>
-            <section class="panel"><div class="panel-head"><h2>Risks</h2></div><ul id="r-risks" class="notes"></ul></section>
-          </div>
-          <div class="grid-2">
-            <section class="panel"><div class="panel-head"><h2>Next-best alternatives</h2><span class="muted small">Overall score below the recommendation</span></div><ol id="r-alts" class="alts"></ol></section>
-            <section class="panel"><div class="panel-head"><h2>Players not selected</h2></div><ul id="r-excluded" class="excluded"></ul></section>
-          </div>
+            <section class="panel">
+              <div class="panel-head"><h2>Constraints</h2><span class="muted small">Every limit is checked for every combination</span></div>
+              <div id="r-limits"></div>
+            </section>
+            <div class="grid-2">
+              <section class="panel"><div class="panel-head"><h2>Why this choice</h2></div><ul id="r-why" class="notes"></ul></section>
+              <section class="panel"><div class="panel-head"><h2>Risks</h2></div><ul id="r-risks" class="notes"></ul></section>
+            </div>
+            <div class="grid-2">
+              <section class="panel"><div class="panel-head"><h2>Next-best alternatives</h2><span class="muted small">Overall score below the recommendation</span></div><ol id="r-alts" class="alts"></ol></section>
+              <section class="panel"><div class="panel-head"><h2>Players not selected</h2></div><ul id="r-excluded" class="excluded"></ul></section>
+            </div>
+          </details>
           <details class="panel disclosure advanced-panel"><summary>Advanced figures (for analysts)</summary><div id="r-advanced"></div></details>
           <div class="next-actions">
-            <button type="button" class="btn btn-secondary" data-nav="inputs">Change the scenario</button>
-            <button type="button" class="btn btn-secondary" data-nav="compare">Compare with scenario A</button>
-            <a class="btn btn-ghost" href="/#contact">Request a pilot</a>
+            <button type="button" class="btn btn-secondary" data-nav="inputs">Change the assumptions</button>
+            <button type="button" class="btn btn-secondary" data-nav="shortlist">See the shortlist</button>
+            <button type="button" class="btn btn-secondary" data-nav="compare">Compare scenarios</button>
+            <a class="btn btn-primary" href="https://lake-intelligence-production.up.railway.app/signup">Create Your Account</a>
           </div>
         </div>
       </section>

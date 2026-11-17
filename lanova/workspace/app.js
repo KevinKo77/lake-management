@@ -1,7 +1,8 @@
 /**
  * LANOVA Sports — Recruitment Workspace.
  * App shell (sidebar + views): clubs → decision dashboard → shortlist → scenario inputs → compare A/B → report.
- * Fictional cases or an imported shortlist are analysed, after confirmation, by the unchanged LANOVA engine (worker).
+ * The first fictional case opens already analysed (fictional inputs need no confirmation); an imported shortlist is
+ * analysed only after the user confirms its inputs. Calculations: the unchanged LANOVA engine (worker).
  * Every figure shown comes from the engine result or from the (fictional or imported) inputs. Nothing is uploaded or stored.
  */
 import {SCENARIOS} from '../v3/demo/scenarios.js';
@@ -71,6 +72,16 @@ document.querySelectorAll('button[data-case], button[data-side-case]').forEach(b
   openCase({club: s.club, tier: s.tier, decision: s.decision, imported: false}, structuredClone(s.scenario));
 }));
 
+// Visitors land on an analysed fictional club; #clubs shows the list, #import the import.
+function boot() {
+  const h = location.hash.slice(1);
+  if (h === 'import') return openImport();
+  if (h === 'clubs') return show('home');
+  const s = SCENARIOS.find(x => x.id === h) ?? SCENARIOS[0];
+  S.caseId = s.id;
+  openCase({club: s.club, tier: s.tier, decision: s.decision, imported: false}, structuredClone(s.scenario));
+}
+
 // ======================================================================= workspace
 function openCase(meta, scenario) {
   stopWorker();
@@ -93,6 +104,7 @@ function openCase(meta, scenario) {
   setExports(false); navState(); runState('idle');
   renderCompare();
   show('dashboard');
+  if (!meta.imported) requestAnalysis(); // fictional case: show the decision straight away
 }
 function renderFacts() {
   const c = S.original.context, f = S.meta.imported;
@@ -283,6 +295,8 @@ function requestAnalysis() {
     return;
   }
   const scenario = {schema: 'lanova-recruitment-v2', fictional: !S.meta.imported, label: S.meta.club, context: ctx, candidates: S.candidates, modes: {...S.modes}};
+  // Fictional demonstration cases are analysed at once; a user's own (imported) data is analysed only after review.
+  if (!S.meta.imported) { S.pendingRun = null; compute(scenario, S.ver); return; }
   S.pendingRun = {scenario, ver: S.ver};
   const must = S.candidates.filter(c => S.modes[c.id] === 'must').map(c => c.name), out = S.candidates.filter(c => S.modes[c.id] === 'exclude').map(c => c.name);
   const changes = S.A ? diffInputs(S.A.inputs, {context: ctx, modes: scenario.modes}) : [];
@@ -378,6 +392,7 @@ function renderResult() {
   if (cash) kpi('Lowest cash, bad case', eur(cash.used), `vs ${eur(cash.limit)} to keep`, cash);
   if (sg) kpi('New signings', `${sg.used} of ${sg.limit}`, needsText(ctx.positionNeeds) ? `Must sign ${needsText(ctx.positionNeeds)}` : 'No required position', sg);
   $('kpis').innerHTML = k.join('');
+  $('r-summary').innerHTML = summaryHtml(s, rows, ctx);
   $('r-kpi-note').textContent = s.feasible ? '' : 'No safe combination exists under these limits. The figures below show what happens if the club signs nobody.';
   $('r-headline').textContent = s.headline;
   if (s.feasible) {
@@ -402,6 +417,24 @@ function renderResult() {
   $('r-alts').innerHTML = s.feasible ? (s.alternatives.length ? s.alternatives.map(o => `<li><span><b>${esc(o.names.join(' + ') || 'No signing')}</b><span class="sub muted">${eur(o.atSigning)} at signing</span></span><span class="gap">−${eur(o.gap)}</span></li>`).join('') : '<li><span>None: no other combination stays within every limit.</span><span></span></li>') : '<li><span>No feasible combination.</span><span></span></li>';
   $('r-excluded').innerHTML = !s.feasible ? '<li>No player can be recommended under these limits; see what would make a safe choice possible.</li>' : (s.notChosen ?? []).map(n => `<li><b>${esc(n.name)}</b>${esc(n.reason)}</li>`).join('') || '<li>Every player on the shortlist is in the recommendation.</li>';
   $('r-advanced').innerHTML = advancedHtml(a, scenario);
+}
+/** Decision first: what to do, what it costs, which limits decide, the main risk. Engine outputs only. */
+function summaryHtml(s, rows, ctx) {
+  const fict = S.meta.imported ? '' : ' <span class="tag fict">Fictional club · illustrative figures</span>';
+  const deciding = rows.filter(r => r.status !== 'ok');
+  const limitsText = deciding.length ? deciding.map(r => `${esc(r.label)}: ${esc(fmt(r, r.used))} ${r.sense === '<=' ? 'of' : 'vs minimum'} ${esc(fmt(r, r.limit))}${r.status === 'broken' ? ' (broken)' : ''}`).join('<br>') : 'No limit is binding: every limit keeps headroom.';
+  const cash = rows.find(r => r.id === 'cashFloor');
+  const risk = s.risks[0] ?? 'No specific risk flagged beyond the bad-case test.';
+  const cost = s.feasible
+    ? `<b>${esc(eur(s.spend.atSigning))} at signing</b><small>${esc(eur(s.spend.totalCommitment))} in total contract commitments over ${ctx.horizon} seasons</small>`
+    : `<b>No safe option</b><small>No combination fits every limit; see what would make one possible below.</small>`;
+  return `<div class="summary-top"><h2 id="h-summary">Recommended decision${fict}</h2><span class="muted small">${esc(S.meta.club)}</span></div>
+    <p class="summary-headline">${esc(s.headline)}</p>
+    <div class="summary-grid">
+      <div class="sum"><span>What it costs</span>${cost}</div>
+      <div class="sum"><span>Limits that decide</span><b class="sum-list">${limitsText}</b></div>
+      <div class="sum"><span>Main risk</span>${cash ? `<b>${esc(eur(cash.used))} lowest cash in a bad case</b>` : ''}<small>${esc(risk)}</small></div>
+    </div>`;
 }
 function advancedHtml(a, scenario) {
   const b = a.result.best, ctx = a.context;
@@ -550,3 +583,5 @@ $('import-use').addEventListener('click', () => {
 });
 navState(); runState('idle');
 document.body.dataset.ready = '1';
+
+boot();
