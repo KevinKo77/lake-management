@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=20261117-simplify">
+<link rel="stylesheet" href="/assets/site.css?v=20261119-conversion">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -33,7 +33,7 @@
   <div class="wrap">
     <p class="eyebrow">Pricing</p>
     <h1>One plan for your whole organisation.</h1>
-    <p class="lead">Subscribe online in a few minutes. Access opens as soon as the payment is confirmed.</p>
+    <p class="lead">Try LANOVA free on your own shortlist first. Subscribe online in a few minutes when you need the full decision workflow; access opens as soon as the payment is confirmed.</p>
   </div>
 </section>
 
@@ -47,22 +47,42 @@
         <div><dt>Billing</dt><dd>Monthly, by card via Stripe</dd></div>
         <div><dt>Commitment</dt><dd>None, cancel any time</dd></div>
       </dl>
-      <p class="eyebrow" style="margin:26px 0 0">Available today</p>
+      <p class="eyebrow" style="margin:26px 0 0">Included</p>
       <ul class="checks">
-        <li>Recruitment Economics for football: Recruitment Workspace and Recruitment Optimizer V2</li>
-        <li>Best combination under budget, squad-cost and cash limits</li>
-        <li>Scenario comparison and bad-case cash analysis</li>
-        <li>Decision reports, CSV schedules and JSON exports</li>
-        <li>Private workspace with server-side data separation; up to 500 saved analyses per organisation</li>
+        <li>Everything in the free tools, plus the LANOVA Suite: your own stress tests, the choice that holds in all of them, regret, trade-offs and exact minimum changes</li>
+        <li>Analyses saved on the server and shared by up to 5 named users: up to 500 saved analyses per organisation</li>
+        <li>Football, basketball, ice hockey, volleyball and rugby union, with your own league limits</li>
+        <li>Decision reports, CSV ledgers and JSON exports</li>
         <li>Email support on business days; optional 60-minute onboarding session</li>
       </ul>
-      <p class="small" style="margin:16px 0 0">Other sports and analyses beyond recruitment are not available yet.</p>
-      <a class="btn btn-primary" data-app-ready data-app-path="/signup" href="/login.html" hidden>Subscribe</a>
+      <p class="small" style="margin:16px 0 0">Recruitment economics only: analyses beyond recruitment are not available yet. <a href="#compare">Compare with the free tools</a>.</p>
+      <a class="btn btn-primary" data-app-ready data-app-path="/signup" href="/login.html" hidden data-track="price_subscribe">Subscribe</a>
       <a class="btn btn-primary" data-app-pending href="mailto:kevin@lake-am.com?subject=LANOVA%20Sports%20Organisation%20Access">Request access</a>
       <p class="small price-sub" data-app-pending>Online subscription is temporarily unavailable. Write to us and we will open your access.</p>
-      <a class="btn btn-ghost" href="/lanova/workspace/">Explore Free Demo first</a>
+      <a class="btn btn-ghost" href="/lanova/workspace/#import" data-track="price_try_own">Try it free on your shortlist first</a>
       <p class="small price-sub">The subscription renews automatically every month until cancelled; cancellation takes effect at the end of the paid month. VAT is added where applicable.</p>
     </div>
+  </div>
+</section>
+
+<section class="section-tight" id="compare">
+  <div class="wrap">
+    <div class="section-head reveal"><p class="eyebrow">Free tools or Organisation Access</p><h2>What the subscription adds.</h2><p>The free tools stay free. The subscription is for clubs that take the decision to their board.</p></div>
+    <div class="table-scroll reveal"><table class="compare">
+      <thead><tr><th scope="col"></th><th scope="col">Free tools<br><span class="small">no account</span></th><th scope="col">Organisation Access<br><span class="small">€990/month excl. VAT</span></th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Analyse a fictional club or your own shortlist (CSV or Excel, up to 40 players)</th><td>✓</td><td>✓</td></tr>
+        <tr><th scope="row">Best combination within your budget, squad-cost and cash limits; bad-case cash</th><td>✓</td><td>✓</td></tr>
+        <tr><th scope="row">Decision report (print to PDF) and CSV schedules</th><td>✓</td><td>✓ plus JSON inputs</td></tr>
+        <tr><th scope="row">Stress tests you define: club cash flow lower, player sales paid late, wages up or down, budget cut, resale values lower (up to 3)</th><td>—</td><td>✓</td></tr>
+        <tr><th scope="row">The choice that holds in every stress test, the best choice in each, regret, trade-offs and the exact minimum changes</th><td>—</td><td>✓</td></tr>
+        <tr><th scope="row">Analyses saved on the server and shared by up to 5 named users (up to 500)</th><td>— (kept in your browser only)</td><td>✓</td></tr>
+        <tr><th scope="row">Sports</th><td>Football</td><td>Football, basketball, ice hockey, volleyball, rugby union</td></tr>
+        <tr><th scope="row">60-minute onboarding and email support on business days</th><td>—</td><td>✓</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small" style="margin-top:14px">Free tools: the <a href="/lanova/workspace/">Recruitment Workspace demo</a> and the <a href="/lanova/recruitment/">advanced optimizer</a>; they run entirely in your browser. Both are also included in the subscription.</p>
+    <div class="btn-row" style="margin-top:20px"><a class="btn btn-primary" data-app-path="/signup" href="/login.html" data-track="compare_subscribe">Subscribe</a><a class="btn btn-ghost" href="/lanova/workspace/#import" data-track="compare_try_own">Try it free on your shortlist</a></div>
   </div>
 </section>
 
@@ -84,16 +104,16 @@
 <section>
   <div class="wrap">
     <div class="section-head reveal"><p class="eyebrow">Questions</p><h2>Frequently asked.</h2></div>
-    <details><summary>Can we try it before subscribing?</summary><p>Yes. The <a href="/lanova/workspace/">free demo</a> shows a complete analysis for a fictional club, with no account needed.</p></details>
-    <details><summary>Which sports does LANOVA support?</summary><p>The module available today covers recruitment economics in football. Other sports are not supported yet; if you work in one of them, <a href="/#other-sports">tell us which decision you need to analyse</a>.</p></details>
+    <details><summary>Can we try it before subscribing?</summary><p>Yes, on your own data. In the <a href="/lanova/workspace/#import">free tools</a> you can import your shortlist (CSV or Excel, up to 40 players) or open a fictional club, with no account. The calculation runs in your browser and nothing is uploaded to our servers. There is no free trial of the subscription itself.</p></details>
+    <details><summary>Which sports does LANOVA support?</summary><p>Recruitment economics for football, basketball, ice hockey, volleyball and rugby union with Organisation Access; the free tools cover football. Your club enters its own league limits (budget, salary cap, squad size, quotas): no league regulation is built in. For another sport or decision, <a href="/#other-sports">tell us what you need</a>.</p></details>
     <details><summary>Does LANOVA provide player data or predict performance?</summary><p>No. You enter or import your shortlist and its contract terms; expected league points are your own estimates. LANOVA calculates the financial consequences.</p></details>
     <details><summary>Who can see our analyses?</summary><p>Only the users of your organisation. Access to saved data is checked on the server for every request.</p></details>
   </div>
 </section>
 
 <section class="cta">
-  <div class="wrap reveal"><h2>Ready when you are.</h2><p>See a full analysis in the free demo, or subscribe now. A guided walkthrough is available on request, but not required.</p>
-  <div class="btn-row"><a class="btn btn-primary" data-app-path="/signup" href="/login.html">Subscribe</a><a class="btn btn-ghost" href="/lanova/workspace/">Explore Free Demo</a></div></div>
+  <div class="wrap reveal"><h2>Ready when you are.</h2><p>Try it free on your own shortlist, or subscribe now. A guided walkthrough is available on request, but not required.</p>
+  <div class="btn-row"><a class="btn btn-primary" data-app-path="/signup" href="/login.html" data-track="footer_subscribe">Subscribe</a><a class="btn btn-ghost" href="/lanova/workspace/#import" data-track="footer_try_own">Try it free on your shortlist</a></div></div>
 </section>
 
 </main>
@@ -102,7 +122,7 @@
     <div class="cols">
       <div>
         <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>LANOVA <small>SPORTS</small></a>
-        <p style="margin-top:16px;max-width:360px">Financial intelligence for sports decisions. Available today: recruitment economics for football. LANOVA Sports is developed and operated by Lake Management.</p>
+        <p style="margin-top:16px;max-width:360px">Financial intelligence for sports decisions. Available today: recruitment economics, free to try on your own shortlist. LANOVA Sports is developed and operated by Lake Management.</p>
       </div>
       <div><h4>Product</h4><a href="/platform.html">Platform</a><a href="/how-it-works.html">How It Works</a><a href="/pricing.html">Pricing</a><a href="/lanova/workspace/">Live demonstration</a></div>
       <div><h4>Company</h4><a href="/founder.html">Founder</a><a href="/lanova/workspace/">Free demo</a><a href="mailto:kevin@lake-am.com">kevin@lake-am.com</a></div>
@@ -114,7 +134,7 @@
     </div>
   </div>
 </footer>
-<script src="/assets/site.js?v=20261115-private-login-990"></script>
+<script src="/assets/site.js?v=20261119-conversion"></script>
 </body>
 </html>
 
