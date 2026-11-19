@@ -49,6 +49,25 @@
       .catch(function () { clearTimeout(timer); });
   }
 
+  // Conversion measurement — PREPARED, OFF. Aggregated, cookieless counters (visit, demo, clicks on offers): no cookie,
+  // no local storage, no identifier; the server keeps daily totals only and stores no IP address or user agent. Turn on
+  // only after the privacy notice (legal.html#privacy) has been updated and the founder has validated it: set
+  // METRICS_ENABLED to true here AND METRICS_ENABLED=true on the app server.
+  var METRICS_ENABLED = false;
+  function track(event) {
+    if (!METRICS_ENABLED || !APP || !navigator.sendBeacon) return;
+    var q = new URLSearchParams(location.search || ''), ref = '';
+    try { ref = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) { ref = ''; }
+    var body = {event: event, page: here || '/', ref: ref === location.hostname ? '' : ref,
+      utm_source: (q.get('utm_source') || '').slice(0, 40), utm_medium: (q.get('utm_medium') || '').slice(0, 40), utm_campaign: (q.get('utm_campaign') || '').slice(0, 40)};
+    try { navigator.sendBeacon(APP + '/api/beacon', new Blob([JSON.stringify(body)], {type: 'text/plain'})); } catch (e) { /* measurement must never break the page */ }
+  }
+  track('page_view');
+  if (METRICS_ENABLED && document.addEventListener) document.addEventListener('click', function (e) {
+    var el = e.target && e.target.closest ? e.target.closest('[data-track]') : null;
+    if (el) track('cta:' + el.getAttribute('data-track'));
+  });
+
   // Demo request form: composes an email (no data is sent to any server).
   var form = document.getElementById('demo-form');
   if (form) {

@@ -72,6 +72,16 @@ document.querySelectorAll('button[data-case], button[data-side-case]').forEach(b
   openCase({club: s.club, tier: s.tier, decision: s.decision, imported: false}, structuredClone(s.scenario));
 }));
 
+// Conversion measurement — PREPARED, OFF (same rules as /assets/site.js): aggregated, cookieless counters, no shortlist
+// data and no identifier is ever sent. Enable only after the privacy notice has been updated and validated.
+const METRICS_ENABLED = false, METRICS_URL = 'https://lake-intelligence-production.up.railway.app/api/beacon';
+const sent = new Set();
+function track(event) {
+  if (!METRICS_ENABLED || sent.has(event) || !navigator.sendBeacon) return; sent.add(event);
+  try { navigator.sendBeacon(METRICS_URL, new Blob([JSON.stringify({event, page: '/lanova/workspace/'})], {type: 'text/plain'})); } catch { /* never break the demo */ }
+}
+track('demo_open');
+
 // Visitors land on an analysed fictional club; #clubs shows the list, #import the import.
 function boot() {
   const h = location.hash.slice(1);
@@ -334,7 +344,7 @@ function compute(scenario, ver) {
     clearTimeout(timer); w.terminate(); S.worker = null;
     if (data.error) return failed(`LANOVA could not analyse these inputs: ${data.error}`);
     const st = buildStory(S.meta, data.scenario, data.analysis, {robustness: data.robustness, fixes: data.fixes});
-    S.result = {scenario: data.scenario, analysis: data.analysis, story: st}; S.resultVer = ver;
+    S.result = {scenario: data.scenario, analysis: data.analysis, story: st}; S.resultVer = ver; track(S.meta?.imported ? 'demo_analysis_own' : 'demo_analysis_fictional');
     const inputs = {context: data.scenario.context, modes: data.scenario.modes};
     if (!S.A) S.A = {inputs, result: S.result};
     S.fresh = true;
@@ -575,6 +585,7 @@ $('import-use').addEventListener('click', () => {
   if (!S.imp?.check?.ok) return;
   const candidates = toCandidates(S.imp.check);
   const H = Math.max(...candidates.map(c => c.contractYears));
+  track('demo_import');
   openCase({club: 'Your club', tier: 'Your imported shortlist', decision: `Which of your ${candidates.length} shortlisted players should the club sign within its budget, wage and cash limits?`, imported: true},
     {schema: 'lanova-recruitment-v2', candidates, modes: {}, context: {horizon: H, positionNeeds: {}, stress: {}}});
   show('inputs');
