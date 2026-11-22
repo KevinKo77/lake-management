@@ -38,3 +38,9 @@ ul.small { padding-left: 18px; } ul.small li { margin: 0 0 6px; }
   a { color: #111; }
 }
 .top { background: var(--bg); }
+.chart .thr.tgt { stroke: var(--accent-2); stroke-width: 2.5; stroke-dasharray: none; } .chart .thr-l.tgt { fill: var(--accent-2); font-weight: 700; }
+.sw-tgt { background: var(--accent-2); }
+.pace { margin: 4px 0 12px; } .kpi b.small-b { font-size: 15px; line-height: 1.35; }
+details.more { margin: 0 0 10px; } details.more summary { cursor: pointer; color: var(--accent-2); font-size: 13px; margin-bottom: 8px; }
+.summary { border-color: var(--accent); }
+@media print { details.more, .pace + details { display: none !important; } .pace { display: block; } }

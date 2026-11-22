@@ -2,7 +2,7 @@
  * LANOVA Survival Decision Lab — page interface. Display and input only: every financial figure comes from lab.js,
  * which runs the published LANOVA Finance engine (../finance/engine/). Nothing is sent or stored.
  */
-import {SNAPSHOT, STRATEGIES, defaults, evaluate, fmt, START_MONTH, HORIZON} from './lab.js';
+import {SNAPSHOT, STRATEGIES, defaults, evaluate, fmt, comparison, summaryCsv, summaryHtml, START_MONTH, HORIZON} from './lab.js';
 
 const main = document.getElementById('main');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -38,9 +38,12 @@ function shell() {
     <div class="grid inputs">
       ${field('sport.points', 'Current points (editable)', {step: 1})}
       ${field('sport.played', 'Matches played (editable)', {step: 1})}
-      ${S.inp.sport.thresholds.map((_, i) => field(`sport.thresholds.${i}`, `Hypothetical survival threshold ${i + 1} (points)`, {step: 1})).join('')}
+      ${field('sport.target', 'Your season-end objective (points, hypothetical)', {step: 1, hint: 'A target you choose — not the real survival threshold.'})}
     </div>
-    <p class="muted small">Survival thresholds are hypotheses to test, not a prediction of the final table: the points needed to stay up depend on every other club.</p>
+    <div id="pace" class="pace" aria-live="polite"></div>
+    <details class="more"><summary>Compare with other hypothetical thresholds</summary><div class="grid inputs">
+      ${S.inp.sport.thresholds.map((_, i) => field(`sport.thresholds.${i}`, `Other hypothetical threshold ${i + 1} (points)`, {step: 1})).join('')}</div></details>
+    <p class="muted small">Objectives and thresholds are hypotheses to test, not a prediction of the final table: the points needed to stay up depend on every other club and are only known at the end of the season.</p>
   </section>
 
   <section class="card" aria-labelledby="h-strat">
@@ -80,10 +83,11 @@ function shell() {
     <header><h2 id="h-src">Sources, assumptions and limits</h2></header>
     <h3>Sporting data</h3>
     <ul class="small">
-      <li><b>Reference date:</b> ${esc(s.referenceDate)} — ${esc(s.state)}. Only Málaga CF's own record is used (position, record, goals, points); no full league table is reproduced.</li>
-      <li><b>Sources consulted</b> (consistent with each other at the reference date): ${s.sources.map(x => `<a href="${esc(x.url)}" rel="noopener noreferrer nofollow" target="_blank">${esc(x.name)}</a>`).join(' · ')}. Results are public facts; these sites are cited, not copied, and no data feed is used.</li>
+      <li><b>Reference date:</b> ${esc(s.referenceDate)} — ${esc(s.state)}. Only Málaga CF's own record is used.</li>
+      <li><b>Data rights:</b> ${esc(s.rights)}</li>
+      <li><b>Sources consulted</b> (match result and Málaga CF's line, cross-checked): ${s.sources.map(x => `<a href="${esc(x.url)}" rel="noopener noreferrer nofollow" target="_blank">${esc(x.name)}</a>`).join(' · ')}. Results are public facts; these sites are cited, not copied, and no data feed is used.</li>
       <li><b>Known discrepancy:</b> ${esc(s.discrepancy)}</li>
-      <li>Not checked against the official LaLiga data feed. Verify on laliga.com before relying on it; points and matches played can be edited above.</li>
+      <li>Position (20th) as listed by fichajes.com and futbolme.com after matchday 13. Not checked against the official LaLiga data feed. Verify on laliga.com before relying on it; points and matches played can be edited above.</li>
     </ul>
     <h3>What the lab does — and does not — say</h3>
     <ul class="small">
@@ -104,15 +108,15 @@ function shell() {
 
 // ------------------------------------------------------------------ charts (display only)
 function pointsChart(r) {
-  const ths = S.inp.sport.thresholds, hi = Math.max(...ths, ...r.strategies.map(s => s.points.total), 10) * 1.08, W = 1000, rowH = 46, L = 230, top = 26, H = top + rowH * 3 + 30;
+  const ths = [S.inp.sport.target, ...S.inp.sport.thresholds], hi = Math.max(...ths, ...r.strategies.map(s => s.points.total), 10) * 1.08, W = 1000, rowH = 46, L = 230, top = 26, H = top + rowH * 3 + 30;
   const x = v => L + (v / hi) * (W - L - 20);
   return `<svg class="chart pts" viewBox="0 0 ${W} ${H}" role="img" aria-label="Total points per strategy compared with the hypothetical survival thresholds; values are in the table below">
-    ${ths.map((t, i) => `<line class="thr" x1="${x(t)}" x2="${x(t)}" y1="${top - 8}" y2="${H - 24}"/><text class="thr-l" x="${x(t)}" y="${i % 2 ? H - 8 : 14}" text-anchor="middle">${t} pts</text>`).join('')}
+    ${ths.map((t, i) => `<line class="thr${i === 0 ? ' tgt' : ''}" x1="${x(t)}" x2="${x(t)}" y1="${top - 8}" y2="${H - 24}"/><text class="thr-l${i === 0 ? ' tgt' : ''}" x="${x(t)}" y="${i % 2 ? H - 8 : 14}" text-anchor="middle">${i === 0 ? 'objective ' : ''}${t}</text>`).join('')}
     ${r.strategies.map((s, i) => { const y = top + i * rowH; return `<text x="8" y="${y + 24}">${esc(s.label)}</text>
       <rect class="bar-now" x="${L}" y="${y + 6}" width="${x(S.inp.sport.points) - L}" height="26"/>
       <rect class="bar b-${s.id}" x="${x(S.inp.sport.points)}" y="${y + 6}" width="${Math.max(0, x(s.points.total) - x(S.inp.sport.points))}" height="26"/>
       <text class="val" x="${x(s.points.total) + 6}" y="${y + 24}">${s.points.total}</text>`; }).join('')}
-  </svg><p class="legend"><span><i class="sw-now"></i>Points today</span><span><i class="sw-gain"></i>Hypothetical gain</span><span><i class="sw-thr"></i>Hypothetical thresholds</span></p>`;
+  </svg><p class="legend"><span><i class="sw-now"></i>Points today</span><span><i class="sw-gain"></i>Hypothetical gain</span><span><i class="sw-tgt"></i>Your objective (hypothetical)</span><span><i class="sw-thr"></i>Other hypothetical thresholds</span></p>`;
 }
 function cashChart(r, view) {
   const series = r.strategies.map(s => s.series[view]), all = series.flat(), lo = Math.min(0, r.minimumCash, ...all), hi = Math.max(r.minimumCash, ...all) * 1.05;
@@ -127,22 +131,45 @@ function cashChart(r, view) {
   </svg><p class="legend">${r.strategies.map(s => `<span><i class="sw-${s.id}"></i>${esc(s.label)}</span>`).join('')}<span><i class="sw-policy"></i>Minimum cash policy</span></p>`;
 }
 
+function pace(r) {
+  const el = document.getElementById('pace');
+  if (r.problems.length) { el.innerHTML = ''; return; }
+  const p = r.pace, path = x => `${x.wins} W · ${x.draws} D · ${x.losses} L`;
+  el.innerHTML = `<div class="kpis"><div class="kpi"><span>Points still needed</span><b>${p.needed}</b><small>to reach your objective of ${p.target} (hypothetical)</small></div>
+    <div class="kpi ${p.reachable ? '' : 'bad'}"><span>Required pace</span><b>${p.perMatch === null ? '—' : p.perMatch.toFixed(2)} pts / match</b><small>over the ${r.remaining} matches left${p.reachable ? '' : ' — more than 3 per match: out of reach'}</small></div>
+    <div class="kpi"><span>Season so far</span><b>${S.inp.sport.played ? (S.inp.sport.points / S.inp.sport.played).toFixed(2) : '—'} pts / match</b><small>${S.inp.sport.points} points in ${S.inp.sport.played} matches</small></div>
+    <div class="kpi"><span>Example records worth it</span><b class="small-b">${p.paths.length ? p.paths.map(path).join('<br>') : '—'}</b><small>arithmetic only, not a prediction</small></div></div>`;
+}
+function download(name, type, text) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], {type})); a.download = name;
+  document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
 function results() {
   const box = document.getElementById('results'), r = evaluate(S.inp);
   document.getElementById('left').textContent = Number.isInteger(S.inp.sport.played) ? String(SNAPSHOT.totalMatches - S.inp.sport.played) : '—';
+  pace(r); S.last = r;
   if (r.problems.length) { box.innerHTML = `<div class="notice bad" role="alert"><b>Check these inputs — nothing is calculated until they are valid:</b><ul>${r.problems.map(p => `<li>${esc(p)}</li>`).join('')}</ul></div>`; return; }
   const st = r.strategies, ths = S.inp.sport.thresholds;
+  const cmp = comparison(r), tgt = S.inp.sport.target;
   box.innerHTML = `
+  <section class="card summary" aria-labelledby="h-sum">
+    <header><div><h2 id="h-sum">4 · Decision summary</h2><p class="muted small">Conditional on your assumptions. Points are your hypotheses; cash is the LANOVA Finance engine on a <b>fictional</b> budget. No probability is attached to any line.</p></div></header>
+    ${table(['Strategy', 'Points (conditional)', `vs objective ${tgt}`, 'Total cash cost (24 m)', `Cash ${r.seasonEnd}`, 'Cash Dec 2028 — stays up', 'Cash Dec 2028 — relegated', 'Financial constraints'],
+      cmp.map((c, i) => [esc(c.strategy), `<b>${c.total}</b>`, `<span class="${cls(c.targetGap)}">${c.targetGap > 0 ? '+' : c.targetGap < 0 ? '−' : ''}${Math.abs(c.targetGap)}</span>`, fmt(c.cost24), fmt(c.seasonCash), fmt(c.stayClosing),
+        `<span class="${cls(c.downClosing)}">${fmt(c.downClosing)}</span>`, c.constraints.length ? `<span class="${st[i].constraints.some(x => x.level === 'high') ? 'neg' : ''}">${c.constraints.length} flagged</span> <a href="#h-trade">see 7</a>` : 'none']), i => i > 0 && i < 7)}
+    <div class="next noprint"><button class="btn primary" type="button" data-export="html">Download presentation summary (HTML)</button><button class="btn" type="button" data-export="csv">Download comparison (CSV)</button><button class="btn" type="button" data-print>Print / save as PDF</button></div>
+  </section>
+
   <section class="card" aria-labelledby="h-pts">
-    <header><div><h2 id="h-pts">4 · Points: what each strategy would need to deliver</h2><p class="muted small">Total = current points + your hypothetical gain. Positive gap = above the threshold.</p></div></header>
+    <header><div><h2 id="h-pts">5 · Points: what each strategy would need to deliver</h2><p class="muted small">Total = current points + your hypothetical gain. Positive gap = above the threshold.</p></div></header>
     ${pointsChart(r)}
-    ${table(['Strategy', 'Hypothetical gain', 'Points per match left', 'Total points', ...ths.map(t => `Gap to ${t}`)],
-      st.map(s => [esc(s.label), String(s.points.gain), s.points.perMatch === null ? '—' : s.points.perMatch.toFixed(2), `<b>${s.points.total}</b>`, ...s.points.gaps.map(g => `<span class="${cls(g.gap)}">${g.gap > 0 ? '+' : g.gap < 0 ? '−' : ''}${Math.abs(g.gap)}</span>`)]))}
-    <p class="muted small">To reach ${ths.map(t => `${t} points the club needs ${Math.max(0, t - S.inp.sport.points)} more (${r.remaining ? (Math.max(0, t - S.inp.sport.points) / r.remaining).toFixed(2) : '—'} per match)`).join('; ')}.</p>
+    ${table(['Strategy', 'Hypothetical gain', 'Points per match (hypothesis)', 'Total points', `Gap to objective ${tgt}`, ...ths.map(t => `Gap to ${t}`)],
+      st.map(s => [esc(s.label), String(s.points.gain), s.points.perMatch === null ? '—' : s.points.perMatch.toFixed(2), `<b>${s.points.total}</b>`, `<b class="${cls(s.points.target.gap)}">${s.points.target.gap > 0 ? '+' : s.points.target.gap < 0 ? '−' : ''}${Math.abs(s.points.target.gap)}</b>`, ...s.points.gaps.map(g => `<span class="${cls(g.gap)}">${g.gap > 0 ? '+' : g.gap < 0 ? '−' : ''}${Math.abs(g.gap)}</span>`)]))}
+    <p class="muted small">Other hypothetical thresholds — to reach ${ths.map(t => `${t} points the club needs ${Math.max(0, t - S.inp.sport.points)} more (${r.remaining ? (Math.max(0, t - S.inp.sport.points) / r.remaining).toFixed(2) : '—'} per match)`).join('; ')}.</p>
   </section>
 
   <section class="card" aria-labelledby="h-cash">
-    <header><div><h2 id="h-cash">5 · Cash: what each strategy costs <span class="tag warn">fictional finance</span></h2><p class="muted small">LANOVA Finance engine, EUR, month-end balances. Cost = cash difference with the status quo.</p></div>
+    <header><div><h2 id="h-cash">6 · Cash: what each strategy costs <span class="tag warn">fictional finance</span></h2><p class="muted small">LANOVA Finance engine, EUR, month-end balances. Cost = cash difference with the status quo.</p></div>
       <div class="seg" role="group" aria-label="Condition shown in the chart">
         <button class="btn small" data-view="stay" aria-pressed="${S.view === 'stay'}">If the club stays up</button>
         <button class="btn small" data-view="down" aria-pressed="${S.view === 'down'}">If relegated</button></div></header>
@@ -155,7 +182,7 @@ function results() {
   </section>
 
   <section class="card" aria-labelledby="h-trade">
-    <header><h2 id="h-trade">6 · Constraints and trade-offs</h2></header>
+    <header><h2 id="h-trade">7 · Constraints and trade-offs</h2></header>
     <div class="tradeoffs">${st.map(s => `<article><h3>${esc(s.label)}</h3>
       <p class="small">${s.points.total} points (hypothesis) · cash cost ${fmt(s.cash.cost24)} · ${s.cash.costPerExtraPoint === null ? (s.id === 'A' ? 'reference strategy' : 'no extra hypothetical point versus A') : `<b>${fmt(s.cash.costPerExtraPoint)}</b> per extra hypothetical point versus A (ratio of your inputs, not a measured return)`}</p>
       ${s.constraints.length ? s.constraints.map(c => `<div class="risk ${c.level}">${esc(c.text)}</div>`).join('') : '<div class="risk info">No constraint breached under these assumptions.</div>'}
@@ -176,6 +203,10 @@ main.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.view) { S.view = b.dataset.view; results(); }
   else if (b.hasAttribute('data-print')) window.print();
+  else if (b.dataset.export && S.last && !S.last.problems.length) {
+    if (b.dataset.export === 'csv') download('lanova-decision-lab-malaga.csv', 'text/csv;charset=utf-8', '\ufeff' + summaryCsv(S.last, S.inp));
+    else download('lanova-decision-lab-malaga-summary.html', 'text/html;charset=utf-8', summaryHtml(S.last, S.inp));
+  }
   else if (b.hasAttribute('data-reset')) { S.inp = defaults(); shell(); results(); }
 });
 shell(); results();

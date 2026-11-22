@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, readdirSync} from 'node:fs';
-import {SNAPSHOT, STRATEGIES, defaults, buildPlan, evaluate, check, instalments, SEASON_END} from '../lanova/decision-lab/lab.js';
+import {SNAPSHOT, STRATEGIES, defaults, buildPlan, evaluate, check, instalments, comparison, summaryCsv, summaryHtml, SEASON_END} from '../lanova/decision-lab/lab.js';
 import {forecast, validatePlan} from '../lanova/finance/engine/model.js';
 
 const dir = 'lanova/decision-lab/', read = f => readFileSync(dir + f, 'utf8');
@@ -36,7 +36,7 @@ test('the default plan is valid for the engine, fictional, and every cash figure
 test('reference values of the default case (non-regression)', () => {
   const s = Object.fromEntries(evaluate(defaults()).strategies.map(x => [x.id, x]));
   assert.deepEqual([s.A.points.total, s.B.points.total, s.C.points.total], [33, 38, 36]);
-  assert.deepEqual(s.B.points.gaps.map(g => g.gap), [4, 1, -2, -5]);
+  assert.deepEqual(s.B.points.gaps.map(g => g.gap), [4, 1, -5]); assert.deepEqual([s.A, s.B, s.C].map(x => x.points.target.gap), [-7, -2, -4]);
   // B: loan fee 1.2M + agent 0.1M + 6 months × 120k × 1.3 = 2,236,000 — all within the season.
   assert.equal(s.B.cash.seasonCost, 2_236_000); assert.equal(s.B.cash.cost24, 2_236_000);
   // C: 3 × 800k (months 0, 6, 12) + agent 200k + bonus 150k + 18 months × 70k × 1.3 = 4,388,000; by June: 800k + 350k + 6 × 91k.
@@ -64,7 +64,8 @@ test('invalid inputs are refused with a reason, never calculated', () => {
 test('sporting snapshot: dated, sourced, consistent, with the discrepancy disclosed', () => {
   assert.equal(SNAPSHOT.referenceDate, '2026-11-22'); assert.ok(SNAPSHOT.sources.length >= 3 && SNAPSHOT.sources.every(s => /^https:\/\//.test(s.url)));
   assert.equal(SNAPSHOT.won * 3 + SNAPSHOT.drawn, SNAPSHOT.points); assert.equal(SNAPSHOT.won + SNAPSHOT.drawn + SNAPSHOT.lost, SNAPSHOT.played);
-  assert.match(SNAPSHOT.discrepancy, /13 matches/);
+  assert.equal(SNAPSHOT.played, 13); assert.equal(SNAPSHOT.totalMatches - SNAPSHOT.played, 25); assert.equal(SNAPSHOT.points, 5);
+  assert.match(SNAPSHOT.state, /Osasuna 1–0 Málaga CF/); assert.match(SNAPSHOT.discrepancy, /12 matches/); assert.match(SNAPSHOT.rights, /No league table, fixture list, logo/);
 });
 
 test('the page: independent, fictional finance, no probability, hypotheses, strict CSP, own scripts only, nothing sent, CTA', () => {
@@ -81,4 +82,21 @@ test('the page: independent, fictional finance, no probability, hypotheses, stri
   // Third-party URLs only as cited sources (links opened by the reader), never loaded.
   for (const m of (html + js).matchAll(/https:\/\/([a-z0-9.-]+)/gi)) assert.ok(['www.lakecapitalmanagement.com', ...SNAPSHOT.sources.map(s => new URL(s.url).host)].includes(m[1]), m[1]);
   assert.ok(html.includes('href="/demo.html"') && html.includes('mailto:kevin@lake-am.com')); assert.doesNotMatch(html + js, /stripe|checkout|signup/i);
+});
+
+test('required pace for a user-chosen, hypothetical objective', () => {
+  const r = evaluate(defaults()); assert.deepEqual({...r.pace, paths: undefined}, {target: 40, needed: 35, perMatch: 1.4, reachable: true, paths: undefined});
+  for (const p of r.pace.paths) { assert.equal(3 * p.wins + p.draws, 35); assert.equal(p.wins + p.draws + p.losses, 25); }
+  const i = defaults(); i.sport.target = 3; assert.equal(evaluate(i).pace.needed, 0);
+  i.sport.target = 80; i.sport.points = 4; const far = evaluate(i).pace; assert.equal(far.reachable, false); assert.equal(far.paths.length, 0, '76 > 75 points available');
+  i.sport.points = 5; assert.deepEqual(evaluate(i).pace.paths, [{wins: 25, draws: 0, losses: 0}]);
+  i.sport.target = 2.5; assert.match(check(i).join(' '), /objective: whole number/);
+});
+
+test('presentation exports: notices, figures identical to the comparison, no external resource', () => {
+  const inp = defaults(), r = evaluate(inp), csv = summaryCsv(r, inp), html = summaryHtml(r, inp, '2026-11-22');
+  for (const t of [csv, html]) { assert.match(t, /not affiliated with Málaga CF or LaLiga/); assert.match(t, /fictional/i); assert.match(t, /No survival probability/); assert.match(t, /not the real survival threshold/); }
+  const lines = csv.trim().split('\r\n'); assert.equal(lines.length, 6); assert.match(lines[2], /^"Strategy",/);
+  comparison(r).forEach((c, k) => assert.ok(lines[3 + k].startsWith(`"${c.strategy}",${c.gain},`) && lines[3 + k].includes(`,${c.cost24},`), c.strategy));
+  assert.doesNotMatch(html, /<script|<link|<img|src=|href=|url\(/i, 'no external resource, sources cited as text'); assert.match(html, /35 points needed, 1\.40 per match/);
 });
