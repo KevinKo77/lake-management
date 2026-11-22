@@ -1,0 +1,40 @@
+/* LANOVA Survival Decision Lab — complements ../finance/demo.css (no inline styles: the page CSP forbids them). */
+.hero { margin: 6px 0 18px; }
+.eyebrow { color: var(--accent-2); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 6px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 0 0 14px; }
+.inputs { margin-top: 4px; }
+.grid.tight { grid-template-columns: 1fr; gap: 9px; }
+.hint { color: var(--faint); font-size: 11.5px; }
+.tag.warn { border-color: rgba(232, 176, 74, .6); color: var(--warn); }
+.strategies { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.strategy { border: 1px solid var(--line); border-top: 3px solid var(--faint); border-radius: 10px; padding: 12px; background: var(--bg-2); min-width: 0; }
+.strategy h3 { margin: 0 0 4px; }
+.s-B { border-top-color: #f0616d; } .s-C { border-top-color: #3fcf8e; } .s-A { border-top-color: #7d86ff; }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.chart.pts { max-height: 220px; }
+.chart .thr { stroke: var(--warn); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.chart .thr-l { fill: var(--warn); }
+.chart .season { stroke: var(--faint); stroke-dasharray: 2 4; }
+.chart .val { fill: var(--text); font-weight: 700; }
+.bar-now { fill: #4a5168; }
+.b-A { fill: #7d86ff; } .b-B { fill: #f0616d; } .b-C { fill: #3fcf8e; }
+.l-A { stroke: #7d86ff; } .l-B { stroke: #f0616d; } .l-C { stroke: #3fcf8e; }
+.sw-A { background: #7d86ff; } .sw-B { background: #f0616d; } .sw-C { background: #3fcf8e; }
+.sw-now { background: #4a5168; } .sw-gain { background: linear-gradient(90deg, #7d86ff, #f0616d, #3fcf8e); }
+.sw-thr, .sw-policy { background: var(--warn); }
+.tradeoffs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.tradeoffs article { min-width: 0; }
+.tradeoffs h3 { margin-top: 0; }
+th[scope="row"] { color: var(--text); background: none; font-weight: 600; }
+ul.small { padding-left: 18px; } ul.small li { margin: 0 0 6px; }
+.cta-card { border-color: var(--accent); }
+@media (max-width: 900px) { .strategies, .tradeoffs { grid-template-columns: 1fr; } }
+@media print {
+  :root { --bg: #fff; --bg-2: #fff; --panel: #fff; --panel-2: #fff; --text: #111; --muted: #444; --faint: #666; --line: #ccc; --line-2: #bbb; color-scheme: light; }
+  body { background: #fff; color: #111; }
+  .top, .skip, .noprint, .seg, .cta-card, .inputs, .strategy .grid, #h-fin + * { display: none !important; }
+  .card { break-inside: avoid; border-color: #ccc; }
+  .banner { background: #fff; border: 1px solid #999; }
+  a { color: #111; }
+}
+.top { background: var(--bg); }
