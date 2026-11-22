@@ -41,6 +41,12 @@ test('the demonstration page: fictional banner, strict CSP, own scripts only, no
 
 test('the public demo page offers the finance demonstration next to the recruitment demo', () => {
   const demo = readFileSync('demo.html', 'utf8');
-  assert.match(demo, /<a class="btn btn-ghost" href="\/lanova\/finance\/" data-cta="finance-demo">Try the finance planning demo<\/a>/);
-  assert.match(demo, /href="\/lanova\/workspace\/" data-cta="free-demo"/, 'existing free demo kept');
+  assert.match(demo, /<a class="btn btn-ghost" href="\/lanova\/finance\/" data-cta="finance-demo">Explore the finance demo \(pilot\)<\/a>/);
+  assert.match(demo, /href="\/lanova\/workspace\/" data-cta="free-demo">Explore the recruitment demo</, 'existing free demo kept');
+  // The two demonstrations are told apart; Finance is never presented as part of the current subscription.
+  const card = id => demo.match(new RegExp(`<div class="card reveal" data-demo="${id}">(.*?)</div>`))[1];
+  assert.match(card('recruitment'), /Included in Organisation Access today/); assert.match(card('recruitment'), /href="\/lanova\/workspace\/"/);
+  assert.match(card('finance'), /Pilot on request — not part of the current subscription/); assert.match(card('finance'), /not included in Organisation Access today/); assert.match(card('finance'), /href="\/lanova\/finance\/"/);
+  assert.doesNotMatch(demo, /finance[^.<]*(included in|part of) (the|your) (current )?subscription(?! today)/i);
+  assert.match(demo, /finance \(pilot on request\)/);
 });
