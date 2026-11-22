@@ -1,0 +1,7 @@
+LANOVA Finance — public demonstration (fictional clubs only)
+Engine: engine/model.js, report.js, pdf.js, cases.js copied byte for byte from KevinKo77/lake-intelligence
+commit aaac1121abd639f3a4c9f7d71dc847c23396fe10 (finance/, engine finance-1.1; PR #56 stacked on PR #55).
+SHA-256 of each file in engine/MANIFEST.json, checked by tests/finance-demo.test.mjs.
+To refresh after a new engine commit: node scripts/sync-finance-engine.mjs <path to lake-intelligence> <commit>.
+demo.js only edits the fictional plan and displays the engine's results (no calculation of its own); nothing is sent
+or stored. No server, account, payment or third-party service is involved.

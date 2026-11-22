@@ -27,7 +27,7 @@ test('the demo page: primary CTA is a working e-mail with the request prefilled,
     assert.equal(u.searchParams.get('subject'), 'LANOVA Sports — demo request');
     for (const field of ['Organisation:', 'My role:', 'Sport:', 'The decision I want to look at:', '30-minute call']) assert.ok(u.searchParams.get('body').includes(field), field);
   }
-  assert.match(demo, /<a class="btn btn-ghost" href="\/lanova\/workspace\/"[^>]*>Explore the free demo first<\/a>/);
+  assert.match(demo, /<a class="btn btn-ghost" href="\/lanova\/workspace\/"[^>]*>Explore the recruitment demo<\/a>/);
   assert.ok(existsSync('lanova/workspace/index.html'), 'the free demo exists in this repository');
   assert.match(demo, /If no email application opens, write to that address directly/, 'fallback when mailto does not open');
 });
