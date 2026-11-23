@@ -18,7 +18,7 @@ export const newOption = n => opt(`option-${n}`, `Option ${n}`, '', {upfront: 0,
 
 export const EXAMPLES = {
   amateur: {
-    title: 'Example 1 · Amateur rugby club', text: 'Volunteer-run club, about €180,000 a year, choosing how to use €25,000 saved over three seasons.',
+    title: 'Rugby', text: 'Amateur, volunteer-run club, about €180,000 a year, choosing how to use €25,000 saved over three seasons.',
     make: () => model({label: 'Illustrative amateur rugby club (anonymous; all figures invented)', sport: 'Rugby union', structure: 'Amateur club (volunteer-run)', horizonMonths: 24,
       finance: {openingCash: 48_000, annualRevenue: 182_000, annualOperatingCosts: 176_000, minimumCash: 15_000, decisionBudget: 25_000, downsideRevenuePct: 15},
       options: [
@@ -31,7 +31,7 @@ export const EXAMPLES = {
       ]}),
   },
   semipro: {
-    title: 'Example 2 · Semi-professional basketball organisation', text: 'Second-tier club, about €2.4M a year, comparing staff, academy, facility and squad options.',
+    title: 'Basketball', text: 'Semi-professional, second-tier club, about €2.4M a year, comparing staff, academy, facility and squad options.',
     make: () => model({label: 'Illustrative semi-professional basketball organisation (anonymous; all figures invented)', sport: 'Basketball', structure: 'Semi-professional club', horizonMonths: 24, objective: 'development',
       finance: {openingCash: 520_000, annualRevenue: 2_400_000, annualOperatingCosts: 2_330_000, minimumCash: 250_000, decisionBudget: 300_000, downsideRevenuePct: 12},
       options: [
@@ -44,7 +44,7 @@ export const EXAMPLES = {
       ]}),
   },
   pro: {
-    title: 'Example 3 · Professional ice hockey organisation', text: 'Top-flight organisation, about €19M a year, testing a training centre, data, medical and roster options over 36 months.',
+    title: 'Hockey', text: 'Professional, top-flight organisation, about €19M a year, testing a training centre, data, medical and roster options over 36 months.',
     make: () => model({label: 'Illustrative professional ice hockey organisation (anonymous; all figures invented)', sport: 'Ice hockey', structure: 'Professional club', horizonMonths: 36, objective: 'financial',
       finance: {openingCash: 3_200_000, annualRevenue: 19_000_000, annualOperatingCosts: 18_600_000, minimumCash: 1_500_000, decisionBudget: 2_500_000, downsideRevenuePct: 6},
       options: [

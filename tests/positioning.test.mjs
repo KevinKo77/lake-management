@@ -52,6 +52,17 @@ test('2 · every sport: the ten disciplines are named, without claiming sport-sp
   assert.doesNotMatch(text(MAIN.map(main).join(' ')), /predict(?:s|ed|ive)? (?:the )?(?:results|performance|wins)(?! of)(?!\?)/i);
 });
 
+test('2 · example selectors name the sport only: Rugby, Basketball, Hockey; the level stays in the scenario details', async () => {
+  const {EXAMPLES} = await import('../lanova/advantage/examples.js');
+  const tabs = [...read('assets/home-map.js').match(/const TABS = (\[.*\]);/)[1].matchAll(/\['(\w+)', '([^']+)'\]/g)].map(m => [m[1], m[2]]);
+  assert.deepEqual(tabs, [['semipro', 'Basketball'], ['amateur', 'Rugby'], ['pro', 'Hockey']], 'home Resource Advantage Map');
+  assert.deepEqual(Object.fromEntries(Object.entries(EXAMPLES).map(([k, e]) => [k, e.title])), {amateur: 'Rugby', semipro: 'Basketball', pro: 'Hockey'}, 'Advantage Lab examples');
+  for (const label of [...tabs.map(t => t[1]), ...Object.values(EXAMPLES).map(e => e.title)]) assert.doesNotMatch(label, /amateur|semi|pro\b|professional|·/i, label);
+  // The level is kept as a detail of each illustrative scenario.
+  assert.match(EXAMPLES.amateur.text, /^Amateur/); assert.match(EXAMPLES.semipro.text, /^Semi-professional/); assert.match(EXAMPLES.pro.text, /^Professional/);
+  assert.match(EXAMPLES.amateur.make().label, /amateur rugby club/); assert.match(EXAMPLES.pro.make().label, /professional ice hockey organisation/);
+});
+
 test('3 · demonstrations open neutral; anonymous examples load only on request; no named fictional club', () => {
   const adv = read('lanova/advantage/app.js'), fin = read('lanova/finance/demo.js');
   assert.match(adv, /else start\(\);/, 'the Advantage Lab opens on its start screen');

@@ -8,7 +8,8 @@ import {EXAMPLES} from '../lanova/advantage/examples.js';
 import {mapSvg} from '../lanova/advantage/map.js';
 
 const box = document.getElementById('home-map');
-const TABS = [['semipro', 'Basketball · semi-pro'], ['amateur', 'Rugby · amateur'], ['pro', 'Ice hockey · pro']];
+// Selection labels name the sport only; the level of each illustrative organisation is a detail of its scenario.
+const TABS = [['semipro', 'Basketball'], ['amateur', 'Rugby'], ['pro', 'Hockey']];
 const S = {key: 'semipro', budget: null, model: null};
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 
