@@ -1,0 +1,48 @@
+/* LANOVA Advantage Lab — complements ../finance/demo.css (no inline styles: the page CSP forbids them). */
+.hero-lab { margin: 8px 0 20px; }
+.eyebrow { color: var(--accent-2); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 6px; }
+.promise { font-size: clamp(18px, 2.2vw, 24px); color: var(--accent-2); margin: 0 0 10px; font-weight: 600; }
+.starts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 14px; }
+.start .btn { margin-top: 10px; }
+.examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin-top: 10px; }
+.labbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 8px; }
+.plan-title { font-size: clamp(20px, 2.4vw, 26px); margin: 2px 0 12px; }
+.hint { color: var(--faint); font-size: 11.5px; }
+.grid.tight { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.option { border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin: 0 0 10px; background: var(--bg-2); }
+.option header { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.badge { display: inline-grid; place-items: center; min-width: 22px; height: 22px; border-radius: 11px; background: rgba(125, 134, 255, .2); color: var(--text); font-size: 12px; font-weight: 700; padding: 0 6px; }
+.check-inline { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
+.chart.map { max-height: 520px; }
+.chart.map .axt { fill: var(--muted); font-size: 13px; }
+.pt circle { stroke: var(--text); }
+.pt.frontier circle { fill: rgba(125, 134, 255, .55); }
+.pt.dominated circle { fill: rgba(163, 171, 189, .28); }
+.pt.not-comparable circle { fill: none; stroke: var(--accent-2); }
+.pt.infeasible circle { fill: rgba(240, 97, 109, .18); stroke: var(--bad); }
+.pt .x { stroke: var(--bad); stroke-width: 3; }
+.pt .n { fill: var(--text); font-size: 13px; font-weight: 700; }
+.pt .h { fill: var(--muted); font-size: 11px; }
+.pt:focus { outline: none; } .pt:focus circle, .pt:hover circle { stroke: var(--warn); stroke-width: 4; }
+.lg { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; border: 1.5px solid var(--text); }
+.lg.frontier { background: rgba(125, 134, 255, .55); } .lg.dominated { background: rgba(163, 171, 189, .28); } .lg.infeasible { background: rgba(240, 97, 109, .18); border-color: var(--bad); } .lg.not-comparable { border-color: var(--accent-2); }
+tr.infeasible td:first-child { color: var(--bad); } tr.dominated td { color: var(--muted); }
+.strats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-bottom: 12px; }
+fieldset.strat { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; min-width: 0; }
+fieldset.strat legend { font-weight: 700; padding: 0 4px; color: var(--text); }
+.strat-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
+.sres { border: 1px solid var(--line); border-left: 4px solid var(--ok); border-radius: 10px; padding: 12px; background: var(--bg-2); min-width: 0; }
+.sres.close-call { border-left-color: var(--warn); } .sres.insufficient-data, .sres.no-feasible { border-left-color: var(--bad); }
+.sres h3 { margin: 0 0 4px; } .sres .reading { margin: 0 0 6px; font-size: 12.5px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.sres .pick { font-weight: 700; margin: 0 0 8px; }
+.sres dl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin: 0 0 8px; }
+.sres dt { color: var(--muted); font-size: 11.5px; } .sres dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: 600; }
+.brief-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; font-size: 13.5px; }
+.brief-grid h3 { margin: 10px 0 4px; } .brief-grid ul { margin: 0; padding-left: 18px; }
+td.small { min-width: 220px; }
+:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+@media (max-width: 760px) { .starts { grid-template-columns: 1fr; } }
+.top { background: var(--bg); }
+.table-wrap table { min-width: 980px; }
+td.small { font-size: 12.5px; }
+@media (max-width: 700px) { .chart.map text { font-size: 19px; } .chart.map .axt { font-size: 19px; } .pt .n { font-size: 19px; } .pt .h { font-size: 16px; } .chart.map { max-height: none; } }
