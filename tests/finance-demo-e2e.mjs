@@ -31,19 +31,34 @@ async function open(opts) {
   const ctx = await browser.newContext({...opts, acceptDownloads: true}), page = await ctx.newPage(); page.setDefaultTimeout(8000);
   page.on('pageerror', e => errors.push(e.message)); // Only requests made while the demonstration is open (the existing /demo.html page loads the site's web fonts).
   page.on('request', r => { if (page.url().includes('/lanova/finance/') && !r.url().startsWith(BASE) && !r.url().startsWith('blob:') && !r.url().startsWith('data:')) offsite.push(r.url()); });
-  await page.goto(`${BASE}/lanova/finance/`); await page.waitForSelector('.club'); return {ctx, page};
+  await page.goto(`${BASE}/lanova/finance/`); await page.waitForSelector('.path'); return {ctx, page};
 }
 const tab = (page, name) => page.locator('.tabs button', {hasText: name}).click();
+// Opens an illustrative example: from the landing (example cards) or, once a plan is open, with the example selector.
+async function example(page, id) { if (await page.locator(`.club[data-club="${id}"]`).count()) await page.click(`.club[data-club="${id}"]`); else await page.selectOption('select[data-ui-example]', id); await page.waitForSelector('.tabs'); }
 const {page} = await open({viewport: {width: 1440, height: 950}});
 
-await t('1 · choose a club: the forecast shown is the engine\'s, for each of the four fictional clubs', async () => {
+await t('0 · neutral landing: four decision paths, no example opened, no named club', async () => {
+  assert.deepEqual(await page.locator('.path b').allInnerTexts(), ['Build a Financial Forecast', 'Compare Strategic Scenarios', 'Analyse Cash Flow & Risk', 'Explore a Financial Decision Report']);
+  assert.equal(await page.locator('.tabs').count(), 0, 'no plan opened by default');
+  const body = await page.innerText('body'); assert.doesNotMatch(body, /Athletic FC|North United|South Athletic|Basket Club|Rivermar|Valdemar/); assert.match(body, /no real or named organisation/);
+  await page.screenshot({path: join(out, 'demo_0_landing_desktop.png'), fullPage: true});
+  for (const [path, tabName, title] of [['forecast', 'Assumptions', /Illustrative example A/], ['scenarios', 'Scenarios', /Illustrative example B/], ['cash', 'Cash & forecast', /Illustrative example A/], ['report', 'Decisions', /Illustrative example C/]]) {
+    await page.goto(`${BASE}/lanova/finance/?path=${path}`); await page.waitForSelector('.tabs');
+    assert.match(await page.locator('.tabs button[aria-pressed="true"]').innerText(), new RegExp(tabName.replace('&', '&')), path);
+    assert.match(await page.innerText('h1'), title, path); assert.match(await page.innerText('.labbar'), /Question:/);
+  }
+  await page.click('button[data-home]'); await page.waitForSelector('.path'); assert.equal(new URL(page.url()).search, '');
+});
+
+await t('1 · choose an example: the forecast shown is the engine\'s, for each of the four illustrative examples', async () => {
   for (const id of ['basketball', 'groupNorth', 'groupSouth', 'football']) {
-    await page.click(`.club[data-club="${id}"]`); await page.waitForSelector('.kpis');
+    await example(page, id); await tab(page, 'Cash & forecast'); await page.waitForSelector('.kpis');
     const want = analyse(CASES[id]()).base, text = await page.innerText('.kpis');
     for (const k of ['closingCash', 'minimumCash', 'revenue']) assert.ok(text.includes(fmt(want.indicators.find(i => i.id === k).value)), `${id} ${k}`);
   }
   assert.match(await page.innerText('main'), /Financial commitments — Months 1–12/); assert.match(await page.innerText('main'), /0\.96×/);
-  assert.match(await page.innerText('body'), /Demonstration with fictional clubs/);
+  assert.match(await page.innerText('body'), /Demonstration with illustrative, anonymous examples/); assert.match(await page.innerText('h1'), /Illustrative example A — 12-month annual budget \(anonymous; all figures invented\)/);
   await page.screenshot({path: join(out, 'demo_1_forecast_desktop.png'), fullPage: true});
 });
 
@@ -73,7 +88,7 @@ await t('3 · simulate a signing: add one, change its fee and instalments; conse
 });
 
 await t('4 · simulate an investment (South): asset, other decisions and combined returns shown separately', async () => {
-  await page.click('.club[data-club="groupSouth"]'); await tab(page, 'Decisions'); await page.waitForSelector('text=Investment return');
+  await example(page, 'groupSouth'); await tab(page, 'Decisions'); await page.waitForSelector('text=Investment return');
   const text = await page.innerText('main');
   assert.match(text, /Asset: selected investments alone\t180,000\t7\.2%/); assert.match(text, /Other selected decisions and interactions\t\+360,000\t\+14\.4 pts/); assert.match(text, /Combined scenario\t540,000\t21\.6%/);
   assert.match(text, /not an IRR or an NPV/);
@@ -81,7 +96,7 @@ await t('4 · simulate an investment (South): asset, other decisions and combine
 });
 
 await t('5 · risks and report: PDF, CSV and HTML exports generated in the browser, marked fictional', async () => {
-  await page.click('.club[data-club="football"]'); await tab(page, 'Risks & report'); await page.waitForSelector('text=Main risks');
+  await example(page, 'football'); await tab(page, 'Risks & report'); await page.waitForSelector('text=Main risks');
   assert.match(await page.innerText('main'), /HIGH · Operating cash flow of the first 12 months/);
   for (const f of ['pdf', 'csv', 'html']) {
     const [d] = await Promise.all([page.waitForEvent('download'), page.click(`button[data-export="${f}"]`)]); const p = join(out, d.suggestedFilename()); await d.saveAs(p);
@@ -92,7 +107,7 @@ await t('5 · risks and report: PDF, CSV and HTML exports generated in the brows
 
 await t('6 · invalid input is explained, never calculated: empty opening cash', async () => {
   await tab(page, 'Assumptions'); const open = page.locator('input[data-bind="openingCash"]'); await open.fill(''); await open.press('Tab');
-  assert.match(await page.innerText('[role=alert]'), /openingCash/); await page.click('.club[data-club="football"]'); assert.equal(await page.locator('[role=alert]').count(), 0);
+  assert.match(await page.innerText('[role=alert]'), /openingCash/); await page.selectOption('select[data-ui-example]', 'basketball'); await page.selectOption('select[data-ui-example]', 'football'); assert.equal(await page.locator('[role=alert]').count(), 0);
 });
 
 await t('7 · contact path: the demo request leads to /demo.html (and its pre-filled e-mail)', async () => {
@@ -102,12 +117,14 @@ await t('7 · contact path: the demo request leads to /demo.html (and its pre-fi
 
 await t('8 · phone (iPhone 13): every step usable without horizontal page overflow', async () => {
   const {page: ph, ctx} = await open({...devices['iPhone 13']});
-  await ph.click('.club[data-club="football"]'); await ph.waitForSelector('.kpis');
-  for (const s of ['Cash forecast', 'Assumptions', 'Scenarios', 'Decisions', 'Risks & report']) {
+  assert.ok(await ph.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth) <= 1, 'landing fits the phone');
+  await ph.screenshot({path: join(out, 'demo_phone_landing.png'), fullPage: true});
+  await ph.click('.path[data-path="cash"]'); await ph.waitForSelector('.kpis');
+  for (const s of ['Cash & forecast', 'Assumptions', 'Scenarios', 'Decisions', 'Risks & report']) {
     await ph.locator('.tabs button', {hasText: s}).click();
     const overflow = await ph.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     assert.ok(overflow <= 1, `${s}: ${overflow}px`);
-    if (s === 'Cash forecast' || s === 'Decisions') await ph.screenshot({path: join(out, `demo_phone_${s.split(' ')[0].toLowerCase()}.png`), fullPage: true});
+    if (s === 'Cash & forecast' || s === 'Decisions') await ph.screenshot({path: join(out, `demo_phone_${s.split(' ')[0].toLowerCase()}.png`), fullPage: true});
   }
   await ctx.close();
 });

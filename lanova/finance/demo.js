@@ -1,5 +1,5 @@
 /**
- * LANOVA Finance — public interactive demonstration (fictional clubs only).
+ * LANOVA Finance — public interactive demonstration (illustrative, anonymous examples only; every figure invented).
  * Every figure comes from the LANOVA Finance engine in ./engine/ (copied unchanged from KevinKo77/lake-intelligence;
  * see BUILD.txt and the SHA-256 manifest). This file only edits the fictional plan and displays the engine's results:
  * it contains no financial calculation of its own. Nothing is sent or stored.
@@ -8,11 +8,21 @@ import {analyse, validatePlan, REVENUE, EXPENSE, CATEGORIES, MONTH_END_NOTICE, P
 import {CASES} from './engine/cases.js';
 import {reportPdf, reportCsv, reportHtml} from './engine/report.js';
 
-const CLUBS = [
-  {id: 'football', title: 'Professional football club', text: 'Annual budget 2026/27: payroll, a striker signing with fee instalments, a bank loan, matchday seasonality.'},
-  {id: 'basketball', title: 'Basketball club', text: 'Commercial revenue falls and the main sponsor contract ends: adapt payroll and costs over 24 months.'},
-  {id: 'groupNorth', title: 'Group club — North', text: '36-month plan with an €8M stadium hospitality investment and a construction loan.'},
-  {id: 'groupSouth', title: 'Group club — South', text: '36-month plan with a €2.5M youth academy and the rent it saves.'},
+// Illustrative, anonymous examples (no real or named club). The engine's validated case plans are used unchanged except
+// for their display name; every figure in them is invented.
+const EXAMPLES = [
+  {id: 'football', letter: 'A', title: 'Example A · 12-month annual budget', text: 'A professional football budget: payroll, matchday seasonality, a bank loan, and a signing paid in instalments.'},
+  {id: 'basketball', letter: 'B', title: 'Example B · 24-month recovery plan', text: 'Commercial revenue falls and the main sponsorship ends: payroll and costs adapted over 24 months.'},
+  {id: 'groupNorth', letter: 'C', title: 'Example C · 36-month infrastructure plan', text: 'An €8M hospitality investment financed by a construction loan, tested against cash and debt service.'},
+  {id: 'groupSouth', letter: 'D', title: 'Example D · 36-month development plan', text: 'A €2.5M training-centre investment and the rent it saves, over three seasons.'},
+];
+const exampleName = id => { const e = EXAMPLES.find(x => x.id === id); return `Illustrative example ${e.letter} — ${e.title.split(' · ')[1]} (anonymous; all figures invented)`; };
+// The four decision paths offered on arrival. Each opens an illustrative example on the step that answers it.
+const PATHS = [
+  {id: 'forecast', title: 'Build a Financial Forecast', text: 'Set opening cash, a minimum cash policy and assumptions; see the monthly income statement and cash.', example: 'football', view: 'assumptions'},
+  {id: 'scenarios', title: 'Compare Strategic Scenarios', text: 'Base, downside and upside cases side by side: revenue, EBITDA, lowest cash and headroom.', example: 'basketball', view: 'scenarios'},
+  {id: 'cash', title: 'Analyse Cash Flow & Risk', text: 'Month-end cash by scenario, the prudent intra-month bound and the financial commitments it must cover.', example: 'football', view: 'overview'},
+  {id: 'report', title: 'Explore a Financial Decision Report', text: 'Test an investment, a loan or a signing against cash and debt service, then export the board report.', example: 'groupNorth', view: 'decisions'},
 ];
 const TEMPLATES = {
   player: {football: {transferFee: 1_500_000, agentFee: 150_000, contractMonths: 36, monthlyWage: 60_000, employerChargeRate: 0.3, signingBonus: 100_000},
@@ -21,7 +31,7 @@ const TEMPLATES = {
     groupSouth: {transferFee: 300_000, agentFee: 30_000, contractMonths: 36, monthlyWage: 20_000, employerChargeRate: 0.3, signingBonus: 0}},
   investment: {amount: 1_000_000, usefulLifeMonths: 120, capexCategory: 'infrastructure', revenueCategory: 'commercial', monthlyRevenue: 25_000, monthlyOperatingCost: 5_000},
 };
-const S = {club: null, plan: null, analysis: null, problems: [], view: 'overview', impactScenario: 'base', instalments: {}, added: 0};
+const S = {club: null, path: null, plan: null, analysis: null, problems: [], view: 'overview', impactScenario: 'base', instalments: {}, added: 0};
 const $ = id => document.getElementById(id);
 const main = document.getElementById('main');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -46,7 +56,7 @@ function recompute() {
   try { S.analysis = analyse(S.plan); S.problems = []; } catch (e) { S.analysis = null; S.problems = e.problems ?? [e.message]; }
 }
 function choose(id) {
-  S.club = id; S.plan = CASES[id](); S.instalments = {}; S.impactScenario = 'base';
+  S.club = id; S.plan = CASES[id](); S.plan.name = exampleName(id); S.instalments = {}; S.impactScenario = 'base';
   for (const d of S.plan.decisions) S.instalments[d.id] = d.type === 'player' ? Math.max(1, d.feePayments.length) : d.type === 'investment' ? d.payments.length : 1;
   recompute(); render();
 }
@@ -65,15 +75,24 @@ function chart(series, {policy = null, labels = []} = {}) {
 }
 
 // ------------------------------------------------------------------ views
-const TABS = [['overview', '1 · Cash forecast'], ['assumptions', '2 · Assumptions'], ['scenarios', '3 · Scenarios'], ['decisions', '4 · Decisions'], ['report', '5 · Risks & report']];
+const TABS = [['overview', '1 · Cash & forecast'], ['assumptions', '2 · Assumptions'], ['scenarios', '3 · Scenarios'], ['decisions', '4 · Decisions'], ['report', '5 · Risks & report']];
+function landing() {
+  return `<section class="hero-lab"><p class="eyebrow">LANOVA Finance · interactive demonstration</p><h1>Which financial decision do you want to examine?</h1>
+    <p class="lede">Choose a question. LANOVA opens an illustrative, anonymous example on the step that answers it; you can then change every assumption, add a decision and export the report. Calculations run in your browser with the LANOVA Finance engine.</p></section>
+    <div class="paths" role="group" aria-label="Decision paths">${PATHS.map((x, i) => `<button type="button" class="path" data-path="${x.id}"><span class="path-n">${i + 1}</span><b>${esc(x.title)}</b><span>${esc(x.text)}</span><em>Open with ${esc(EXAMPLES.find(e => e.id === x.example).title.split(' · ')[0])} →</em></button>`).join('')}</div>
+    <section class="card"><h2>Illustrative examples</h2><p class="muted small">Anonymous examples built for this demonstration. They describe no real or named organisation, and every figure is invented. Each one can be opened on any step.</p>
+    <div class="examples">${EXAMPLES.map(e => `<button type="button" class="club" data-club="${e.id}"><b>${esc(e.title)}</b><span>${esc(e.text)}</span></button>`).join('')}</div></section>
+    <p class="muted small">Squad economics (recruitment) has its own demonstration: <a href="/lanova/workspace/">open the squad economics demo</a>.</p>`;
+}
 function render() {
-  const intro = `<h1>Financial planning for sports clubs</h1><p class="lede">Pick a fictional club, change its assumptions and test a signing or an investment. LANOVA recalculates the monthly accounts and cash, the scenarios, the financial commitments and the risks — then exports a board report.</p>`;
-  const clubs = `<div class="clubs" role="group" aria-label="Fictional clubs">${CLUBS.map(c => `<button type="button" class="club" data-club="${c.id}" aria-pressed="${S.club === c.id}"><b>${esc(c.title)}</b><span>${esc(c.text)}</span></button>`).join('')}</div>`;
-  if (!S.plan) { main.innerHTML = intro + clubs; return; }
+  if (!S.plan) { main.innerHTML = landing(); return; }
+  const path = PATHS.find(x => x.id === S.path);
+  const bar = `<div class="labbar"><button type="button" class="btn small ghost" data-home="1">← All questions</button><span class="muted small">${path ? `Question: <b>${esc(path.title)}</b> · ` : ''}</span>
+    <label class="inline">Example<select data-ui-example="1">${EXAMPLES.map(e => `<option value="${e.id}" ${e.id === S.club ? 'selected' : ''}>${esc(e.title)}</option>`).join('')}</select></label></div>`;
   const tabs = `<nav class="tabs" aria-label="Demonstration steps">${TABS.map(([id, l]) => `<button type="button" data-view="${id}" aria-pressed="${S.view === id}">${esc(l)}</button>`).join('')}</nav>`;
-  const problems = S.problems.length ? `<div class="notice bad" role="alert"><b>These inputs cannot be calculated yet:</b><ul>${S.problems.slice(0, 8).map(p => `<li>${esc(p)}</li>`).join('')}</ul>Correct the value or choose the club again to reset it.</div>` : '';
+  const problems = S.problems.length ? `<div class="notice bad" role="alert"><b>These inputs cannot be calculated yet:</b><ul>${S.problems.slice(0, 8).map(p => `<li>${esc(p)}</li>`).join('')}</ul>Correct the value or reopen the example to reset it.</div>` : '';
   const body = S.analysis ? ({overview, assumptions, scenarios, decisions, report})[S.view]() : (S.view === 'assumptions' || S.view === 'decisions' ? ({assumptions, decisions})[S.view]() : '');
-  main.innerHTML = intro + clubs + `<p class="muted small">${esc(S.plan.name)} · ${S.plan.horizonMonths} months from ${esc(S.plan.startMonth)} · amounts in ${esc(cur())} · fictional data</p>` + tabs + problems + body + next();
+  main.innerHTML = bar + `<h1 class="plan-title">${esc(S.plan.name)}</h1><p class="muted small">${S.plan.horizonMonths} months from ${esc(S.plan.startMonth)} · amounts in ${esc(cur())} · illustrative data</p>` + tabs + problems + body + next();
 }
 function next() {
   const i = TABS.findIndex(([id]) => id === S.view), n = TABS[i + 1];
@@ -97,16 +116,16 @@ function assumptions() {
     ...EXPENSE.filter(used).map(c => [`${CATEGORIES[c].label} — % change`, ...p.scenarios.map((s, i) => pctInput(`scenarios.${i}.costFactors.${c}`, s.costFactors[c]))]),
     ['Extra delay collecting revenue (months)', ...p.scenarios.map((s, i) => `<input type="number" min="0" max="6" step="1" data-bind="scenarios.${i}.extraCollectionLagMonths" data-type="int" value="${s.extraCollectionLagMonths}">`)],
     ['Applies from', ...p.scenarios.map((s, i) => `<select data-bind="scenarios.${i}.fromMonth" data-type="int">${Array.from({length: p.horizonMonths}, (_, t) => `<option value="${t}" ${t === s.fromMonth ? 'selected' : ''}>${month(t)}</option>`).join('')}</select>`)]];
-  return `<section class="card"><h2>Club position</h2><div class="grid">
+  return `<section class="card"><h2>Starting position</h2><div class="grid">
       <label>Opening cash (${esc(cur())})<input type="number" step="1000" data-bind="openingCash" data-type="num" value="${p.openingCash}"></label>
       <label>Minimum cash policy (${esc(cur())})<input type="number" step="1000" min="0" data-bind="minimumCash" data-type="num" value="${p.minimumCash}"></label></div></section>
-    <section class="card"><h2>Scenario assumptions</h2><p class="muted small">Each scenario has its own assumptions, applied to the club's budget from the month chosen. 0 = as budgeted. Changing one scenario never changes another.</p>
+    <section class="card"><h2>Scenario assumptions</h2><p class="muted small">Each scenario has its own assumptions, applied to the budget from the month chosen. 0 = as budgeted. Changing one scenario never changes another.</p>
     ${table(['Assumption', ...p.scenarios.map(s => s.label)], rows.map(r => [esc(r[0]), ...r.slice(1)]), () => false)}</section>`;
 }
 function scenarios() {
   const a = S.analysis, ids = ['revenue', 'ebitda', 'netResult', 'minimumCash', 'closingCash', 'liquidityHeadroom', 'investmentCapacity', 'debt'];
   const names = {revenue: 'Revenue, year 1', ebitda: 'EBITDA, year 1', netResult: 'Net result, year 1', minimumCash: 'Lowest month-end cash', closingCash: 'Cash at the end', liquidityHeadroom: 'Headroom vs policy', investmentCapacity: 'Investment capacity (one-off, now)', debt: 'Debt at the end'};
-  return `<section class="card"><h2>Scenario comparison</h2><p class="muted small">Same club and same selected decisions; only the scenario assumptions differ. Amounts in ${esc(cur())}.</p>
+  return `<section class="card"><h2>Scenario comparison</h2><p class="muted small">Same plan and same selected decisions; only the scenario assumptions differ. Amounts in ${esc(cur())}.</p>
     ${table(['Indicator', ...a.scenarios.map(s => s.label)], [...ids.map(id => [esc(names[id]), ...a.scenarios.map(s => `<span class="${id === 'liquidityHeadroom' ? cls(s.kpis[id]) : ''}">${money(s.kpis[id])}</span>`)]), ['Cash policy', ...a.scenarios.map(s => (s.breaches ? '<span class="neg">breached</span>' : '<span class="pos">met</span>'))]])}
     ${chart(a.scenarios.map(s => ({label: s.label, values: s.cash})), {policy: S.plan.minimumCash, labels: a.base.months.map(m => m.month)})}</section>`;
 }
@@ -138,7 +157,7 @@ function decisions() {
       ['Asset: selected investments alone', money(r.asset.incrementalEbitda), pct(r.asset.ebitdaYield), r.asset.simplePaybackYears?.toFixed(1) ?? 'n/a'],
       ['Other selected decisions and interactions', signed(r.others.incrementalEbitda), r.others.yieldPoints === null ? 'n/a' : `${r.others.yieldPoints >= 0 ? '+' : '−'}${Math.abs(r.others.yieldPoints * 100).toFixed(1)} pts`, '—'],
       {cls: 'total', cells: ['Combined scenario', money(r.combined.incrementalEbitda), pct(r.combined.ebitdaYield), r.combined.simplePaybackYears?.toFixed(1) ?? 'n/a']}])}` : '';
-    impact = `<section class="card"><header><div><h2>Consequences</h2><p class="muted small">Each line is a full recalculation of the club with the decision, against the same club without any decision. Amounts in ${esc(cur())}.</p></div>
+    impact = `<section class="card"><header><div><h2>Consequences</h2><p class="muted small">Each line is a full recalculation of the plan with the decision, against the same plan without any decision. Amounts in ${esc(cur())}.</p></div>
       <label>Scenario<select data-ui="impactScenario">${S.plan.scenarios.map(s => `<option value="${s.id}" ${s.id === sc.scenario ? 'selected' : ''}>${esc(s.label)}</option>`).join('')}</select></label></header>
       <p class="muted small">Without any decision: lowest cash ${money(sc.baseline.minimumCash)}, cash at the end ${money(sc.baseline.closingCash)}.</p>
       ${table(['Decision', 'EBITDA, year 1', 'Cash at the end', 'Lowest cash', 'Lowest cash after', 'Worst month', 'Cash policy'], rows)}${returns}</section>`;
@@ -149,10 +168,10 @@ function decisions() {
 function report() {
   const b = S.analysis.base;
   const risks = b.risks.length ? b.risks.map(x => `<p class="risk ${esc(x.severity)}"><b>${esc(x.severity.toUpperCase())}</b> · ${esc(x.message)}</p>`).join('') : '<p class="muted">No rule-based risk flag in the base case.</p>';
-  return `<section class="card"><h2>Main risks — base case</h2><p class="muted small">Transparent rules on the calculated figures and the club's own thresholds; not predictions.</p>${risks}</section>
+  return `<section class="card"><h2>Main risks — base case</h2><p class="muted small">Transparent rules on the calculated figures and the organisation's own thresholds; not predictions.</p>${risks}</section>
     <section class="card"><h2>Board report</h2><p>Summary with definitions, risks, assumptions and data provenance, monthly forecast and result-to-cash bridge, financial commitments, scenario comparison, consequences of the decisions and limitations — from the plan as you changed it.</p>
     <div class="next"><button type="button" class="btn primary" data-export="pdf">Download PDF</button><button type="button" class="btn" data-export="csv">Download CSV</button><button type="button" class="btn" data-export="html">Download HTML</button></div>
-    <p class="muted small">Generated in your browser; marked as a fictional demonstration.</p></section>`;
+    <p class="muted small">Generated in your browser; marked as a demonstration with invented figures.</p></section>`;
 }
 
 // ------------------------------------------------------------------ events
@@ -169,26 +188,29 @@ function syncPayments(d) {
   if (d.type === 'investment') { d.payments = d.amount > 0 ? split(d.amount, n, d.startMonth, 3) : []; d.operationsStartMonth = Math.min(S.plan.horizonMonths - 1, Math.max(d.operationsStartMonth ?? 0, d.startMonth + 3 * n)); }
 }
 function addDecision(type) {
-  const id = `demo-${type}-${++S.added}`, base = {id, selected: true, startMonth: 1, kind: 'assumption', source: 'Demonstration assumption (fictional)', asOf: '2026-06-15', notes: ''};
+  const id = `demo-${type}-${++S.added}`, base = {id, selected: true, startMonth: 1, kind: 'assumption', source: 'Demonstration assumption (invented figure)', asOf: '2026-06-15', notes: ''};
   const d = type === 'player' ? {...base, label: `New signing ${S.added}`, type, ...TEMPLATES.player[S.club], feePayments: []}
     : {...base, label: `New investment ${S.added}`, type, ...TEMPLATES.investment, payments: [], operationsStartMonth: 7};
   S.instalments[id] = type === 'player' ? 2 : 2; syncPayments(d); S.plan.decisions.push(d);
 }
 main.addEventListener('click', e => {
   const t = e.target.closest('button'); if (!t) return;
-  if (t.dataset.club) return choose(t.dataset.club);
+  if (t.dataset.home) { S.plan = null; S.analysis = null; S.club = null; S.path = null; setUrl(); render(); return window.scrollTo(0, 0); }
+  if (t.dataset.path) return openPath(t.dataset.path);
+  if (t.dataset.club) { S.path = null; choose(t.dataset.club); setUrl(); return; }
   if (t.dataset.view) { S.view = t.dataset.view; render(); return main.querySelector('.tabs')?.scrollIntoView({block: 'nearest'}); }
   if (t.dataset.add) { if (S.plan.decisions.length >= 12) return; addDecision(t.dataset.add); recompute(); return render(); }
   if (t.dataset.remove) { S.plan.decisions.splice(Number(t.dataset.remove), 1); recompute(); return render(); }
   if (t.dataset.export) {
-    const fmt = t.dataset.export, meta = {organisation: 'LANOVA Finance demonstration — fictional club', generatedAt: new Date().toISOString()};
+    const fmt = t.dataset.export, meta = {organisation: 'LANOVA Finance demonstration — illustrative anonymous example', generatedAt: new Date().toISOString()};
     const data = fmt === 'pdf' ? reportPdf(S.plan, S.analysis, meta) : fmt === 'csv' ? reportCsv(S.plan, S.analysis, meta) : reportHtml(S.plan, S.analysis, meta);
     const url = URL.createObjectURL(new Blob([data], {type: {pdf: 'application/pdf', csv: 'text/csv', html: 'text/html'}[fmt]}));
-    const a = document.createElement('a'); a.href = url; a.download = `lanova-finance-demo-${S.club}.${fmt}`; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
+    const a = document.createElement('a'); a.href = url; a.download = `lanova-finance-demo-example-${EXAMPLES.find(e => e.id === S.club).letter.toLowerCase()}.${fmt}`; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
   }
 });
 main.addEventListener('change', e => {
   const el = e.target;
+  if (el.dataset.uiExample) { const v = S.view; choose(el.value); S.view = v; setUrl(); return render(); }
   if (el.dataset.ui) { S[el.dataset.ui] = el.value; return render(); }
   if (el.dataset.bind) setPath(el.dataset.bind, parse(el.dataset.type, el));
   else if (el.dataset.dec !== undefined) {
@@ -198,4 +220,15 @@ main.addEventListener('change', e => {
   } else return;
   recompute(); render();
 });
-render();
+// ------------------------------------------------------------------ paths and shareable links (?path=forecast|scenarios|cash|report)
+function openPath(id) {
+  const x = PATHS.find(p => p.id === id); if (!x) return;
+  S.path = id; choose(x.example); S.view = x.view; setUrl(); render(); main.querySelector('.tabs')?.scrollIntoView({block: 'nearest'});
+}
+function setUrl() {
+  try { const u = new URL(location.href); u.search = S.path ? `?path=${S.path}` : S.club ? `?example=${EXAMPLES.find(e => e.id === S.club).letter.toLowerCase()}` : ''; history.replaceState(null, '', u); } catch { /* not essential */ }
+}
+{
+  const q = new URLSearchParams(location.search), path = q.get('path'), ex = EXAMPLES.find(e => e.letter.toLowerCase() === (q.get('example') ?? '').toLowerCase());
+  if (PATHS.some(p => p.id === path)) openPath(path); else if (ex) choose(ex.id); else render();
+}

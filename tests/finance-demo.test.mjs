@@ -27,7 +27,7 @@ test('the engine reproduces the validated results of the four fictional clubs', 
 
 test('the demonstration page: fictional banner, strict CSP, own scripts only, no network call, honest availability, contact path', () => {
   const html = read('index.html'), js = read('demo.js');
-  assert.match(html, /Demonstration with fictional clubs/); assert.match(html, /nothing you enter is sent or stored/);
+  assert.match(html, /Demonstration with illustrative, anonymous examples/); assert.match(html, /nothing you enter is sent or stored/);
   assert.match(html, /http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self';[^"]*connect-src 'self'/);
   for (const m of html.matchAll(/<script[^>]+src="([^"]+)"/g)) assert.equal(m[1], 'demo.js');
   assert.doesNotMatch(html + js, /https?:\/\/(?!www\.lakecapitalmanagement\.com)[a-z]/i, 'no third-party URL');
@@ -39,14 +39,12 @@ test('the demonstration page: fictional banner, strict CSP, own scripts only, no
   assert.match(js, /href="\/demo\.html"/); assert.doesNotMatch(html + js, /stripe|checkout|signup/i);
 });
 
-test('the public demo page offers the finance demonstration next to the recruitment demo', () => {
+test('the public demo page leads with the finance decision paths and keeps the squad economics demo', () => {
   const demo = readFileSync('demo.html', 'utf8');
-  assert.match(demo, /<a class="btn btn-ghost" href="\/lanova\/finance\/" data-cta="finance-demo">Explore the finance demo \(pilot\)<\/a>/);
-  assert.match(demo, /href="\/lanova\/workspace\/" data-cta="free-demo">Explore the recruitment demo</, 'existing free demo kept');
-  // The two demonstrations are told apart; Finance is never presented as part of the current subscription.
-  const card = id => demo.match(new RegExp(`<div class="card reveal" data-demo="${id}">(.*?)</div>`))[1];
-  assert.match(card('recruitment'), /Included in Organisation Access today/); assert.match(card('recruitment'), /href="\/lanova\/workspace\/"/);
-  assert.match(card('finance'), /Pilot on request — not part of the current subscription/); assert.match(card('finance'), /not included in Organisation Access today/); assert.match(card('finance'), /href="\/lanova\/finance\/"/);
-  assert.doesNotMatch(demo, /finance[^.<]*(included in|part of) (the|your) (current )?subscription(?! today)/i);
-  assert.match(demo, /finance \(pilot on request\)/);
+  assert.match(demo, /<a class="btn btn-ghost" href="\/lanova\/finance\/" data-cta="finance-demo">Explore the finance demonstrations<\/a>/);
+  for (const p of ['forecast', 'scenarios', 'cash', 'report']) assert.match(demo, new RegExp(`href="/lanova/finance/\\?path=${p}"`), p);
+  const card = id => demo.match(new RegExp(`data-demo="${id}">(.*?)</div>`, 's'))[1];
+  assert.match(card('recruitment'), /Squad Economics · included in Organisation Access today/); assert.match(card('recruitment'), /href="\/lanova\/workspace\/"/);
+  assert.match(demo, /pilot on request — not part of the current subscription/); assert.match(demo, /not included in Organisation Access today/);
+  assert.doesNotMatch(demo, /finance[^.<]*(?<!not )(?<!not yet )(included in|part of) (the|your) (current )?subscription(?! today)/i, 'never claims Finance is in the subscription');
 });

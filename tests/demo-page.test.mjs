@@ -27,8 +27,10 @@ test('the demo page: primary CTA is a working e-mail with the request prefilled,
     assert.equal(u.searchParams.get('subject'), 'LANOVA Sports — demo request');
     for (const field of ['Organisation:', 'My role:', 'Sport:', 'The decision I want to look at:', '30-minute call']) assert.ok(u.searchParams.get('body').includes(field), field);
   }
-  assert.match(demo, /<a class="btn btn-ghost" href="\/lanova\/workspace\/"[^>]*>Explore the recruitment demo<\/a>/);
-  assert.ok(existsSync('lanova/workspace/index.html'), 'the free demo exists in this repository');
+  // Repositioning: the secondary CTA opens the finance demonstration (decision paths); squad economics keeps its demo link.
+  assert.match(demo, /<a class="btn btn-ghost" href="\/lanova\/finance\/"[^>]*>Explore the finance demonstrations<\/a>/);
+  assert.match(demo, /<a href="\/lanova\/workspace\/">Explore the squad economics demo<\/a>/);
+  assert.ok(existsSync('lanova/workspace/index.html') && existsSync('lanova/finance/index.html'), 'both free demos exist in this repository');
   assert.match(demo, /If no email application opens, write to that address directly/, 'fallback when mailto does not open');
 });
 
@@ -37,7 +39,8 @@ test('the demo page invents nothing: no form, no booking or third-party service,
   assert.doesNotMatch(demo, /calendly|cal\.com|hubspot|typeform|google\.com\/forms|zoom\.us|teams\.microsoft/i);
   assert.doesNotMatch(demo, /testimonial|trusted by|customers say|case study|\d+\s?% (?:more|less|faster|better)|ROI/i);
   assert.match(demo, /LANOVA does not value clubs or companies/, 'investors and advisers: the limit is stated');
-  assert.match(demo, /Football recruitment today/);
+  assert.match(demo, /not included in Organisation Access today/, 'the finance pilot is not presented as part of the subscription');
+  assert.match(demo, /Squad Economics · included in Organisation Access today/);
   for (const m of demo.matchAll(/<script[^>]+src="([^"]+)"/g)) assert.match(m[1], /^\/assets\/site\.js\?v=/, 'only the existing site script');
 });
 
