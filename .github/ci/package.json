@@ -1,0 +1,8 @@
+{
+  "name": "lake-management-ci",
+  "private": true,
+  "description": "Test-only dependencies for the CI browser suites. Not part of the published site.",
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

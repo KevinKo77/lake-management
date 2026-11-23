@@ -1,0 +1,89 @@
+# Independent validation of the LANOVA V3 candidate branch (PR #27).
+# Read-only: no secret, no deployment, no write to any branch, Railway or Stripe. It only checks out the exact head
+# commit of the pull request, runs the unit and browser suites, and keeps their logs and screenshots as artifacts.
+name: LANOVA V3 validation
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lanova-v3-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  suite:
+    # Targeted at the V3 candidate branch (PR #27); a manual run validates the branch it is started on.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'claude/lanova-v3-integrated'
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {id: unit, name: 'Unit tests (node --test)', cmd: 'node --test tests/*.test.mjs', browser: false}
+          - {id: site, name: 'Browser · site (desktop + iPhone 13)', cmd: 'node tests/site-e2e.mjs ci-out/site', browser: true}
+          - {id: finance, name: 'Browser · Finance demo', cmd: 'node tests/finance-demo-e2e.mjs ci-out/finance', browser: true}
+          - {id: advantage, name: 'Browser · Advantage Lab', cmd: 'node tests/advantage-e2e.mjs ci-out/advantage', browser: true}
+          - {id: mobile, name: 'Browser · mobile, touch (iPhone 13)', cmd: 'node tests/mobile-e2e.mjs ci-out/mobile', browser: true}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Check out the exact head commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Confirm the commit under test
+        run: |
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          echo "Commit under test: $HEAD_SHA" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: .github/ci/package-lock.json
+
+      - name: Install Playwright (locked) and Chromium
+        if: matrix.browser
+        run: |
+          npm ci --prefix .github/ci --no-audit --no-fund
+          ln -s .github/ci/node_modules node_modules
+          npx --prefix .github/ci playwright install --with-deps chromium
+          node -e "console.log('playwright', require('playwright/package.json').version)"
+
+      - name: Run ${{ matrix.name }}
+        run: |
+          mkdir -p ci-out
+          node --version | tee ci-out/node-version.txt
+          set -o pipefail
+          ${{ matrix.cmd }} 2>&1 | tee "ci-out/${{ matrix.id }}.log"
+
+      - name: Publish the result in the job summary
+        if: always()
+        run: |
+          {
+            echo "### ${{ matrix.name }}"
+            echo
+            echo "Commit: \`$HEAD_SHA\` · Node $(node --version)"
+            echo
+            echo '```'
+            grep -E '^(PASS|FAIL|not ok|# (tests|pass|fail))|checks passed' "ci-out/${{ matrix.id }}.log" || echo "no log"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep logs and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lanova-v3-${{ matrix.id }}-${{ env.HEAD_SHA }}
+          path: ci-out/
+          if-no-files-found: warn
+          retention-days: 30

@@ -1,6 +1,8 @@
 LANOVA Finance — public demonstration (fictional clubs only)
 Engine: engine/model.js, report.js, pdf.js, cases.js copied byte for byte from KevinKo77/lake-intelligence
-commit aaac1121abd639f3a4c9f7d71dc847c23396fe10 (finance/, engine finance-1.1; PR #56 stacked on PR #55).
+commit 96b99091b14af3d06d06a8baceda71e230d2e571 (finance/, engine finance-1.1; PR #58, branch
+claude/finance-v1-production-candidate). Previous copy: aaac112 (PR #56); the only engine change since then is the
+signing-bonus fix cb7dce2 (a bonus paid before a scenario's "applies from" month is not scaled by its factor).
 SHA-256 of each file in engine/MANIFEST.json, checked by tests/finance-demo.test.mjs.
 To refresh after a new engine commit: node scripts/sync-finance-engine.mjs <path to lake-intelligence> <commit>.
 demo.js only edits the fictional plan and displays the engine's results (no calculation of its own); nothing is sent

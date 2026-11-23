@@ -1,8 +1,9 @@
 /* LANOVA Finance demonstration — standalone page (no inline styles: the page CSP forbids them). */
 [hidden] { display: none !important; }
 :root {
-  --bg: #0b0d12; --bg-2: #10131a; --panel: #151922; --panel-2: #1b2030; --line: #262c3b; --line-2: #323a4e;
-  --text: #eef1f7; --muted: #a3abbd; --faint: #737c91; --accent: #7d86ff; --accent-2: #a9afff; --ok: #3fcf8e; --warn: #e8b04a; --bad: #f0616d;
+  /* LANOVA V3 instrument palette (shared with assets/v3.css): ink-navy surfaces, ledger-green accent. */
+  --bg: #0b131d; --bg-2: #0f1925; --panel: #142030; --panel-2: #1a2839; --line: #243346; --line-2: #31445b;
+  --text: #e8eef4; --muted: #a2b1c1; --faint: #7d8ea1; --accent: #52d3a4; --accent-2: #8fe5c4; --ok: #52d3a4; --warn: #e8b04a; --bad: #f0616d;
   --r: 12px; color-scheme: dark;
   font: 14.5px/1.5 "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: var(--text); background: var(--bg);
 }
@@ -15,14 +16,15 @@ a { color: var(--accent-2); }
 .top { border-bottom: 1px solid var(--line); padding: 12px 0; position: sticky; top: 0; background: rgba(11, 13, 18, .95); z-index: 5; }
 .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 700; letter-spacing: .06em; }
 .brand small { color: var(--muted); font-weight: 600; letter-spacing: .14em; font-size: 11px; }
-.mark { width: 18px; height: 18px; border-radius: 5px; background: linear-gradient(135deg, #9aa1ff, #3b3fa8); display: inline-block; }
+.mark { width: 20px; height: 20px; border-radius: 5px; background: #e8eef4; display: inline-block; position: relative; }
+.mark::before, .mark::after { content: ""; position: absolute; bottom: 4px; width: 3px; border-radius: 1px; background: #0b6b4e; } .mark::before { left: 6px; height: 7px; } .mark::after { left: 11px; height: 11px; }
 .cta { display: flex; gap: 8px; flex-wrap: wrap; }
 .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 7px 14px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--panel-2); color: var(--text); font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; }
 .btn:hover { border-color: var(--accent); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: #0b0d12; }
 .btn.ghost { background: none; }
 .btn.small { min-height: 30px; padding: 4px 10px; font-size: 13px; }
-.btn[aria-pressed="true"] { border-color: var(--accent); background: rgba(125, 134, 255, .16); }
+.btn[aria-pressed="true"] { border-color: var(--accent); background: rgba(82, 211, 164, .16); }
 .banner { background: rgba(232, 176, 74, .1); border-bottom: 1px solid rgba(232, 176, 74, .35); padding: 9px 0; font-size: 13.5px; }
 main { padding: 22px 20px 40px; }
 h1 { font-size: clamp(24px, 3vw, 34px); margin: 0 0 6px; letter-spacing: -.02em; }
@@ -37,11 +39,12 @@ h2 { font-size: 18px; margin: 0 0 4px; } h3 { font-size: 15px; margin: 18px 0 8p
 .club b { display: block; margin-bottom: 4px; } .club span { color: var(--muted); font-size: 13px; }
 .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 16px; padding: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
 .tabs button { border: 0; background: none; color: var(--muted); padding: 8px 12px; border-radius: 8px; font: inherit; cursor: pointer; }
-.tabs button[aria-pressed="true"] { background: rgba(125, 134, 255, .16); color: var(--text); }
-.kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-.kpi { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: var(--bg-2); min-width: 0; }
+.tabs button[aria-pressed="true"] { background: rgba(82, 211, 164, .16); color: var(--text); }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.kpi { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; background: var(--bg-2); min-width: 0; position: relative; }
+.kpi.bad { border-color: rgba(240, 97, 109, .55); box-shadow: inset 3px 0 0 var(--bad); } .kpi.good { box-shadow: inset 3px 0 0 var(--ok); }
 .kpi span { display: block; color: var(--muted); font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
-.kpi b { display: block; font-size: 20px; margin: 4px 0 2px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.kpi b { display: block; font-size: 22px; letter-spacing: -.01em; margin: 6px 0 4px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .kpi small { color: var(--faint); font-size: 12px; }
 .kpi.bad b { color: var(--bad); } .kpi.good b { color: var(--ok); }
 .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin: 8px 0 12px; }
@@ -80,3 +83,17 @@ td input { width: 92px; padding: 5px 7px; }
   .tabs { flex-wrap: nowrap; overflow-x: auto; } .tabs button { white-space: nowrap; }
   .top .btn.ghost { display: none; }
 }
+/* Decision-path landing (no example opened by default) */
+.hero-lab { margin: 6px 0 18px; } .hero-lab .eyebrow, .eyebrow { color: var(--accent-2); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 6px; }
+.paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 0 0 18px; }
+.path { position: relative; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 16px 14px; color: var(--text); font: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 6px; min-height: 170px; }
+.path:hover, .path:focus-visible { border-color: var(--accent); }
+.path b { font-size: 16px; } .path span { color: var(--muted); font-size: 13.5px; } .path em { margin-top: auto; color: var(--accent-2); font-style: normal; font-size: 13px; font-weight: 600; }
+.path .path-n { width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; background: rgba(82, 211, 164, .16); color: var(--text); font-weight: 700; font-size: 13px; }
+.examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.labbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 10px; }
+label.inline { flex-direction: row; align-items: center; gap: 8px; color: var(--muted); }
+.plan-title { font-size: clamp(20px, 2.4vw, 26px); margin: 4px 0 2px; }
+:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+
+@media (max-width: 1100px) and (min-width: 701px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
