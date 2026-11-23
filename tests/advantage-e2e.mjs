@@ -9,7 +9,7 @@ import {createRequire} from 'node:module';
 import {readFileSync, mkdirSync, writeFileSync, statSync} from 'node:fs';
 import {join, resolve, extname, normalize} from 'node:path';
 import assert from 'node:assert/strict';
-import {evaluate, fmt} from '../lanova/advantage/lab.js';
+import {evaluate, fmt, financialNotice, FINANCIAL_INCOMPLETE} from '../lanova/advantage/lab.js';
 import {EXAMPLES} from '../lanova/advantage/examples.js';
 
 const {chromium, devices} = createRequire(import.meta.url)('playwright');
@@ -88,6 +88,32 @@ await t('5 · decision brief: HTML, JSON and CSV exports carry the same figures'
   assert.equal(json.brief.options.length, want.options.length);
   want.options.forEach((o, i) => { assert.equal(json.brief.options[i].totalCost, o.totals.totalCost); assert.ok(csv.includes(`"${o.name}","${o.status}"`), o.name); assert.ok(html.includes(o.name)); });
   assert.match(html, /Hard constraints/); assert.match(html, /Data missing for a definitive decision/); assert.match(html, /every figure is invented/);
+  // P0: a gain that is not estimable is flagged identically in the five places: interface, brief, HTML, JSON, CSV.
+  const names = want.financial.optionsWithUnknownGain, n = financialNotice(want); assert.ok(names.length && n.incomplete);
+  for (const id of ['#map-fin-notice', '#brief-fin-notice']) { const ui = await page.innerText(id); assert.ok(ui.startsWith(`${FINANCIAL_INCOMPLETE}.`), id); assert.ok(ui.includes(n.text), id); }
+  for (const k of want.financial.strategiesAffected) { const card = await page.innerText(`[data-financial-incomplete="${k}"]`); for (const x of names) assert.ok(card.includes(x), `${k}: ${x}`); }
+  assert.equal(await page.locator('.sres.financial-incomplete').count(), want.financial.strategiesAffected.length);
+  assert.equal(json.brief.financialComparison.status, 'incomplete'); assert.deepEqual(json.brief.financialComparison.optionsWithUnknownGain, names); assert.equal(json.brief.financialComparison.warning, n.text);
+  assert.ok(html.includes('id="financial-notice"') && html.includes(FINANCIAL_INCOMPLETE));
+  assert.ok(csv.split('\r\n')[1].startsWith('"WARNING — Financial comparison incomplete'));
+  for (const x of names) { assert.ok(html.includes(x) && csv.includes(x)); assert.match(await rowOf(page, x).then(r => r[4]), /gain not estimable: costs only/); }
+  await page.locator('#map-fin-notice').scrollIntoViewIfNeeded(); await page.screenshot({path: join(out, 'advantage_financial_incomplete_desktop.png')});
+});
+
+await t('5b · a documented gain range replaces "not estimable": validated, cash at its low end, the warning clears', async () => {
+  const i = (await evaluate(EXAMPLES.pro.make())).options.findIndex(o => o.totals.financialStatus === 'unknown');
+  await page.selectOption(`[data-gain-kind="${i}"]`, 'range'); await page.waitForTimeout(250);
+  assert.match(await page.innerText('#map [role=alert]'), /lowest documented gain per month/, 'an empty range is not computed');
+  await fill(page, `options.${i}.gainRange.low`, 10000); await fill(page, `options.${i}.gainRange.high`, 40000);
+  assert.match(await page.innerText('#map [role=alert]'), /a range is not a guess/, 'a source is required');
+  await fill(page, `options.${i}.gainRange.basis`, 'Illustrative: two written quotes');
+  assert.equal(await page.locator('#map [role=alert]').count(), 0); assert.equal(await page.locator('.sres.financial-incomplete').count(), 0);
+  assert.doesNotMatch(await page.innerText('#map-fin-notice'), /Financial comparison incomplete/); assert.match(await page.innerText('#map-fin-notice'), /cash uses the low end/);
+  const m = EXAMPLES.pro.make(); m.objective = 'development'; m.options[i].gainRange = {low: 10000, high: 40000, basis: 'Illustrative: two written quotes'}; const want = evaluate(m);
+  assert.equal((await rowOf(page, want.options[i].name))[5], fmt(want.options[i].minCashBase));
+  assert.match((await rowOf(page, want.options[i].name))[4], /documented range/);
+  await page.selectOption(`[data-gain-kind="${i}"]`, 'unknown'); await page.waitForTimeout(250);
+  assert.ok(await page.locator('.sres.financial-incomplete').count() > 0, 'back to not estimable: flagged again');
 });
 
 await t('6 · keyboard: start buttons and map points are reachable and named', async () => {

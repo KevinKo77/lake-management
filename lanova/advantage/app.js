@@ -2,14 +2,14 @@
  * LANOVA Advantage Lab — interface. Input and display only: every figure comes from lab.js, which runs the LANOVA
  * Finance engine for cash. Nothing is sent or stored.
  */
-import {evaluate, brief, briefCsv, briefHtml, fmt, OBJECTIVES, STRATEGIES, CRITERIA, MAX_OPTIONS, HORIZONS, normaliseWeights} from './lab.js';
+import {evaluate, brief, briefCsv, briefHtml, fmt, OBJECTIVES, STRATEGIES, CRITERIA, MAX_OPTIONS, HORIZONS, normaliseWeights, READINGS, financialNotice, netFinancialText, gainStatus, PRUDENT_CASH} from './lab.js';
 import {EXAMPLES, blank, newOption} from './examples.js';
 import {mapSvg, STATUS} from './map.js';
 
 const main = document.getElementById('main');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const S = {model: null, example: null, result: null, weights: Object.fromEntries(Object.entries(STRATEGIES).map(([k, v]) => [k, {...v.weights}])), strategy: 'immediate', added: 0, timer: 0};
-const READING = {indicative: 'Indicative', 'close-call': 'Close call: examine the alternative', uncertain: 'Uncertain: depends on missing estimates', 'no-feasible': 'No feasible combination'};
+const READING = READINGS; // one wording for the interface and the exports
 
 // ------------------------------------------------------------------ start screen
 function start() {
@@ -38,7 +38,9 @@ function workspace() {
       ${o.upfrontType === 'capital' ? field(`options.${i}.usefulLifeMonths`, 'Useful life (months)', o.usefulLifeMonths, {step: 1, min: 1}) : ''}
       ${field(`options.${i}.monthlyCost`, 'Running cost per month (EUR)', o.monthlyCost, {min: 0})}${field(`options.${i}.commitmentMonths`, 'Committed for (months)', o.commitmentMonths, {step: 1, min: 0, hint: 'Future commitments: running cost × months'})}
       ${select(`options.${i}.startMonth`, 'Starts in', o.startMonth, Array.from({length: m.horizonMonths}, (_, t) => [t, `month ${t + 1}`]))}${field(`options.${i}.effectMonths`, 'Months until it has an effect', o.effectMonths, {step: 1, min: 0})}
-      <label>Financial gain per month (EUR)<input type="number" inputmode="decimal" step="any" data-bind="options.${i}.monthlyGain" value="${o.monthlyGain ?? ''}" ${o.monthlyGain === null ? 'disabled' : ''}><span class="check-inline"><input type="checkbox" data-gain-na="${i}" ${o.monthlyGain === null ? 'checked' : ''}> not estimable</span></label>
+      <label>Financial gain per month is<select data-gain-kind="${i}">${[['known', 'a single figure'], ['range', 'a documented range'], ['unknown', 'not estimable']].map(([v, l]) => `<option value="${v}" ${gainStatus(o) === v ? 'selected' : ''}>${l}</option>`).join('')}</select>${gainStatus(o) === 'unknown' ? '<small class="hint">Left out of the cash (prudent). Never counted as zero: rankings it could change are marked "Financial comparison incomplete".</small>' : ''}</label>
+      ${gainStatus(o) === 'known' ? field(`options.${i}.monthlyGain`, 'Financial gain per month (EUR)', o.monthlyGain) : ''}
+      ${gainStatus(o) === 'range' ? `${field(`options.${i}.gainRange.low`, 'Lowest documented gain per month (EUR)', o.gainRange.low, {hint: 'Used for the cash (prudent)'})}${field(`options.${i}.gainRange.high`, 'Highest documented gain per month (EUR)', o.gainRange.high)}${field(`options.${i}.gainRange.basis`, 'Source of the range', o.gainRange.basis, {type: 'text', hint: 'A quote, an offer, a past season: a range is not a guess'})}` : ''}
       ${field(`options.${i}.gainMonths`, 'Gain lasts (months)', o.gainMonths, {step: 1, min: 1})}
       ${select(`options.${i}.shortTermScore`, 'Your estimate: immediate contribution (0–10)', o.shortTermScore, scoreOpts)}${select(`options.${i}.longTermScore`, 'Your estimate: long-term contribution (0–10)', o.longTermScore, scoreOpts)}
       ${select(`options.${i}.risk`, 'Your view of its risk', o.risk, [['', 'No estimate'], ['low', 'Low'], ['medium', 'Medium'], ['high', 'High']])}${select(`options.${i}.confidence`, 'Confidence in your estimates', o.confidence, [['low', 'Low'], ['medium', 'Medium'], ['high', 'High']])}
@@ -50,12 +52,13 @@ function workspace() {
       <div><dt>Your estimates (0–10)</dt><dd>Contributions to immediate performance and long-term development. They are your judgement, not predictions of sporting results. A blank estimate stays unknown: it is never counted as zero, and a ranking that depends on it is marked uncertain.</dd></div>
       <div><dt>Risk (your view)</dt><dd>Used only to compare options with each other (dominance): an option is never dominated by one you consider riskier. It does not change any cash figure.</dd></div>
       <div><dt>Confidence</dt><dd>Recorded in the decision brief for the reader. It does not change any calculation.</dd></div>
+      <div><dt>Financial gains</dt><dd>A single figure, a documented range (with its source) or "not estimable". ${esc(PRUDENT_CASH)} When a gain that is not estimable could change a ranking, the strategy reads "Financial comparison incomplete" and the option is named.</dd></div>
       <div><dt>Scenarios</dt><dd>Base case as entered; downside case with lower revenue in every month, option gains included. The downside feeds the "financial security" criterion and the warnings.</dd></div>
       <div><dt>Strategy weights</dt><dd>Preferences applied after the hard constraints, to every feasible combination including "do nothing". They express priorities; they do not forecast results.</dd></div>
     </dl></details>
     <section class="card" aria-labelledby="h-map"><header><div><h2 id="h-map">1 · Resource Advantage Map</h2><p class="muted small">Each option on its total cost and its contribution to the objective. Size = how far it lowers your lowest month-end cash; outline = your risk view; small label = months until it has an effect.</p></div>
       ${select('objective', 'Objective (vertical axis)', m.objective, Object.entries(OBJECTIVES).map(([k, v]) => [k, v.label]))}</header>
-      <div id="summary" class="summary" aria-live="polite"></div><div id="map" aria-live="polite"></div></section>
+      <div id="fin-notice" aria-live="polite"></div><div id="summary" class="summary" aria-live="polite"></div><div id="map" aria-live="polite"></div></section>
     <section class="card" aria-labelledby="h-org"><header><h2 id="h-org">2 · Decision Simulator — organisation and hard constraints</h2></header>
       <div class="grid">
         ${field('label', 'Organisation (name or description)', m.label, {type: 'text'})}${field('sport', 'Sport', m.sport, {type: 'text', attrs: 'list="sports"'})}
@@ -83,8 +86,8 @@ function workspace() {
 function chart(r, m) {
   const svg = mapSvg(r, m, {narrow: (main.clientWidth || innerWidth) < 700, names: true});
   const legend = `<p class="legend"><span><i class="lg frontier"></i>Efficient: no feasible option is better on cost, objective, risk and cash at once</span><span><i class="lg dominated"></i>Dominated</span><span><i class="lg infeasible"></i>Not feasible</span><span><i class="lg not-comparable"></i>Not comparable</span><span>Outline: thin = low risk · dashed = medium · thick = high (your view)</span><span>Larger = lowers your lowest cash more</span></p>`;
-  const rows = r.options.map((o, i) => `<tr class="${o.status}"><td><span class="badge">${i + 1}</span> ${esc(o.name)}</td><td>${esc(STATUS[o.status])}</td><td class="n">${fmt(o.totals.upfront)}</td><td class="n">${fmt(o.totals.totalCost)}</td><td class="n">${o.totals.netFinancialInHorizon === null ? 'not estimable' : fmt(o.totals.netFinancialInHorizon)}</td><td class="n">${fmt(o.minCashBase)}</td><td class="n">${fmt(o.minCashDownside)}</td><td>${o.input.shortTermScore ?? '—'} / ${o.input.longTermScore ?? '—'}</td><td>${esc(o.risk ?? '—')}</td><td class="n">${o.horizonMonths}</td><td class="small">${esc([...o.reasons, ...o.dominatedBy.map(n => `Dominated by: ${n}.`), ...o.warnings].join(' '))}</td></tr>`).join('');
-  return svg + legend + `<div class="table-wrap"><table><thead><tr><th>Option</th><th>Status</th><th class="n">Immediate cost</th><th class="n">Total cost</th><th class="n">Net financial, horizon</th><th class="n">Lowest cash with it</th><th class="n">Lowest cash, downside</th><th>Your estimates now / long term</th><th>Risk (your view)</th><th class="n">Months to effect</th><th>Why</th></tr></thead><tbody>${rows}</tbody></table></div>
+  const rows = r.options.map((o, i) => `<tr class="${o.status}"><td><span class="badge">${i + 1}</span> ${esc(o.name)}</td><td>${esc(STATUS[o.status])}</td><td class="n">${fmt(o.totals.upfront)}</td><td class="n">${fmt(o.totals.totalCost)}</td><td class="n">${esc(netFinancialText(o))}</td><td class="n">${fmt(o.minCashBase)}</td><td class="n">${fmt(o.minCashDownside)}</td><td>${o.input.shortTermScore ?? '—'} / ${o.input.longTermScore ?? '—'}</td><td>${esc(o.risk ?? '—')}</td><td class="n">${o.horizonMonths}</td><td class="small">${esc([...o.reasons, ...o.dominatedBy.map(n => `Dominated by: ${n}.`), ...o.warnings].join(' '))}</td></tr>`).join('');
+  return svg + legend + `<div class="table-wrap"><table><thead><tr><th>Option</th><th>Status</th><th class="n">Immediate cost</th><th class="n">Total cost</th><th class="n">Net financial, horizon</th><th class="n">Lowest cash with it (prudent)</th><th class="n">Lowest cash, downside</th><th>Your estimates now / long term</th><th>Risk (your view)</th><th class="n">Months to effect</th><th>Why</th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="muted small">Without any option: lowest month-end cash ${fmt(r.baseMinCash)} (downside ${fmt(r.baseMinCashDownside)}). Dominance compares feasible options on total cost, the objective, risk and lowest cash, only when both have estimates. Cash: LANOVA Finance engine.</p>`;
 }
 
@@ -95,7 +98,8 @@ function results(r, m) {
       <dl><div><dt>Immediate cost</dt><dd>${fmt(b.upfront)}</dd></div><div><dt>Total cost</dt><dd>${fmt(b.totalCost)}</dd></div><div><dt>Lowest cash</dt><dd>${fmt(b.minCashBase)}</dd></div><div><dt>Lowest cash, downside</dt><dd class="${b.minCashDownside < m.finance.minimumCash ? 'neg' : ''}">${fmt(b.minCashDownside)}</dd></div></dl>
       ${s.runnerUp ? `<p class="small muted">Alternative to examine: ${esc(s.runnerUp.options.join(' + ') || 'do nothing')}</p>` : ''}
       ${s.assumptionsNeeded.length ? `<p class="small neg">The ranking could change once these estimates are known: ${esc(s.assumptionsNeeded.join('; '))}.${s.contenders.length ? ` Could rank higher: ${esc(s.contenders.map(c => c.options.join(' + ') || 'do nothing').join(' · '))}.` : ''}</p>` : ''}
-      ${s.unboundedGains.length ? `<p class="small muted">Financial gains not estimable, so not counted: ${esc(s.unboundedGains.join(', '))}.</p>` : ''}
+      ${s.financial.incomplete ? `<p class="small neg" data-financial-incomplete="${k}"><b>Financial comparison incomplete.</b> ${esc(s.financial.reasons.join(' '))} Gain not estimable: ${esc(s.financial.optionsWithUnknownGain.map(x => `${x.name} (${x.role})`).join('; '))}.</p>`
+        : s.unboundedGains.length ? `<p class="small muted">Gain not estimable, left out of the cash; this ranking does not depend on it: ${esc(s.unboundedGains.join(', '))}.</p>` : ''}
       ${b.highRisk.length ? `<p class="small">High risk in your view: ${esc(b.highRisk.join(', '))}</p>` : ''}
       ${b.minCashDownside < m.finance.minimumCash ? '<p class="small neg">In the downside case, cash falls below the reserve.</p>' : ''}
       <p class="small muted">${s.candidates} feasible combination(s) compared.</p></article>`; }).join('')}</div>
@@ -105,10 +109,16 @@ function results(r, m) {
 function briefView(r, m) {
   const b = brief(m, r), li = a => `<ul>${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
   const bad = b.options.filter(o => o.status === 'infeasible' || o.status === 'dominated');
-  return `<div class="brief-grid"><div><h3>Objective</h3><p>${esc(b.objective)} · ${esc(b.horizon)}</p><h3>Hard constraints</h3>${li(b.hardConstraints)}<h3>Scenarios studied</h3>${li(b.scenariosStudied)}</div>
+  return `${noticeHtml(r, 'brief-fin-notice')}<div class="brief-grid"><div><h3>Objective</h3><p>${esc(b.objective)} · ${esc(b.horizon)}</p><h3>Hard constraints</h3>${li(b.hardConstraints)}<h3>Scenarios studied</h3>${li(b.scenariosStudied)}</div>
     <div><h3>Dominated or not feasible</h3>${bad.length ? li(bad.map(o => `${o.name}: ${o.status === 'infeasible' ? o.infeasibleBecause.join(' ') : `dominated by ${o.dominatedBy.join(', ')}`}`)) : '<p class="muted">None.</p>'}
       <h3>Data missing for a definitive decision</h3>${li(b.missingForADecision)}</div>
     <div><h3>Assumptions</h3>${li(b.assumptions)}<h3>Limits</h3>${li(b.limits)}</div></div>`;
+}
+
+/** The financial-completeness notice (same text as the exports: financialNotice in lab.js). */
+function noticeHtml(r, id) {
+  const n = financialNotice(r);
+  return n ? `<div class="notice ${n.incomplete ? 'bad fin-incomplete' : ''}" id="${id}" role="${n.incomplete ? 'alert' : 'note'}"><b>${esc(n.title)}.</b> <span class="fin-text">${esc(n.text)}</span></div>` : '';
 }
 
 // ------------------------------------------------------------------ compute and events
@@ -117,18 +127,19 @@ function compute() {
   const map = document.getElementById('map'), res = document.getElementById('results'), br = document.getElementById('brief');
   if (r.problems.length) {
     const msg = `<div class="notice bad" role="alert"><b>Complete or correct these inputs — nothing is calculated until they are valid:</b><ul>${r.problems.slice(0, 12).map(p => `<li>${esc(p)}</li>`).join('')}</ul></div>`;
-    map.innerHTML = msg; res.innerHTML = ''; document.getElementById('summary').innerHTML = ''; br.innerHTML = '<p class="muted">The brief appears once the inputs are valid.</p>'; return;
+    map.innerHTML = msg; res.innerHTML = ''; document.getElementById('summary').innerHTML = ''; document.getElementById('fin-notice').innerHTML = ''; br.innerHTML = '<p class="muted">The brief appears once the inputs are valid.</p>'; return;
   }
   map.innerHTML = r.options.length ? chart(r, S.model) : '<p class="muted">Add options below to see them on the map.</p>';
   const c = st => r.options.filter(o => o.status === st).length;
   document.getElementById('summary').innerHTML = r.options.length ? `<div><span>Options</span><b>${r.options.length}</b></div><div><span>Efficient</span><b>${c('frontier')}</b></div><div><span>Dominated</span><b>${c('dominated')}</b></div><div><span>Not feasible</span><b>${c('infeasible')}</b></div><div><span>Not comparable</span><b>${c('not-comparable')}</b></div><div><span>Lowest cash without any option</span><b>${fmt(r.baseMinCash)}</b></div>` : '';
+  document.getElementById('fin-notice').innerHTML = noticeHtml(r, 'map-fin-notice');
   res.innerHTML = results(r, S.model); br.innerHTML = briefView(r, S.model);
 }
 const schedule = () => { clearTimeout(S.timer); S.timer = setTimeout(compute, 120); };
 addEventListener('resize', () => { if (S.model && document.getElementById('map')) schedule(); });
 function setPath(path, raw, el) {
   const keys = path.split('.'), last = keys.pop(); let o = S.model; for (const k of keys) o = o[k];
-  const textKeys = ['label', 'sport', 'structure', 'name', 'category', 'upfrontType', 'objective', 'risk', 'confidence'];
+  const textKeys = ['label', 'sport', 'structure', 'name', 'category', 'upfrontType', 'objective', 'risk', 'confidence', 'basis'];
   let v;
   if (textKeys.includes(last)) v = last === 'risk' ? (raw === '' ? null : raw) : raw;
   else if (['shortTermScore', 'longTermScore'].includes(last)) v = raw === '' ? null : Number(raw);
@@ -150,7 +161,12 @@ main.addEventListener('input', e => {
 main.addEventListener('change', e => {
   const el = e.target;
   if (el.dataset.bind && el.tagName === 'SELECT') setPath(el.dataset.bind, el.value, el);
-  else if (el.dataset.gainNa !== undefined) { const o = S.model.options[Number(el.dataset.gainNa)]; o.monthlyGain = el.checked ? null : 0; workspace(); }
+  else if (el.dataset.gainKind !== undefined) {
+    // Switching never invents a figure: a single figure starts at 0 (no gain) for you to edit; a range starts empty.
+    const o = S.model.options[Number(el.dataset.gainKind)], v = el.value;
+    if (v === 'known') { o.monthlyGain = 0; delete o.gainRange; } else { o.monthlyGain = null; if (v === 'range') o.gainRange = {low: null, high: null, basis: ''}; else delete o.gainRange; }
+    workspace();
+  }
 });
 main.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;

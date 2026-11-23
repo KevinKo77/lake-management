@@ -67,12 +67,18 @@ await t('3 · home: the first screen says what LANOVA is, for every sport, with 
   const want = evaluate({...EXAMPLES.semipro.make(), objective: 'development'});
   assert.equal(await page.innerText('#hm-feasible'), `${want.options.filter(o => o.feasible).length} of ${want.options.length}`);
   assert.equal(await page.locator('#home-map .pt').count(), want.options.length);
+  // The pick never hides a gain that is not estimable: same rule and same options as the Advantage Lab.
+  assert.equal(want.strategies.development.status, 'financial-incomplete');
+  const fin = await page.innerText('#hm-fin'); assert.match(fin, /^Financial comparison incomplete: the gain of .+ is not estimable/);
+  for (const x of want.strategies.development.financial.optionsWithUnknownGain) assert.ok(fin.includes(x.name), x.name);
   await page.screenshot({path: join(out, 'v3_home_first_screen_desktop.png')});
   // Change the budget: fewer options become feasible, exactly as the engine says.
   await page.locator('#hm-budget').fill('20000'); await page.waitForTimeout(150);
   const m = {...EXAMPLES.semipro.make(), objective: 'development'}; m.finance.decisionBudget = 20000; const w2 = evaluate(m);
   assert.equal(await page.innerText('#hm-feasible'), `${w2.options.filter(o => o.feasible).length} of ${w2.options.length}`);
   assert.equal(await page.locator('#home-map .pt.infeasible').count(), w2.options.filter(o => o.status === 'infeasible').length);
+  // Complete data (rugby): no warning.
+  await page.click('#home-map button[data-ex="amateur"]'); await page.waitForTimeout(100); assert.equal(await page.innerText('#hm-fin'), '');
   // Another sport.
   await page.click('#home-map button[data-ex="pro"]'); await page.waitForTimeout(100);
   assert.equal(await page.locator('#home-map .pt').count(), EXAMPLES.pro.make().options.length);

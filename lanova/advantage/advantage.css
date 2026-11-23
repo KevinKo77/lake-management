@@ -32,7 +32,8 @@ fieldset.strat { border: 1px solid var(--line); border-radius: 10px; padding: 10
 fieldset.strat legend { font-weight: 700; padding: 0 4px; color: var(--text); }
 .strat-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
 .sres { border: 1px solid var(--line); border-left: 4px solid var(--ok); border-radius: 10px; padding: 12px; background: var(--bg-2); min-width: 0; }
-.sres.close-call { border-left-color: var(--warn); } .sres.insufficient-data, .sres.no-feasible { border-left-color: var(--bad); }
+.sres.close-call, .sres.uncertain { border-left-color: var(--warn); } .sres.financial-incomplete { border-left-color: var(--bad); }
+.notice.fin-incomplete { border-width: 2px; border-color: var(--bad); } .notice .fin-text { color: var(--text); } .sres.insufficient-data, .sres.no-feasible { border-left-color: var(--bad); }
 .sres h3 { margin: 0 0 4px; } .sres .reading { margin: 0 0 6px; font-size: 12.5px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
 .sres .pick { font-weight: 700; margin: 0 0 8px; }
 .sres dl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin: 0 0 8px; }

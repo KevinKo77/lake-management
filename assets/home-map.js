@@ -3,7 +3,7 @@
  * drawing code as /lanova/advantage/ (lab.js → LANOVA Finance engine; map.js). Illustrative anonymous examples only,
  * all figures invented; nothing is sent or stored.
  */
-import {evaluate, fmt, STRATEGIES} from '../lanova/advantage/lab.js';
+import {evaluate, fmt, STRATEGIES, FINANCIAL_INCOMPLETE} from '../lanova/advantage/lab.js';
 import {EXAMPLES} from '../lanova/advantage/examples.js';
 import {mapSvg} from '../lanova/advantage/map.js';
 
@@ -29,7 +29,7 @@ function render(full) {
       <div id="hm-svg"></div>
       <p class="map-key"><span><i class="k-frontier"></i>Efficient</span><span><i class="k-dominated"></i>Dominated</span><span><i class="k-infeasible"></i>Not feasible</span><span><i class="k-nc"></i>Not comparable</span><span>Vertical: estimated long-term contribution (0–10, the example's own estimate)</span></p>
     </div>
-    <div class="readout" aria-live="polite"><div><span>Feasible options</span><b id="hm-feasible"></b></div><div><span>Efficient (not dominated)</span><b id="hm-eff"></b></div><div><span>${esc(STRATEGIES.development.label)}</span><b id="hm-pick"></b><small id="hm-pick-names" class="pick-names"></small></div></div>
+    <div class="readout" aria-live="polite"><div><span>Feasible options</span><b id="hm-feasible"></b></div><div><span>Efficient (not dominated)</span><b id="hm-eff"></b></div><div><span>${esc(STRATEGIES.development.label)}</span><b id="hm-pick"></b><small id="hm-pick-names" class="pick-names"></small><small id="hm-fin" class="pick-fin"></small></div></div>
     <div class="instrument-foot"><span>Calculated in your browser: Advantage Lab engine and LANOVA Finance engine.</span><a id="hm-open" href="lanova/advantage/?example=${S.key}">Open the full analysis →</a></div>`;
   box.querySelector('#hm-svg').innerHTML = mapSvg(r, m, {narrow, names: box.clientWidth >= 520});
   box.querySelector('#hm-out').textContent = `€${fmt(S.budget)}`;
@@ -37,6 +37,8 @@ function render(full) {
   box.querySelector('#hm-eff').textContent = String(count('frontier'));
   box.querySelector('#hm-pick').textContent = pick;
   box.querySelector('#hm-pick-names').textContent = strat.best.options.join(' · ');
+  // Same rule as the Advantage Lab: a gain that is not estimable is never read as zero, and the ranking says so.
+  box.querySelector('#hm-fin').textContent = strat.financial.incomplete ? `${FINANCIAL_INCOMPLETE}: the gain of ${strat.financial.optionsWithUnknownGain.map(x => x.name).join(', ')} is not estimable, so this choice could change.` : '';
   box.querySelector('#hm-open').href = `lanova/advantage/?example=${S.key}`;
 }
 box.addEventListener('click', e => { const b = e.target.closest('button[data-ex]'); if (b) { load(b.dataset.ex); box.querySelector(`button[data-ex="${b.dataset.ex}"]`)?.focus(); } });

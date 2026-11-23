@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, readdirSync} from 'node:fs';
-import {evaluate, check, optionTotals, optionDecisions, basePlan, markDominance, brief, briefCsv, briefHtml, SCHEMA} from '../lanova/advantage/lab.js';
+import {evaluate, check, optionTotals, optionDecisions, basePlan, markDominance, brief, briefCsv, briefHtml, financialNotice, FINANCIAL_INCOMPLETE, STRATEGIES, SCHEMA} from '../lanova/advantage/lab.js';
 import {EXAMPLES, blank, newOption} from '../lanova/advantage/examples.js';
 import {forecast} from '../lanova/finance/engine/model.js';
 
@@ -24,8 +24,12 @@ test('one engine: the lab imports only the published Finance engine; the page se
 
 test('costs and commitments: immediate, running within the horizon, after the horizon; gains only when estimable', () => {
   const m = model([]), o = opt('a', {upfront: 10_000, monthlyCost: 1_000, startMonth: 6, commitmentMonths: 12, monthlyGain: 500, effectMonths: 2, gainMonths: 24});
-  assert.deepEqual(optionTotals(m, o), {upfront: 10_000, runningInHorizon: 6_000, commitmentsAfterHorizon: 6_000, totalCost: 22_000, gainInHorizon: 2_000, netFinancialInHorizon: -14_000, gainEstimable: true});
+  assert.deepEqual(optionTotals(m, o), {upfront: 10_000, runningInHorizon: 6_000, commitmentsAfterHorizon: 6_000, totalCost: 22_000, gainInHorizon: 2_000, netFinancialInHorizon: -14_000, gainEstimable: true,
+    financialStatus: 'complete', gainRangeInHorizon: [2_000, 2_000], netFinancialRange: [-14_000, -14_000], prudentNetInHorizon: -14_000, gainUncertainInHorizon: false});
   const na = optionTotals(m, {...o, monthlyGain: null}); assert.equal(na.gainInHorizon, null); assert.equal(na.netFinancialInHorizon, null); assert.equal(na.totalCost, 22_000);
+  assert.equal(na.financialStatus, 'unknown'); assert.equal(na.prudentNetInHorizon, -16_000, 'prudent: costs only, never a zero gain'); assert.equal(na.gainUncertainInHorizon, true);
+  const rg = optionTotals(m, {...o, monthlyGain: null, gainRange: {low: 200, high: 800, basis: 'signed sponsor letter'}});
+  assert.equal(rg.financialStatus, 'range'); assert.equal(rg.gainInHorizon, null); assert.deepEqual(rg.gainRangeInHorizon, [800, 3_200]); assert.deepEqual(rg.netFinancialRange, [-15_200, -12_800]); assert.equal(rg.prudentNetInHorizon, -15_200);
   assert.equal(optionTotals(m, {...o, startMonth: 11, effectMonths: 3}).gainInHorizon, 0, 'effect after the horizon');
 });
 
@@ -108,8 +112,8 @@ test('edge cases: invalid inputs are refused with a reason, never computed', () 
 
 test('exports: brief JSON, CSV and HTML carry the same figures as the evaluation, with assumptions, limits and missing data', () => {
   const m = EXAMPLES.pro.make(), r = evaluate(m), b = brief(m, r), csv = briefCsv(m, r).trim().split('\r\n'), html = briefHtml(m, r, '2026-11-23');
-  assert.equal(b.options.length, r.options.length); assert.equal(csv.length, r.options.length + 2);
-  r.options.forEach((o, i) => { assert.equal(b.options[i].status, o.status); assert.equal(b.options[i].totalCost, o.totals.totalCost); assert.ok(csv[i + 2].startsWith(`"${o.name}","${o.status}",${o.totals.upfront},`)); assert.ok(html.includes(o.name)); });
+  assert.equal(b.options.length, r.options.length); assert.equal(csv.length, r.options.length + 3 + 2 + Object.keys(r.strategies).length, 'notice, header, options, blank line, strategy header, strategies');
+  r.options.forEach((o, i) => { assert.equal(b.options[i].status, o.status); assert.equal(b.options[i].totalCost, o.totals.totalCost); assert.ok(csv[i + 3].startsWith(`"${o.name}","${o.status}",${o.totals.upfront},`)); assert.ok(html.includes(o.name)); });
   for (const k of ['objective', 'scenariosStudied', 'hardConstraints', 'assumptions', 'limits', 'missingForADecision', 'strategies']) assert.ok(b[k], k);
   assert.ok(b.options.find(o => o.status === 'infeasible').infeasibleBecause.length); assert.ok(b.options.some(o => o.dominatedBy.length));
   assert.match(html, /every figure is invented/); assert.match(html, /not predictions; no probability is given/); assert.doesNotMatch(html, /<script/);
@@ -166,4 +170,121 @@ test('missing data in combinations: every combination keeps its unknowns listed,
   assert.match(b.assumptions.join(' '), /treated as unknown, not as zero/);
   // Financial gains that are not estimable are excluded and listed, not guessed.
   const p = evaluate(EXAMPLES.pro.make()); assert.ok(Object.values(p.strategies).some(s => s.unboundedGains.includes('Data and decision-support department')));
+});
+
+// ------------------------------------------------------------------ P0 corrective: financial gains that are not estimable
+// Reproducible case: two options, both feasible, sporting estimates known for both, "do nothing" available. Option B's
+// financial gain is not estimable. Before the fix, B counted for its costs only and the ranking read "indicative" or
+// "close call": the unknown gain was silently treated as no gain.
+const gainCase = (gainB = null, extra = {}) => model([
+  opt('a', {name: 'Option A', upfront: 10_000, monthlyCost: 500, commitmentMonths: 12, monthlyGain: 1_000, gainMonths: 12, shortTermScore: 6, longTermScore: 5}),
+  opt('b', {name: 'Option B', upfront: 12_000, monthlyCost: 800, commitmentMonths: 12, monthlyGain: gainB, gainMonths: 12, shortTermScore: 7, longTermScore: 5, ...extra}),
+]);
+
+test('P0 · an unknown gain is never a zero gain: every strategy that weighs money or cash reads "Financial comparison incomplete"', () => {
+  const m = gainCase(), r = evaluate(m);
+  assert.deepEqual(r.problems, []);
+  assert.ok(r.options.every(o => o.feasible), 'both options are financially feasible');
+  for (const [k, s] of Object.entries(r.strategies)) {
+    assert.ok(s.candidates >= 3, `${k}: do nothing, A, B (and A + B) are candidates`);
+    assert.equal(s.status, 'financial-incomplete', `${k}: the ranking must not look settled`);
+    assert.ok(s.financial.incomplete); assert.match(s.financial.reasons.join(' '), /not estimable/);
+    assert.deepEqual(s.financial.optionsWithUnknownGain.map(x => x.name), ['Option B'], `${k}: B is named, selected or not`);
+    assert.ok(s.unboundedGains.includes('Option B'));
+  }
+  // B is named even where it is neither selected nor the alternative.
+  const roles = Object.values(r.strategies).map(s => s.financial.optionsWithUnknownGain[0].role);
+  assert.ok(roles.every(x => ['in the best combination', 'in the alternative', 'feasible, not selected'].includes(x)));
+  // Prudent cash is kept: B's cash change has no gain in it, and its net effect is costs only, labelled as such.
+  const b = r.options.find(o => o.id === 'b');
+  assert.equal(b.totals.financialStatus, 'unknown'); assert.equal(b.totals.netFinancialInHorizon, null); assert.equal(b.totals.prudentNetInHorizon, -(12_000 + 800 * 12));
+  close(b.closingCashDelta, -(12_000 + 800 * 12), 'cash change of B = its costs only (prudent)');
+  assert.match(b.warnings.join(' '), /not estimable: the cash figures exclude it \(prudent cash\)/);
+  // Not dominated because of a cash figure that leaves its gain out.
+  assert.notEqual(b.status, 'dominated');
+});
+
+test('P0 · the same case with every gain known is computed as before (no false alarm); a gain after the horizon changes nothing', () => {
+  for (const g of [0, 300, 2_000]) {
+    const r = evaluate(gainCase(g));
+    assert.deepEqual(r.financial.optionsWithUnknownGain, []); assert.equal(financialNotice(r), null);
+    for (const s of Object.values(r.strategies)) { assert.notEqual(s.status, 'financial-incomplete'); assert.equal(s.financial.incomplete, false); }
+  }
+  // With different known gains, the ranking can change: the unknown really could have changed it.
+  const low = evaluate(gainCase(0)).strategies.security.best.options, high = evaluate(gainCase(5_000)).strategies.security.best.options;
+  assert.notDeepEqual(low, high, 'B\'s gain decides the security strategy');
+  // An unknown gain that would only start after the horizon cannot change these figures: no warning.
+  const late = evaluate(gainCase(null, {effectMonths: 12}));
+  assert.deepEqual(late.financial.optionsWithUnknownGain, []);
+  for (const s of Object.values(late.strategies)) assert.notEqual(s.status, 'financial-incomplete');
+});
+
+test('P0 · a strategy that weighs neither money nor cash is not flagged, but the notice still says the cash leaves the gain out', () => {
+  const m = gainCase(), r = evaluate(m, {weights: {immediate: {short: 1, long: 0, money: 0, security: 0}}});
+  assert.notEqual(r.strategies.immediate.status, 'financial-incomplete'); assert.equal(r.strategies.development.status, 'financial-incomplete');
+  const r2 = evaluate(m, {weights: Object.fromEntries(Object.keys(STRATEGIES).map(k => [k, {short: 1, long: 0, money: 0, security: 0}]))});
+  for (const s of Object.values(r2.strategies)) assert.notEqual(s.status, 'financial-incomplete');
+  const n = financialNotice(r2); assert.equal(n.incomplete, false); assert.match(n.text, /Option B is not estimable and is left out of the cash figures \(prudent cash\)/);
+});
+
+test('P0 · an option excluded by the reserve without its unknown gain is named: its gain could make it feasible', () => {
+  // C alone breaks the reserve on costs; its gain is unknown, so the exclusion itself is uncertain.
+  const m = model([opt('a', {name: 'Option A', upfront: 5_000, shortTermScore: 5}), opt('c', {name: 'Option C', upfront: 0, monthlyCost: 8_000, commitmentMonths: 12, monthlyGain: null, gainMonths: 12, shortTermScore: 9})],
+    {minimumCash: 40_000});
+  const r = evaluate(m), c = r.options.find(o => o.id === 'c');
+  assert.equal(c.feasible, false); assert.equal(c.couldBecomeFeasible, true);
+  const w = {short: 1, long: 0, money: 0, security: 0};
+  const s = evaluate(m, {weights: {immediate: w, development: w, security: w}}).strategies.immediate;
+  assert.equal(s.status, 'financial-incomplete', 'even a strategy that ignores money: the unknown gain decides feasibility');
+  assert.deepEqual(s.financial.optionsWithUnknownGain, [{name: 'Option C', role: 'not feasible without its gain; the gain could make it feasible'}]);
+});
+
+test('P0 · a documented gain range: validated, prudent cash at its low end, ranking reads both ends, no fabricated figure', () => {
+  const range = (low, high, basis = 'two signed sponsor offers') => ({gainRange: {low, high, basis}});
+  // Validation: both ends, in order, with a source; a range is only used when there is no single figure.
+  assert.match(check(gainCase(null, {gainRange: {low: 900, high: 100, basis: 'x'}})).join(' '), /lowest documented gain must not exceed the highest/);
+  assert.match(check(gainCase(null, {gainRange: {low: 100, high: 900, basis: ' '}})).join(' '), /a range is not a guess/);
+  assert.match(check(gainCase(500, range(100, 900))).join(' '), /only when the gain per month is not a single figure/);
+  const r = evaluate(gainCase(null, range(400, 1_600))), b = r.options.find(o => o.id === 'b');
+  assert.deepEqual(r.problems, []); assert.equal(b.totals.financialStatus, 'range'); assert.deepEqual(r.financial.optionsWithGainRange, ['Option B']);
+  assert.deepEqual(b.totals.netFinancialRange, [400 * 12 - 21_600, 1_600 * 12 - 21_600]);
+  close(b.closingCashDelta, 400 * 12 - 21_600, 'cash uses the low end of the range');
+  // A range is bounded: the comparison is complete, and it is uncertain only if the two ends could reorder the ranking.
+  for (const s of Object.values(r.strategies)) { assert.notEqual(s.status, 'financial-incomplete'); assert.deepEqual(s.unboundedGains, []); }
+  assert.ok(Object.values(r.strategies).some(s => s.status === 'uncertain' && s.assumptionsNeeded.some(x => /Option B: financial gain within its documented range/.test(x))));
+  // A range of zero width is the same as the known figure.
+  const point = evaluate(gainCase(null, range(1_000, 1_000))), known = evaluate(gainCase(1_000));
+  for (const k of Object.keys(STRATEGIES)) { assert.deepEqual(point.strategies[k].best.options, known.strategies[k].best.options); assert.equal(point.strategies[k].status, known.strategies[k].status); }
+  // A long option name still gives valid Finance engine decisions (labels are at most 80 characters).
+  assert.deepEqual(evaluate(gainCase(null, {name: 'A very long option name that describes a whole programme in detail', ...range(400, 1_600)})).problems, []);
+  const bj = brief(gainCase(null, range(400, 1_600)), r).options[1];
+  assert.deepEqual(bj.gainRangePerMonth, [400, 1_600]); assert.equal(bj.gainRangeBasis, 'two signed sponsor offers'); assert.equal(bj.financialStatus, 'range');
+});
+
+test('P0 · consistency: the interface notice, the brief (JSON), the HTML export and the CSV export name the same options', () => {
+  for (const m of [gainCase(), EXAMPLES.semipro.make(), EXAMPLES.pro.make()]) {
+    const r = evaluate(m), n = financialNotice(r), b = brief(m, r), html = briefHtml(m, r, '2026-11-23'), csv = briefCsv(m, r).split('\r\n');
+    assert.ok(n.incomplete); assert.equal(n.title, FINANCIAL_INCOMPLETE);
+    const names = r.financial.optionsWithUnknownGain; assert.ok(names.length);
+    // JSON
+    assert.equal(b.financialComparison.status, 'incomplete'); assert.equal(b.financialComparison.warning, n.text); assert.deepEqual(b.financialComparison.optionsWithUnknownGain, names);
+    for (const [k, s] of Object.entries(r.strategies)) {
+      const bs = b.strategies[STRATEGIES[k].label];
+      assert.equal(bs.status, s.status); assert.equal(bs.financialComparison, s.financial.incomplete ? FINANCIAL_INCOMPLETE : 'complete');
+      assert.deepEqual(bs.optionsWithUnknownGain.map(x => x.name), names, 'every option concerned, in every strategy');
+    }
+    // HTML
+    const esc = x => x.replace(/&/g, '&amp;').replace(/'/g, '&#39;');
+    assert.ok(html.includes(`<p class="warn" id="financial-notice"><b>${FINANCIAL_INCOMPLETE}.</b> ${esc(n.text)}</p>`));
+    assert.ok(html.includes(`${FINANCIAL_INCOMPLETE} — a gain that is not estimable could change the ranking`));
+    for (const x of names) assert.ok(html.includes(`Gain not estimable: ${esc(x)}`) || html.includes(`; ${esc(x)} (`), x);
+    // CSV: a warning line, a financial status per option, and the reading per strategy
+    assert.equal(csv[1], `"WARNING — ${n.text.replace(/"/g, '""')}"`);
+    for (const x of names) assert.ok(csv.find(l => l.startsWith(`"${x}",`)).endsWith('"gain not estimable: excluded from cash (prudent)"'), x);
+    for (const k of r.financial.strategiesAffected) assert.ok(csv.some(l => l.startsWith(`"${STRATEGIES[k].label}","${FINANCIAL_INCOMPLETE} — `) && names.every(x => l.includes(x))), k);
+  }
+  // With complete data, no warning anywhere.
+  const m = EXAMPLES.amateur.make(), r = evaluate(m);
+  assert.equal(financialNotice(r), null); assert.equal(brief(m, r).financialComparison.status, 'complete');
+  assert.doesNotMatch(briefHtml(m, r) + briefCsv(m, r), /id="financial-notice"|WARNING —|a gain that is not estimable could change the ranking/);
 });
