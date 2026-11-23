@@ -80,7 +80,8 @@ p { margin: 0 0 1em; }
 
 /* ---------------- hero */
 .hero { padding: clamp(48px, 7vw, 88px) 0 clamp(56px, 7vw, 88px); }
-.hero-grid { display: grid; grid-template-columns: minmax(0, 5.2fr) minmax(0, 6.8fr); gap: clamp(32px, 5vw, 64px); align-items: center; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 5.2fr) minmax(0, 6.8fr); gap: clamp(32px, 5vw, 64px); align-items: start; }
+.hero-grid > div:first-child { padding-top: clamp(8px, 3vw, 40px); }
 .hero .kicker { font: 700 13px/1 var(--mono); letter-spacing: .2em; color: var(--ink); margin: 0 0 6px; }
 .hero .kicker + .eyebrow { margin-bottom: 26px; }
 .hero h1 { margin-bottom: 24px; }
