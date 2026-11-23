@@ -35,16 +35,14 @@ test('the demonstration page: fictional banner, strict CSP, own scripts only, no
   assert.doesNotMatch(html + js, / style="/, 'no inline style (CSP)');
   for (const m of js.matchAll(/^import .* from '([^']+)';$/gm)) assert.match(m[1], /^\.\/engine\/(model|cases|report)\.js$/);
   assert.match(html, /not yet part of the self-service subscription/, 'does not claim Finance is in the subscription');
-  assert.ok(html.includes('href="/demo.html"') && html.includes('mailto:kevin@lake-am.com'), 'demo request and contact');
-  assert.match(js, /href="\/demo\.html"/); assert.doesNotMatch(html + js, /stripe|checkout|signup/i);
+  assert.ok(html.includes('href="../../demo.html"') && html.includes('mailto:kevin@lake-am.com'), 'demo request and contact');
+  assert.match(js, /href="\.\.\/\.\.\/demo\.html"/); assert.doesNotMatch(html + js, /stripe|checkout|signup/i);
 });
 
-test('the public demo page leads with the finance decision paths and keeps the squad economics demo', () => {
+test('the public demo page opens the finance demonstration on its neutral workspace and on each decision path', () => {
   const demo = readFileSync('demo.html', 'utf8');
-  assert.match(demo, /<a class="btn btn-ghost" href="\/lanova\/finance\/" data-cta="finance-demo">Explore the finance demonstrations<\/a>/);
-  for (const p of ['forecast', 'scenarios', 'cash', 'report']) assert.match(demo, new RegExp(`href="/lanova/finance/\\?path=${p}"`), p);
-  const card = id => demo.match(new RegExp(`data-demo="${id}">(.*?)</div>`, 's'))[1];
-  assert.match(card('recruitment'), /Squad Economics · included in Organisation Access today/); assert.match(card('recruitment'), /href="\/lanova\/workspace\/"/);
-  assert.match(demo, /pilot on request — not part of the current subscription/); assert.match(demo, /not included in Organisation Access today/);
+  assert.match(demo, /<a class="btn btn-ink" href="lanova\/finance\/" data-demo="finance">Open the neutral workspace<\/a>/);
+  for (const p of ['forecast', 'scenarios', 'cash', 'report']) assert.match(demo, new RegExp(`href="lanova/finance/\\?path=${p}"`), p);
+  assert.match(demo, /LANOVA Finance is a pilot on request, not included in Organisation Access today/);
   assert.doesNotMatch(demo, /finance[^.<]*(?<!not )(?<!not yet )(included in|part of) (the|your) (current )?subscription(?! today)/i, 'never claims Finance is in the subscription');
 });

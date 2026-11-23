@@ -4,12 +4,12 @@
  */
 import {evaluate, brief, briefCsv, briefHtml, fmt, OBJECTIVES, STRATEGIES, CRITERIA, MAX_OPTIONS, HORIZONS, normaliseWeights} from './lab.js';
 import {EXAMPLES, blank, newOption} from './examples.js';
+import {mapSvg, STATUS} from './map.js';
 
 const main = document.getElementById('main');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const S = {model: null, example: null, result: null, weights: Object.fromEntries(Object.entries(STRATEGIES).map(([k, v]) => [k, {...v.weights}])), strategy: 'immediate', added: 0, timer: 0};
-const STATUS = {frontier: 'Efficient (not dominated)', dominated: 'Dominated', infeasible: 'Not feasible', 'not-comparable': 'Not comparable (estimate missing)'};
-const READING = {indicative: 'Indicative', 'close-call': 'Close call: examine the alternative', 'insufficient-data': 'Insufficient data: no recommendation', 'no-feasible': 'No feasible combination'};
+const READING = {indicative: 'Indicative', 'close-call': 'Close call: examine the alternative', uncertain: 'Uncertain: depends on missing estimates', 'no-feasible': 'No feasible combination'};
 
 // ------------------------------------------------------------------ start screen
 function start() {
@@ -45,9 +45,17 @@ function workspace() {
     </div></article>`).join('');
   main.innerHTML = `<div class="labbar"><button type="button" class="btn small ghost" data-home="1">← Start again</button><span class="muted small">${m.fictional ? 'Illustrative example — anonymous; all figures invented' : 'Your own workspace'} · EUR</span></div>
     <h1 class="plan-title">${esc(m.label || 'My organisation')}</h1>
+    <details class="card howto"><summary>How to read these results</summary><dl>
+      <div><dt>Calculated</dt><dd>Costs, commitments, month-end cash (LANOVA Finance engine) and feasibility against your budget and minimum cash reserve.</dd></div>
+      <div><dt>Your estimates (0–10)</dt><dd>Contributions to immediate performance and long-term development. They are your judgement, not predictions of sporting results. A blank estimate stays unknown: it is never counted as zero, and a ranking that depends on it is marked uncertain.</dd></div>
+      <div><dt>Risk (your view)</dt><dd>Used only to compare options with each other (dominance): an option is never dominated by one you consider riskier. It does not change any cash figure.</dd></div>
+      <div><dt>Confidence</dt><dd>Recorded in the decision brief for the reader. It does not change any calculation.</dd></div>
+      <div><dt>Scenarios</dt><dd>Base case as entered; downside case with lower revenue in every month, option gains included. The downside feeds the "financial security" criterion and the warnings.</dd></div>
+      <div><dt>Strategy weights</dt><dd>Preferences applied after the hard constraints, to every feasible combination including "do nothing". They express priorities; they do not forecast results.</dd></div>
+    </dl></details>
     <section class="card" aria-labelledby="h-map"><header><div><h2 id="h-map">1 · Resource Advantage Map</h2><p class="muted small">Each option on its total cost and its contribution to the objective. Size = how far it lowers your lowest month-end cash; outline = your risk view; small label = months until it has an effect.</p></div>
       ${select('objective', 'Objective (vertical axis)', m.objective, Object.entries(OBJECTIVES).map(([k, v]) => [k, v.label]))}</header>
-      <div id="map" aria-live="polite"></div></section>
+      <div id="summary" class="summary" aria-live="polite"></div><div id="map" aria-live="polite"></div></section>
     <section class="card" aria-labelledby="h-org"><header><h2 id="h-org">2 · Decision Simulator — organisation and hard constraints</h2></header>
       <div class="grid">
         ${field('label', 'Organisation (name or description)', m.label, {type: 'text'})}${field('sport', 'Sport', m.sport, {type: 'text', attrs: 'list="sports"'})}
@@ -72,38 +80,8 @@ function workspace() {
 }
 
 // ------------------------------------------------------------------ chart (display only)
-/** Round axis ticks (1, 2 or 5 × a power of ten) covering [lo, hi]. */
-function nice(lo, hi, n = 5) {
-  const span = hi - lo || 1, raw = span / n, p = 10 ** Math.floor(Math.log10(raw)), step = [1, 2, 5, 10].map(k => k * p).find(k => k >= raw);
-  const out = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(Math.round(v)); return out;
-}
 function chart(r, m) {
-  const pts = r.options.map((o, i) => ({o, i, x: o.totals.totalCost, y: o.contribution}));
-  const est = OBJECTIVES[m.objective].estimate, placed = pts.filter(p => p.y !== null), unplaced = pts.filter(p => p.y === null);
-  const narrow = (main.clientWidth || innerWidth) < 700, W = narrow ? 560 : 1000, H = narrow ? 620 : 480, L = narrow ? 112 : 96, R = 28, T = 24, B = unplaced.length ? (narrow ? 130 : 96) : 64;
-  const xmax = Math.max(1, ...pts.map(p => p.x)) * 1.08;
-  const ys = placed.map(p => p.y), ylo = est ? 0 : Math.min(0, ...ys) - (Math.max(0, ...ys) - Math.min(0, ...ys)) * 0.1, yhi0 = est ? 10 : Math.max(0, ...ys), yhi = yhi0 > ylo ? yhi0 + (est ? 0 : (yhi0 - ylo) * 0.08) : ylo + 1;
-  const plotB = H - B, x = v => L + (v / xmax) * (W - L - R), y = v => T + (yhi - v) / (yhi - ylo) * (plotB - T);
-  const imp = Math.max(1, ...pts.map(p => Math.abs(Math.min(0, p.o.cashImpactLowest)))), rad = p => 9 + 13 * Math.abs(Math.min(0, p.o.cashImpactLowest)) / imp;
-  const ticksY = est ? [0, 2, 4, 6, 8, 10] : nice(ylo, yhi, narrow ? 4 : 5).filter(v => v >= ylo && v <= yhi);
-  const ticksX = nice(0, xmax, narrow ? 3 : 5).filter(v => v <= xmax);
-  const ax = v => { const a = Math.abs(v), sg = v < 0 ? '−' : ''; return a >= 1e6 ? `${sg}${+(a / 1e6).toFixed(1)}M` : a >= 1e3 ? `${sg}${+(a / 1e3).toFixed(0)}k` : `${sg}${a}`; };
-  const dash = {low: '', medium: '6 4', high: ''}, sw = {low: 1.5, medium: 2, high: 4};
-  const point = (p, cx, cy) => { const o = p.o, r0 = rad(p);
-    const label = `Option ${p.i + 1}, ${o.name}: ${STATUS[o.status]}. Total cost ${fmt(o.totals.totalCost)} EUR. ${OBJECTIVES[m.objective].label}: ${o.contribution === null ? 'no estimate' : est ? `${o.contribution} out of 10 (your estimate)` : `${fmt(o.contribution)} EUR`}. Lowest cash with it ${fmt(o.minCashBase)} EUR. Risk: ${o.risk ?? 'no estimate'}. Effect after ${o.horizonMonths} months.`;
-    return `<g class="pt ${o.status}" tabindex="0" role="img" aria-label="${esc(label)}"><title>${esc(label)}</title>
-      <circle cx="${cx}" cy="${cy}" r="${r0}" stroke-width="${o.risk ? sw[o.risk] : 1}" ${o.risk && dash[o.risk] ? `stroke-dasharray="${dash[o.risk]}"` : ''}/>
-      ${o.status === 'infeasible' ? `<path class="x" d="M${cx - r0 * .55} ${cy - r0 * .55}L${cx + r0 * .55} ${cy + r0 * .55}M${cx + r0 * .55} ${cy - r0 * .55}L${cx - r0 * .55} ${cy + r0 * .55}"/>` : `<text class="n" x="${cx}" y="${cy + 4}" text-anchor="middle">${p.i + 1}</text>`}
-      <text class="h" x="${cx + r0 + 4}" y="${cy - r0 + 2}">${o.horizonMonths}m</text></g>`; };
-  const svg = `<svg class="chart map" viewBox="0 0 ${W} ${H}" aria-label="Resource Advantage Map: ${pts.length} options; the same figures are in the table below">
-    ${ticksY.map(v => `<line class="axis" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${est ? v : ax(v)}</text>`).join('')}
-    ${ticksX.map(v => `<text x="${x(v)}" y="${plotB + 18}" text-anchor="middle">${ax(v)}</text>`).join('')}
-    ${!est && ylo < 0 ? `<line class="zero" x1="${L}" x2="${W - R}" y1="${y(0)}" y2="${y(0)}"/>` : ''}
-    <text x="${(L + W - R) / 2}" y="${plotB + 38}" text-anchor="middle" class="axt">Total cost, all commitments (EUR) →</text>
-    <text transform="translate(16 ${(T + plotB) / 2}) rotate(-90)" text-anchor="middle" class="axt">${esc(est ? 'Your estimate (0–10) →' : 'Net financial effect (EUR) →')}</text>
-    ${unplaced.length ? `<text x="${L}" y="${H - (narrow ? 62 : 22)}" class="axt">No estimate for this objective:</text>${unplaced.map((p, k) => point(p, (narrow ? L + 20 : L + 250) + k * 60, H - (narrow ? 24 : 26))).join('')}` : ''}
-    ${placed.sort((a, b) => rad(b) - rad(a)).map(p => point(p, x(p.x), y(p.y))).join('')}
-  </svg>`;
+  const svg = mapSvg(r, m, {narrow: (main.clientWidth || innerWidth) < 700, names: true});
   const legend = `<p class="legend"><span><i class="lg frontier"></i>Efficient: no feasible option is better on cost, objective, risk and cash at once</span><span><i class="lg dominated"></i>Dominated</span><span><i class="lg infeasible"></i>Not feasible</span><span><i class="lg not-comparable"></i>Not comparable</span><span>Outline: thin = low risk · dashed = medium · thick = high (your view)</span><span>Larger = lowers your lowest cash more</span></p>`;
   const rows = r.options.map((o, i) => `<tr class="${o.status}"><td><span class="badge">${i + 1}</span> ${esc(o.name)}</td><td>${esc(STATUS[o.status])}</td><td class="n">${fmt(o.totals.upfront)}</td><td class="n">${fmt(o.totals.totalCost)}</td><td class="n">${o.totals.netFinancialInHorizon === null ? 'not estimable' : fmt(o.totals.netFinancialInHorizon)}</td><td class="n">${fmt(o.minCashBase)}</td><td class="n">${fmt(o.minCashDownside)}</td><td>${o.input.shortTermScore ?? '—'} / ${o.input.longTermScore ?? '—'}</td><td>${esc(o.risk ?? '—')}</td><td class="n">${o.horizonMonths}</td><td class="small">${esc([...o.reasons, ...o.dominatedBy.map(n => `Dominated by: ${n}.`), ...o.warnings].join(' '))}</td></tr>`).join('');
   return svg + legend + `<div class="table-wrap"><table><thead><tr><th>Option</th><th>Status</th><th class="n">Immediate cost</th><th class="n">Total cost</th><th class="n">Net financial, horizon</th><th class="n">Lowest cash with it</th><th class="n">Lowest cash, downside</th><th>Your estimates now / long term</th><th>Risk (your view)</th><th class="n">Months to effect</th><th>Why</th></tr></thead><tbody>${rows}</tbody></table></div>
@@ -116,7 +94,8 @@ function results(r, m) {
       <p class="pick">${s.status === 'no-feasible' ? 'None: even without any option, month-end cash falls below the reserve. Review the reserve or the plan first.' : b.options.length ? esc(b.options.join(' + ')) : 'Do nothing (keep the resources)'}</p>
       <dl><div><dt>Immediate cost</dt><dd>${fmt(b.upfront)}</dd></div><div><dt>Total cost</dt><dd>${fmt(b.totalCost)}</dd></div><div><dt>Lowest cash</dt><dd>${fmt(b.minCashBase)}</dd></div><div><dt>Lowest cash, downside</dt><dd class="${b.minCashDownside < m.finance.minimumCash ? 'neg' : ''}">${fmt(b.minCashDownside)}</dd></div></dl>
       ${s.runnerUp ? `<p class="small muted">Alternative to examine: ${esc(s.runnerUp.options.join(' + ') || 'do nothing')}</p>` : ''}
-      ${s.missingUsed.length ? `<p class="small neg">Missing estimates used by this strategy: ${esc(s.missingUsed.join('; '))}</p>` : ''}
+      ${s.assumptionsNeeded.length ? `<p class="small neg">The ranking could change once these estimates are known: ${esc(s.assumptionsNeeded.join('; '))}.${s.contenders.length ? ` Could rank higher: ${esc(s.contenders.map(c => c.options.join(' + ') || 'do nothing').join(' · '))}.` : ''}</p>` : ''}
+      ${s.unboundedGains.length ? `<p class="small muted">Financial gains not estimable, so not counted: ${esc(s.unboundedGains.join(', '))}.</p>` : ''}
       ${b.highRisk.length ? `<p class="small">High risk in your view: ${esc(b.highRisk.join(', '))}</p>` : ''}
       ${b.minCashDownside < m.finance.minimumCash ? '<p class="small neg">In the downside case, cash falls below the reserve.</p>' : ''}
       <p class="small muted">${s.candidates} feasible combination(s) compared.</p></article>`; }).join('')}</div>
@@ -138,9 +117,11 @@ function compute() {
   const map = document.getElementById('map'), res = document.getElementById('results'), br = document.getElementById('brief');
   if (r.problems.length) {
     const msg = `<div class="notice bad" role="alert"><b>Complete or correct these inputs — nothing is calculated until they are valid:</b><ul>${r.problems.slice(0, 12).map(p => `<li>${esc(p)}</li>`).join('')}</ul></div>`;
-    map.innerHTML = msg; res.innerHTML = ''; br.innerHTML = '<p class="muted">The brief appears once the inputs are valid.</p>'; return;
+    map.innerHTML = msg; res.innerHTML = ''; document.getElementById('summary').innerHTML = ''; br.innerHTML = '<p class="muted">The brief appears once the inputs are valid.</p>'; return;
   }
   map.innerHTML = r.options.length ? chart(r, S.model) : '<p class="muted">Add options below to see them on the map.</p>';
+  const c = st => r.options.filter(o => o.status === st).length;
+  document.getElementById('summary').innerHTML = r.options.length ? `<div><span>Options</span><b>${r.options.length}</b></div><div><span>Efficient</span><b>${c('frontier')}</b></div><div><span>Dominated</span><b>${c('dominated')}</b></div><div><span>Not feasible</span><b>${c('infeasible')}</b></div><div><span>Not comparable</span><b>${c('not-comparable')}</b></div><div><span>Lowest cash without any option</span><b>${fmt(r.baseMinCash)}</b></div>` : '';
   res.innerHTML = results(r, S.model); br.innerHTML = briefView(r, S.model);
 }
 const schedule = () => { clearTimeout(S.timer); S.timer = setTimeout(compute, 120); };
@@ -186,4 +167,11 @@ main.addEventListener('click', e => {
   }
 });
 void normaliseWeights;
-start();
+// Entry points from the demo page: ?start=blank, ?example=<amateur|semipro|pro>, optional &section=brief|map|strategies.
+{
+  const q = new URLSearchParams(location.search), ex = q.get('example'), sec = {brief: 'h-brief', map: 'h-map', strategies: 'h-strat'}[q.get('section')];
+  if (q.get('start') === 'blank') { S.model = blank(); workspace(); }
+  else if (ex && EXAMPLES[ex]) { S.model = EXAMPLES[ex].make(); S.example = ex; workspace(); }
+  else start();
+  if (S.model && sec) requestAnimationFrame(() => document.getElementById(sec)?.scrollIntoView({block: 'start'}));
+}

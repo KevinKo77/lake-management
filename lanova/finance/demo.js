@@ -82,7 +82,7 @@ function landing() {
     <div class="paths" role="group" aria-label="Decision paths">${PATHS.map((x, i) => `<button type="button" class="path" data-path="${x.id}"><span class="path-n">${i + 1}</span><b>${esc(x.title)}</b><span>${esc(x.text)}</span><em>Open with ${esc(EXAMPLES.find(e => e.id === x.example).title.split(' · ')[0])} →</em></button>`).join('')}</div>
     <section class="card"><h2>Illustrative examples</h2><p class="muted small">Anonymous examples built for this demonstration. They describe no real or named organisation, and every figure is invented. Each one can be opened on any step.</p>
     <div class="examples">${EXAMPLES.map(e => `<button type="button" class="club" data-club="${e.id}"><b>${esc(e.title)}</b><span>${esc(e.text)}</span></button>`).join('')}</div></section>
-    <p class="muted small">Squad economics (recruitment) has its own demonstration: <a href="/lanova/workspace/">open the squad economics demo</a>.</p>`;
+    <p class="muted small">Squad economics (recruitment) has its own demonstration: <a href="../../lanova/workspace/">open the squad economics demo</a>.</p>`;
 }
 function render() {
   if (!S.plan) { main.innerHTML = landing(); return; }
@@ -96,7 +96,7 @@ function render() {
 }
 function next() {
   const i = TABS.findIndex(([id]) => id === S.view), n = TABS[i + 1];
-  return `<div class="next">${n ? `<button type="button" class="btn" data-view="${n[0]}">Next: ${esc(n[1].replace(/^\d · /, ''))} →</button>` : ''}<a class="btn primary" href="/demo.html" data-cta="finance-demo-request">Request a demo on your figures</a></div>`;
+  return `<div class="next">${n ? `<button type="button" class="btn" data-view="${n[0]}">Next: ${esc(n[1].replace(/^\d · /, ''))} →</button>` : ''}<a class="btn primary" href="../../demo.html" data-cta="finance-demo-request">Request a demo on your figures</a></div>`;
 }
 function overview() {
   const a = S.analysis, b = a.base, k = id => kpi(b, id);

@@ -111,7 +111,7 @@ await t('6 · invalid input is explained, never calculated: empty opening cash',
 });
 
 await t('7 · contact path: the demo request leads to /demo.html (and its pre-filled e-mail)', async () => {
-  const link = page.locator('a[data-cta="finance-demo-request"]').first(); assert.equal(await link.getAttribute('href'), '/demo.html');
+  const link = page.locator('a[data-cta="finance-demo-request"]').first(); assert.equal(await link.getAttribute('href'), '../../demo.html');
   await link.click(); await page.waitForURL(/\/demo\.html$/); assert.match(await page.locator('a.btn-primary').first().getAttribute('href'), /^mailto:kevin@lake-am\.com\?subject=/);
 });
 

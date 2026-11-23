@@ -11,12 +11,12 @@
 .grid.tight { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
 .option { border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin: 0 0 10px; background: var(--bg-2); }
 .option header { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
-.badge { display: inline-grid; place-items: center; min-width: 22px; height: 22px; border-radius: 11px; background: rgba(125, 134, 255, .2); color: var(--text); font-size: 12px; font-weight: 700; padding: 0 6px; }
+.badge { display: inline-grid; place-items: center; min-width: 22px; height: 22px; border-radius: 11px; background: rgba(82, 211, 164, .2); color: var(--text); font-size: 12px; font-weight: 700; padding: 0 6px; }
 .check-inline { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
 .chart.map { max-height: 520px; }
 .chart.map .axt { fill: var(--muted); font-size: 13px; }
 .pt circle { stroke: var(--text); }
-.pt.frontier circle { fill: rgba(125, 134, 255, .55); }
+.pt.frontier circle { fill: rgba(82, 211, 164, .55); }
 .pt.dominated circle { fill: rgba(163, 171, 189, .28); }
 .pt.not-comparable circle { fill: none; stroke: var(--accent-2); }
 .pt.infeasible circle { fill: rgba(240, 97, 109, .18); stroke: var(--bad); }
@@ -25,7 +25,7 @@
 .pt .h { fill: var(--muted); font-size: 11px; }
 .pt:focus { outline: none; } .pt:focus circle, .pt:hover circle { stroke: var(--warn); stroke-width: 4; }
 .lg { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; border: 1.5px solid var(--text); }
-.lg.frontier { background: rgba(125, 134, 255, .55); } .lg.dominated { background: rgba(163, 171, 189, .28); } .lg.infeasible { background: rgba(240, 97, 109, .18); border-color: var(--bad); } .lg.not-comparable { border-color: var(--accent-2); }
+.lg.frontier { background: rgba(82, 211, 164, .55); } .lg.dominated { background: rgba(163, 171, 189, .28); } .lg.infeasible { background: rgba(240, 97, 109, .18); border-color: var(--bad); } .lg.not-comparable { border-color: var(--accent-2); }
 tr.infeasible td:first-child { color: var(--bad); } tr.dominated td { color: var(--muted); }
 .strats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-bottom: 12px; }
 fieldset.strat { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: grid; gap: 8px; min-width: 0; }
@@ -46,3 +46,13 @@ td.small { min-width: 220px; }
 .table-wrap table { min-width: 980px; }
 td.small { font-size: 12.5px; }
 @media (max-width: 700px) { .chart.map text { font-size: 19px; } .chart.map .axt { font-size: 19px; } .pt .n { font-size: 19px; } .pt .h { font-size: 16px; } .chart.map { max-height: none; } }
+
+/* V3: reading guide and summary strip */
+details.howto { padding: 14px 18px; } details.howto summary { cursor: pointer; font-weight: 700; color: var(--text); }
+details.howto dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px 20px; margin: 12px 0 0; }
+details.howto dt { font-weight: 700; color: var(--accent-2); font-size: 13px; } details.howto dd { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 12px; }
+.summary div { background: var(--bg-2); padding: 10px 12px; min-width: 0; }
+.summary span { display: block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.summary b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; margin-top: 2px; overflow-wrap: anywhere; }
+.pt .nm { fill: var(--text); font-size: 12px; }

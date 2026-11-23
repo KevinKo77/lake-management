@@ -182,25 +182,46 @@ export function bestCombination(m, base, options, weights) {
     if (!feasible) continue;
     combos.push({options: set.map(o => o.name), ids: set.map(o => o.id), upfront, totalCost: sum(set.map(o => o.totals.totalCost)), minCashBase: minBase, minCashDownside: Math.min(...cashDown),
       closingCash: cashBase[H - 1], cashBase,
-      crit: {short: sum(set.map(o => o.input.shortTermScore ?? 0)), long: sum(set.map(o => o.input.longTermScore ?? 0)), money: sum(set.map(o => o.totals.netFinancialInHorizon ?? 0)), security: Math.min(...cashDown)},
+      // Each criterion as an interval [low, high]. A missing 0–10 estimate is unknown, not zero: it spans 0 to 10 and its
+      // midpoint (5) is used for the ranking, so an undocumented option is neither rewarded nor penalised. A gain that is
+      // not estimable cannot be bounded: only its costs are counted, and the option is flagged.
+      crit: interval(set, cashDown),
+      unknown: {short: set.filter(o => o.input.shortTermScore === null).map(o => o.name), long: set.filter(o => o.input.longTermScore === null).map(o => o.name), money: set.filter(o => o.input.monthlyGain === null).map(o => o.name)},
       missing: [...new Set(set.flatMap(o => o.missing.map(x => `${o.name}: ${x}`)))], highRisk: set.filter(o => o.risk === 'high').map(o => o.name)});
   }
   const w = normaliseWeights(weights), keys = Object.keys(w);
   if (!combos.length) {
     // Even "do nothing" breaks a hard constraint: the organisation's own plan already falls below the reserve.
     const best = {options: [], ids: [], upfront: 0, totalCost: 0, minCashBase: Math.min(...base.base), minCashDownside: Math.min(...base.downside), closingCash: base.base[H - 1], cashBase: base.base,
-      crit: {short: 0, long: 0, money: 0, security: Math.min(...base.downside)}, parts: {}, score: 0, missing: [], highRisk: []};
-    return {weights: w, candidates: 0, best, runnerUp: null, status: 'no-feasible', missingUsed: []};
+      crit: {short: [0, 0], long: [0, 0], money: [0, 0], security: [Math.min(...base.downside), Math.min(...base.downside)]}, unknown: {short: [], long: [], money: []}, parts: {}, score: 0, scoreLow: 0, scoreHigh: 0, missing: [], highRisk: []};
+    return {weights: w, candidates: 0, best, runnerUp: null, status: 'no-feasible', missingUsed: [], contenders: [], assumptionsNeeded: [], unboundedGains: []};
   }
-  const lo = Object.fromEntries(keys.map(k => [k, Math.min(...combos.map(c => c.crit[k]))])), hi = Object.fromEntries(keys.map(k => [k, Math.max(...combos.map(c => c.crit[k]))]));
-  for (const c of combos) { c.parts = Object.fromEntries(keys.map(k => [k, hi[k] - lo[k] > 1e-9 ? (c.crit[k] - lo[k]) / (hi[k] - lo[k]) : 0])); c.score = sum(keys.map(k => w[k] * c.parts[k])); }
+  // Scale every criterion between the lowest low and the highest high over all candidates, then score each candidate
+  // three times: at the low ends, at the midpoints (the ranking) and at the high ends (the range missing data allows).
+  const lo = Object.fromEntries(keys.map(k => [k, Math.min(...combos.map(c => c.crit[k][0]))])), hi = Object.fromEntries(keys.map(k => [k, Math.max(...combos.map(c => c.crit[k][1]))]));
+  const scale = (k, v) => (hi[k] - lo[k] > 1e-9 ? (v - lo[k]) / (hi[k] - lo[k]) : 0);
+  for (const c of combos) {
+    c.parts = Object.fromEntries(keys.map(k => [k, scale(k, (c.crit[k][0] + c.crit[k][1]) / 2)]));
+    c.score = sum(keys.map(k => w[k] * c.parts[k])); c.scoreLow = sum(keys.map(k => w[k] * scale(k, c.crit[k][0]))); c.scoreHigh = sum(keys.map(k => w[k] * scale(k, c.crit[k][1])));
+  }
   combos.sort((a, b) => b.score - a.score || a.totalCost - b.totalCost || a.options.length - b.options.length);
   const best = combos[0], runnerUp = combos.find(c => c !== best) ?? null;
-  const relies = keys.filter(k => w[k] > 0 && ['short', 'long'].includes(k));
-  const missingUsed = best.missing.filter(x => (relies.includes('short') && /immediate/.test(x)) || (relies.includes('long') && /long-term/.test(x)) || (w.money > 0 && /financial gain/.test(x)));
+  // Missing data that a weighted criterion uses, for a candidate.
+  const used = c => [...(w.short > 0 ? c.unknown.short.map(n => `${n}: immediate contribution`) : []), ...(w.long > 0 ? c.unknown.long.map(n => `${n}: long-term contribution`) : [])];
+  // Contenders: candidates whose range reaches above the best's once the missing 0–10 estimates are known. Only
+  // missing data can make this happen; with complete estimates the ranges are points and there is no contender.
+  const contenders = combos.filter(c => c !== best && (used(c).length || used(best).length) && c.scoreHigh > best.scoreLow + 1e-9);
+  const missingUsed = used(best), assumptionsNeeded = [...new Set([...missingUsed, ...contenders.slice(0, 3).flatMap(used)])];
+  // Financial gains that are not estimable cannot be bounded: they are excluded (costs only) and listed, not guessed.
+  const unboundedGains = w.money > 0 ? [...new Set([best, ...contenders].flatMap(c => c.unknown.money))] : [];
   const close = runnerUp && best.score - runnerUp.score < 0.05;
-  const status = missingUsed.length ? 'insufficient-data' : close ? 'close-call' : 'indicative';
-  return {weights: w, candidates: combos.length, best, runnerUp, status, missingUsed};
+  const status = contenders.length ? 'uncertain' : close ? 'close-call' : 'indicative';
+  return {weights: w, candidates: combos.length, best, runnerUp, status, missingUsed, contenders: contenders.slice(0, 3).map(c => ({options: c.options, score: c.score, scoreHigh: c.scoreHigh})), assumptionsNeeded, unboundedGains};
+}
+function interval(set, cashDown) {
+  const est = k => [sum(set.map(o => o.input[k] ?? 0)), sum(set.map(o => o.input[k] ?? 10))];
+  const money = sum(set.map(o => o.totals.netFinancialInHorizon ?? -(o.totals.upfront + o.totals.runningInHorizon))), sec = Math.min(...cashDown);
+  return {short: est('shortTermScore'), long: est('longTermScore'), money: [money, money], security: [sec, sec]};
 }
 export function normaliseWeights(w) {
   const k = Object.keys(CRITERIA), v = k.map(x => Math.max(0, Number(w?.[x]) || 0)), s = sum(v);
@@ -222,8 +243,11 @@ export function brief(m, r) {
       immediateContributionEstimate: o.input.shortTermScore, longTermContributionEstimate: o.input.longTermScore, risk: o.risk, confidence: o.confidence, monthsToEffect: o.horizonMonths,
       infeasibleBecause: o.reasons, dominatedBy: o.dominatedBy, warnings: o.warnings, missingData: o.missing})),
     strategies: Object.fromEntries(Object.entries(r.strategies).map(([k, s]) => [STRATEGIES[k].label, {status: s.status, options: s.best.options, immediateCost: s.best.upfront, totalCost: s.best.totalCost,
-      lowestCash: round2(s.best.minCashBase), lowestCashDownside: round2(s.best.minCashDownside), alternative: s.runnerUp ? s.runnerUp.options : null, missingDataUsed: s.missingUsed}])),
+      lowestCash: round2(s.best.minCashBase), lowestCashDownside: round2(s.best.minCashDownside), alternative: s.runnerUp ? s.runnerUp.options : null, missingDataUsed: s.missingUsed,
+      couldRankHigherOnceKnown: s.contenders.map(c => c.options), estimatesNeededToSettle: s.assumptionsNeeded, gainsNotEstimableExcluded: s.unboundedGains}])),
     assumptions: ['Contributions to performance and development are the organisation\'s own estimates on a 0–10 scale, not measured or predicted results.',
+      'A missing estimate is treated as unknown, not as zero: it spans 0 to 10, its midpoint is used for the ranking, and a ranking that missing data could change is reported as uncertain.',
+      'Risk level and confidence are the organisation\'s own judgement: risk is used only in the dominance comparison; confidence is recorded in the brief and does not change any calculation.',
       'Financial gains are entered only where they can be estimated; "not estimable" is never counted as zero in the option totals.',
       'Cash is forecast monthly by the LANOVA Finance engine: month-end balances, no tax, no financing, no payment delays.',
       'Revenue and operating costs of the organisation are spread evenly over the months.'],
@@ -242,7 +266,7 @@ export function briefCsv(m, r) {
 const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 export function briefHtml(m, r, when = new Date().toISOString().slice(0, 10)) {
   const b = brief(m, r), li = a => `<ul>${a.map(x => `<li>${h(x)}</li>`).join('')}</ul>`;
-  const strat = Object.entries(b.strategies).map(([k, s]) => `<tr><td>${h(k)}</td><td>${s.status === 'no-feasible' ? 'None meets the hard constraints' : s.options.length ? h(s.options.join(', ')) : 'Do nothing'}</td><td>${fmt(s.immediateCost)}</td><td>${fmt(s.totalCost)}</td><td>${fmt(s.lowestCash)}</td><td>${fmt(s.lowestCashDownside)}</td><td>${h({indicative: 'Indicative', 'close-call': 'Close call — examine the alternative', 'insufficient-data': 'Insufficient data', 'no-feasible': 'Even without any option, cash falls below the reserve'}[s.status])}${s.alternative ? `<br><small>Alternative: ${h(s.alternative.join(', ') || 'Do nothing')}</small>` : ''}</td></tr>`).join('');
+  const strat = Object.entries(b.strategies).map(([k, s]) => `<tr><td>${h(k)}</td><td>${s.status === 'no-feasible' ? 'None meets the hard constraints' : s.options.length ? h(s.options.join(', ')) : 'Do nothing'}</td><td>${fmt(s.immediateCost)}</td><td>${fmt(s.totalCost)}</td><td>${fmt(s.lowestCash)}</td><td>${fmt(s.lowestCashDownside)}</td><td>${h({indicative: 'Indicative', 'close-call': 'Close call — examine the alternative', uncertain: 'Uncertain — depends on missing estimates', 'no-feasible': 'Even without any option, cash falls below the reserve'}[s.status])}${s.estimatesNeededToSettle?.length ? `<br><small>Needed to settle: ${h(s.estimatesNeededToSettle.join('; '))}</small>` : ''}${''}${s.alternative ? `<br><small>Alternative: ${h(s.alternative.join(', ') || 'Do nothing')}</small>` : ''}</td></tr>`).join('');
   const opts = b.options.map(o => `<tr><td>${h(o.name)}</td><td>${h(o.status)}</td><td>${fmt(o.immediateCost)}</td><td>${fmt(o.totalCost)}</td><td>${o.netFinancialInHorizon === null ? 'not estimable' : fmt(o.netFinancialInHorizon)}</td><td>${fmt(o.lowestCashWithOption)}</td><td>${o.immediateContributionEstimate ?? '—'} / ${o.longTermContributionEstimate ?? '—'}</td><td>${h(o.risk ?? '—')}</td><td>${h([...o.infeasibleBecause, ...o.dominatedBy.map(x => `Dominated by ${x}`), ...o.warnings].join(' '))}</td></tr>`).join('');
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Decision brief — ${h(b.generatedFor)}</title>
 <style>body{font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#141821;max-width:1050px;margin:24px auto;padding:0 16px}h1{margin:0 0 4px;font-size:24px}h2{font-size:17px;margin:22px 0 6px}.note{border:1px solid #c9a227;background:#fff9e6;padding:8px 10px;border-radius:6px}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:13px}th,td{border:1px solid #d6d9e0;padding:5px 7px;text-align:left;vertical-align:top}th{background:#f1f2f5}small{color:#555}</style></head><body>

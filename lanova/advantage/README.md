@@ -6,6 +6,7 @@ Static page at `/lanova/advantage/`. It runs entirely in the browser: no server,
 |---|---|
 | `lab.js` | Decision engine (pure functions): costs, hard constraints, dominance, combinations, decision brief, exports. Imports only `../finance/engine/model.js`. |
 | `examples.js` | Neutral blank workspace and three illustrative anonymous examples (inputs only, no results). |
+| `map.js` | The Resource Advantage Map drawn from an evaluation (shared by the Advantage Lab and the home page). |
 | `app.js`, `index.html`, `advantage.css` | Interface: start screen, Resource Advantage Map, Decision Simulator, Decision Brief. Strict CSP, own scripts only. |
 | `../finance/engine/` | The LANOVA Finance engine, already published and byte-identical to `KevinKo77/lake-intelligence` (SHA-256 manifest). **It is reused and not modified**: every cash figure comes from it. |
 
@@ -89,8 +90,16 @@ A missing value is never treated as zero. In particular, "not estimable" (`null`
 | Prioritise long-term development | 0.1 | 0.6 | 0.15 | 0.15 |
 | Preserve financial security | 0.075 | 0.075 | 0.3 | 0.55 |
 
+**Missing estimates (V3 correction).** A blank 0–10 estimate is unknown, not zero:
+- each criterion is an interval [low, high]; an unknown estimate spans 0 to 10;
+- the ranking uses the midpoint (5), so an undocumented option is neither rewarded nor penalised;
+- each candidate also has a score at the low ends and at the high ends;
+- a candidate whose high score reaches above the best's low score is a **contender**. The strategy is then `uncertain`, and the brief lists the estimates needed to settle the ranking;
+- a financial gain that is not estimable cannot be bounded. Only its costs are counted, and the option is listed (`unboundedGains`);
+- with complete estimates the intervals are points, and the results are identical to V0.1.
+
 **Reading of the result:**
-- `insufficient-data`: the chosen combination relies on a missing estimate that a weighted criterion uses. No recommendation is given.
+- `uncertain`: missing estimates could change the ranking. The contenders and the estimates needed are listed.
 - `close-call`: the runner-up is within 0.05 of the best score. The alternative is shown.
 - `indicative`: otherwise.
 

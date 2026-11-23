@@ -15,7 +15,7 @@ const close = (a, b, msg) => assert.ok(Math.abs(a - b) < 0.01, `${msg}: ${a} vs 
 
 test('one engine: the lab imports only the published Finance engine; the page sends and stores nothing', () => {
   const imports = f => [...read(f).matchAll(/^import .* from '([^']+)';$/gm)].map(m => m[1]);
-  assert.deepEqual(imports('lab.js'), ['../finance/engine/model.js']); assert.deepEqual(imports('examples.js'), ['./lab.js']); assert.deepEqual(imports('app.js'), ['./lab.js', './examples.js']);
+  assert.deepEqual(imports('lab.js'), ['../finance/engine/model.js']); assert.deepEqual(imports('examples.js'), ['./lab.js']); assert.deepEqual(imports('app.js'), ['./lab.js', './examples.js', './map.js']); assert.deepEqual(imports('map.js'), ['./lab.js']);
   const all = readdirSync(dir).filter(f => /\.(js|html|css)$/.test(f)).map(read).join('\n');
   assert.doesNotMatch(all, /\bfetch\(|XMLHttpRequest|localStorage|sessionStorage|document\.cookie|sendBeacon|https?:\/\/(?!www\.lakecapitalmanagement)/);
   assert.match(read('index.html'), /http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self';[^"]*connect-src 'self'/);
@@ -85,8 +85,8 @@ test('strategies: preferences only after constraints; "do nothing" is a candidat
   const max = Math.max(...[r.baseMinCashDownside, ...r.options.filter(o => o.feasible).map(o => o.minCashDownside)]); assert.ok(best.minCashDownside >= max - 0.01, 'pure security picks the highest downside cash');
   assert.deepEqual(best.options, [], 'here: do nothing');
   const m = EXAMPLES.amateur.make(); m.options[5].shortTermScore = null; const r2 = evaluate(m);
-  const imm = r2.strategies.immediate; if (imm.best.ids.includes('signings')) assert.equal(imm.status, 'insufficient-data');
-  const all = Object.values(r2.strategies).every(s => ['indicative', 'close-call', 'insufficient-data'].includes(s.status)); assert.ok(all);
+  const imm = r2.strategies.immediate; if (imm.best.ids.includes('signings')) assert.equal(imm.status, 'uncertain');
+  const all = Object.values(r2.strategies).every(s => ['indicative', 'close-call', 'uncertain'].includes(s.status)); assert.ok(all);
   const empty = evaluate(model([])); for (const s of Object.values(empty.strategies)) assert.deepEqual(s.best.options, []);
 });
 
@@ -131,4 +131,39 @@ test('no feasible plan: when the organisation alone falls below the reserve, not
   assert.ok(r.baseMinCash < 600_000); assert.ok(r.options.every(o => !o.feasible));
   for (const s of Object.values(r.strategies)) { assert.equal(s.status, 'no-feasible'); assert.deepEqual(s.best.options, []); }
   assert.match(briefHtml(m, r), /Even without any option, cash falls below the reserve/);
+});
+
+// ------------------------------------------------------------------ P0: missing data is unknown, never an implicit zero
+test('missing data: an undocumented option is not penalised; the ranking is flagged uncertain with the estimate needed', () => {
+  const two = (a, b) => evaluate(model([opt('documented', {upfront: 5_000, shortTermScore: b}), opt('undocumented', {upfront: 5_000, shortTermScore: a})], {decisionBudget: 5_000}), {weights: {immediate: {short: 1, long: 0, money: 0, security: 0}}}).strategies.immediate;
+  // Before the fix, a missing estimate counted as 0 and the documented option always won. Now the unknown spans 0–10:
+  // against a documented 4, the undocumented option (midpoint 5) may rank first, and the ranking is reported as uncertain.
+  const u = two(null, 4);
+  assert.equal(u.status, 'uncertain'); assert.deepEqual(u.best.options, ['undocumented']);
+  assert.deepEqual(u.assumptionsNeeded, ['undocumented: immediate contribution']);
+  assert.ok(u.best.scoreLow < u.best.score && u.best.score < u.best.scoreHigh, 'range shown');
+  // Against a documented 9, the documented option ranks first, and the result is still uncertain: the unknown could be 10.
+  const v = two(null, 9); assert.deepEqual(v.best.options, ['documented']); assert.equal(v.status, 'uncertain'); assert.deepEqual(v.contenders.map(c => c.options), [['undocumented']]);
+  // Once the estimate is known, the uncertainty disappears and the ranking follows the numbers.
+  const k = two(6, 4); assert.notEqual(k.status, 'uncertain'); assert.deepEqual(k.best.options, ['undocumented']); assert.deepEqual(k.contenders, []);
+});
+
+test('missing data: estimates no weighted criterion uses do not make a ranking uncertain; complete data is unchanged', () => {
+  const r = evaluate(model([opt('a', {upfront: 5_000, longTermScore: null}), opt('b', {upfront: 4_000})]), {weights: {immediate: {short: 1, long: 0, money: 0, security: 0}}});
+  assert.notEqual(r.strategies.immediate.status, 'uncertain'); assert.deepEqual(r.strategies.immediate.assumptionsNeeded, []);
+  for (const k of Object.keys(EXAMPLES)) for (const s of Object.values(evaluate(EXAMPLES[k].make()).strategies)) {
+    assert.notEqual(s.status, 'uncertain', `${k}: complete 0–10 estimates`); assert.deepEqual(s.contenders, []);
+    assert.ok(Math.abs(s.best.scoreLow - s.best.score) < 1e-12 && Math.abs(s.best.scoreHigh - s.best.score) < 1e-12, 'point scores');
+  }
+});
+
+test('missing data in combinations: every combination keeps its unknowns listed, and the brief states what would settle the ranking', () => {
+  const m = EXAMPLES.amateur.make(); m.options[5].shortTermScore = null; m.options[0].longTermScore = null; const r = evaluate(m), b = brief(m, r);
+  const imm = r.strategies.immediate; assert.equal(imm.status, 'uncertain');
+  assert.ok(imm.assumptionsNeeded.includes('Two experienced players (expenses paid): immediate contribution'));
+  const label = Object.keys(b.strategies).find(x => /immediate/.test(x)); assert.deepEqual(b.strategies[label].estimatesNeededToSettle, imm.assumptionsNeeded);
+  assert.match(briefHtml(m, r), /Uncertain — depends on missing estimates/); assert.match(briefHtml(m, r), /Needed to settle:/);
+  assert.match(b.assumptions.join(' '), /treated as unknown, not as zero/);
+  // Financial gains that are not estimable are excluded and listed, not guessed.
+  const p = evaluate(EXAMPLES.pro.make()); assert.ok(Object.values(p.strategies).some(s => s.unboundedGains.includes('Data and decision-support department')));
 });
