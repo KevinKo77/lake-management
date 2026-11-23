@@ -119,7 +119,7 @@ const firstBelow = s => { const t = s.cash.findIndex(v => v < S.plan.minimumCash
  */
 function alertsCard(a) {
   const base = a.base.risks.filter(x => x.severity !== 'info');
-  const others = a.scenarios.filter(s => s.id !== 'base' && s.breaches).map(s => `<p class="risk high"><b>HIGH</b> · ${esc(s.label)}: month-end cash falls below the cash policy (${money(S.plan.minimumCash)}) from ${esc(month(firstBelow(s)))}; lowest ${money(s.kpis.minimumCash)}.</p>`);
+  const others = a.scenarios.filter(s => s.id !== 'base' && s.breaches).map(s => `<p class="risk high"><b>HIGH</b> · ${esc(s.label)}: month-end cash falls below the cash policy (${esc(cur())} ${money(S.plan.minimumCash)}) from ${esc(month(firstBelow(s)))}; lowest ${esc(cur())} ${money(s.kpis.minimumCash)}.</p>`);
   const items = [...base.map(x => `<p class="risk ${esc(x.severity)}"><b>${esc(x.severity.toUpperCase())}</b> · ${esc(x.message)}</p>`), ...others];
   return `<section class="card" id="alerts"><h2>Alerts</h2><p class="muted small">Transparent rules on the calculated figures (base case) and the cash policy in each scenario; not predictions. Month-end figures; the intra-month bound is a prudent limit, not a dated forecast.</p>
     ${items.length ? items.join('') : '<p class="muted">No alert: month-end cash stays above the cash policy in every scenario and no rule is triggered in the base case.</p>'}</section>`;

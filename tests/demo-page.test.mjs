@@ -47,5 +47,5 @@ test('the demo page invents nothing: no form, no booking or third-party service,
 test('the demo page has its own title, description and canonical URL, and the shared assets', () => {
   assert.match(demo, /<title>Request a Demo — LANOVA Sports<\/title>/);
   assert.match(demo, /<link rel="canonical" href="https:\/\/www\.lakecapitalmanagement\.com\/demo\.html">/);
-  assert.match(demo, /assets\/v3\.css\?v=20261123-v3/); assert.match(demo, /assets\/site\.js\?v=20261115-private-login-990/);
+  assert.match(demo, /assets\/v3\.css\?v=20261123-v4/); assert.match(demo, /assets\/site\.js\?v=20261115-private-login-990/);
 });
