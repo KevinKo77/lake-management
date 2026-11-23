@@ -26,6 +26,7 @@ const BASE = `http://127.0.0.1:${server.address().port}`;
 const checks = [], errors = [], offsite = [];
 const t = async (name, fn) => { try { await fn(); checks.push({name, status: 'PASS'}); console.log('PASS', name); } catch (e) { checks.push({name, status: 'FAIL', error: String(e.message).split('\n').slice(0, 5).join(' | ')}); console.log('FAIL', name, '\n  ', String(e.message).split('\n').slice(0, 5).join('\n   ')); } };
 const fmt = v => `${v < 0 ? '−' : ''}${Math.round(Math.abs(v)).toLocaleString('en-GB')}`;
+const fmtSigned = v => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.round(Math.abs(v)).toLocaleString('en-GB')}`;
 const browser = await chromium.launch();
 async function open(opts) {
   const ctx = await browser.newContext({...opts, acceptDownloads: true}), page = await ctx.newPage(); page.setDefaultTimeout(8000);
@@ -60,6 +61,25 @@ await t('1 · choose an example: the forecast shown is the engine\'s, for each o
   assert.match(await page.innerText('main'), /Financial commitments — Months 1–12/); assert.match(await page.innerText('main'), /0\.96×/);
   assert.match(await page.innerText('body'), /Demonstration with illustrative, anonymous examples/); assert.match(await page.innerText('h1'), /Illustrative example A — 12-month annual budget \(anonymous; all figures invented\)/);
   await page.screenshot({path: join(out, 'demo_1_forecast_desktop.png'), fullPage: true});
+});
+
+await t('1b · alerts and scenario reading: the engine\'s own risks, policy breaches by scenario, when each scenario applies, differences vs base', async () => {
+  await example(page, 'basketball'); await tab(page, 'Cash & forecast'); await page.waitForSelector('#alerts');
+  const a = analyse(CASES.basketball()), alerts = await page.locator('#alerts .risk').allInnerTexts();
+  const want = [...a.base.risks.filter(x => x.severity !== 'info').map(x => x.message), ...a.scenarios.filter(s => s.id !== 'base' && s.breaches).map(s => s.label)];
+  assert.equal(alerts.length, want.length, 'one alert per rule or scenario, no repetition');
+  want.forEach((w, i) => assert.ok(alerts[i].includes(w), w)); assert.equal(new Set(alerts).size, alerts.length);
+  assert.match(await page.innerText('#alerts'), /intra-month bound is a prudent limit, not a dated forecast/);
+  await page.locator('#alerts').screenshot({path: join(out, 'demo_alerts_desktop.png')});
+  await tab(page, 'Scenarios'); const cells = async l => (await page.locator('tbody tr', {hasText: l}).first().innerText()).split('\t').map(x => x.trim());
+  const plan = CASES.basketball();
+  assert.equal((await cells('Applies from')).length, a.scenarios.length + 1);
+  assert.match((await cells('Assumptions'))[2], /commercial −30%/);
+  const base = a.scenarios.find(s => s.id === 'base'), down = a.scenarios.find(s => s.id === 'downside');
+  assert.equal((await cells('Change vs base: lowest cash'))[2], fmtSigned(down.kpis.minimumCash - base.kpis.minimumCash));
+  const first = down.cash.findIndex(v => v < plan.minimumCash); assert.ok(first >= 0); assert.notEqual((await cells('First month below the cash policy'))[2], 'none');
+  assert.equal((await cells('First month below the cash policy'))[1], 'none');
+  await example(page, 'football'); // the next check starts from example A, as after check 1
 });
 
 await t('2 · change assumptions: the downside changes, the base does not; figures equal a direct engine run', async () => {

@@ -267,7 +267,7 @@ test('P0 · consistency: the interface notice, the brief (JSON), the HTML export
     assert.ok(n.incomplete); assert.equal(n.title, FINANCIAL_INCOMPLETE);
     const names = r.financial.optionsWithUnknownGain; assert.ok(names.length);
     // JSON
-    assert.equal(b.financialComparison.status, 'incomplete'); assert.equal(b.financialComparison.warning, n.text); assert.deepEqual(b.financialComparison.optionsWithUnknownGain, names);
+    assert.equal(b.financialComparison.status, 'incomplete'); assert.equal(b.financialComparison.warning, n.full); assert.equal(b.financialComparison.title, FINANCIAL_INCOMPLETE); assert.deepEqual(b.financialComparison.optionsWithUnknownGain, names);
     for (const [k, s] of Object.entries(r.strategies)) {
       const bs = b.strategies[STRATEGIES[k].label];
       assert.equal(bs.status, s.status); assert.equal(bs.financialComparison, s.financial.incomplete ? FINANCIAL_INCOMPLETE : 'complete');
@@ -279,7 +279,10 @@ test('P0 · consistency: the interface notice, the brief (JSON), the HTML export
     assert.ok(html.includes(`${FINANCIAL_INCOMPLETE} — a gain that is not estimable could change the ranking`));
     for (const x of names) assert.ok(html.includes(`Gain not estimable: ${esc(x)}`) || html.includes(`; ${esc(x)} (`), x);
     // CSV: a warning line, a financial status per option, and the reading per strategy
-    assert.equal(csv[1], `"WARNING — ${n.text.replace(/"/g, '""')}"`);
+    assert.equal(csv[1], `"WARNING — ${n.full.replace(/"/g, '""')}"`);
+    // The title is stated once in every support (no "Financial comparison incomplete. Financial comparison incomplete: …").
+    const htmlNotice = html.match(/<p class="warn" id="financial-notice">[\s\S]*?<\/p>/)[0];
+    for (const x of [n.full, b.financialComparison.warning, csv[1], htmlNotice]) assert.equal(x.split(FINANCIAL_INCOMPLETE).length - 1, 1, `stated once: ${x.slice(0, 80)}`);
     for (const x of names) assert.ok(csv.find(l => l.startsWith(`"${x}",`)).endsWith('"gain not estimable: excluded from cash (prudent)"'), x);
     for (const k of r.financial.strategiesAffected) assert.ok(csv.some(l => l.startsWith(`"${STRATEGIES[k].label}","${FINANCIAL_INCOMPLETE} — `) && names.every(x => l.includes(x))), k);
   }

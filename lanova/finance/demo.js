@@ -105,9 +105,24 @@ function overview() {
   const c = b.commitments;
   const rows = [['Operating cash flow', c.operatingCashFlow], ['Loan debt service', -c.bankDebtService], ['Transfer instalments of past deals', -c.transferPaymentsPastDeals], ['Transfer and agent fees of new signings', -c.playerRegistrationsPaid], ['Other financial commitments', -c.otherCommitments], ['Other capital spending', -c.otherCapitalSpending], ['Transfer receipts, loan drawdowns and other receipts', c.transferReceipts + c.loanDrawdowns + c.otherReceipts], ['Cash generated after all commitments', c.cashAfterCommitments]];
   return `<section class="card"><header><div><h2>Base case${a.selected.length ? ` with ${a.selected.length} selected decision(s)` : ''}</h2><p class="muted small">${esc(MONTH_END_NOTICE)}</p></div></header><div class="kpis">${head}</div></section>
+    ${alertsCard(a)}
     <section class="card"><h2>Month-end cash, by scenario</h2>${chart([...a.scenarios.map(s => ({label: s.label, values: s.cash})), {label: 'Prudent intra-month bound, base (not a forecast)', values: b.months.map(m => m.prudentLowerBound)}], {policy: S.plan.minimumCash, labels: b.months.map(m => m.month)})}<p class="muted small">${esc(PRUDENT_BOUND_LABEL)}</p></section>
     <section class="card"><h2>Financial commitments — ${esc(c.period)}</h2>${table(['Item', `Amount (${cur()})`], rows.map(([l, v], i) => ({cls: i === rows.length - 1 ? 'total' : '', cells: [esc(l), `<span class="${cls(v)}">${money(v)}</span>`]})))}
     <p>Bank debt-service cover: <b>${times(k('dscr').value)}</b> · Financial commitments cover: <b>${times(c.cover)}</b></p><p class="muted small">${esc(c.notice)}</p></section>`;
+}
+/** First month whose month-end cash is below the cash policy, in one scenario's results (null if none). */
+const firstBelow = s => { const t = s.cash.findIndex(v => v < S.plan.minimumCash - 0.005); return t < 0 ? null : t; };
+/**
+ * Alerts shown with the forecast: the engine's own rule-based risks for the base case (high and medium; the same
+ * messages as the report), and, for the other scenarios, where month-end cash breaks the cash policy. Nothing new is
+ * calculated; each alert is stated once.
+ */
+function alertsCard(a) {
+  const base = a.base.risks.filter(x => x.severity !== 'info');
+  const others = a.scenarios.filter(s => s.id !== 'base' && s.breaches).map(s => `<p class="risk high"><b>HIGH</b> · ${esc(s.label)}: month-end cash falls below the cash policy (${money(S.plan.minimumCash)}) from ${esc(month(firstBelow(s)))}; lowest ${money(s.kpis.minimumCash)}.</p>`);
+  const items = [...base.map(x => `<p class="risk ${esc(x.severity)}"><b>${esc(x.severity.toUpperCase())}</b> · ${esc(x.message)}</p>`), ...others];
+  return `<section class="card" id="alerts"><h2>Alerts</h2><p class="muted small">Transparent rules on the calculated figures (base case) and the cash policy in each scenario; not predictions. Month-end figures; the intra-month bound is a prudent limit, not a dated forecast.</p>
+    ${items.length ? items.join('') : '<p class="muted">No alert: month-end cash stays above the cash policy in every scenario and no rule is triggered in the base case.</p>'}</section>`;
 }
 function assumptions() {
   const p = S.plan, used = cat => p.lines.some(l => l.category === cat && l.values.some(v => v > 0));
@@ -125,8 +140,15 @@ function assumptions() {
 function scenarios() {
   const a = S.analysis, ids = ['revenue', 'ebitda', 'netResult', 'minimumCash', 'closingCash', 'liquidityHeadroom', 'investmentCapacity', 'debt'];
   const names = {revenue: 'Revenue, year 1', ebitda: 'EBITDA, year 1', netResult: 'Net result, year 1', minimumCash: 'Lowest month-end cash', closingCash: 'Cash at the end', liquidityHeadroom: 'Headroom vs policy', investmentCapacity: 'Investment capacity (one-off, now)', debt: 'Debt at the end'};
+  const plan = id => S.plan.scenarios.find(x => x.id === id), base = a.scenarios.find(s => s.id === 'base') ?? a.scenarios[0];
+  // What each scenario assumes and when it starts (as entered), then the main differences with the base case: plain
+  // subtractions of the engine's results.
+  const setup = [['Applies from', ...a.scenarios.map(s => esc(month(plan(s.id)?.fromMonth ?? 0)))], ['Assumptions', ...a.scenarios.map(s => `<span class="small">${esc(plan(s.id)?.notes || 'As budgeted')}</span>`)]];
+  const vsBase = [['ebitda', 'Change vs base: EBITDA (year 1)'], ['minimumCash', 'Change vs base: lowest cash'], ['closingCash', 'Change vs base: final cash']]
+    .map(([id, l]) => [esc(l), ...a.scenarios.map(s => (s === base ? '—' : `<span class="${cls(s.kpis[id] - base.kpis[id])}">${signed(s.kpis[id] - base.kpis[id])}</span>`))]);
+  const first = ['First month below the cash policy', ...a.scenarios.map(s => (firstBelow(s) === null ? '<span class="pos">none</span>' : `<span class="neg">${esc(month(firstBelow(s)))}</span>`))];
   return `<section class="card"><h2>Scenario comparison</h2><p class="muted small">Same plan and same selected decisions; only the scenario assumptions differ. Amounts in ${esc(cur())}.</p>
-    ${table(['Indicator', ...a.scenarios.map(s => s.label)], [...ids.map(id => [esc(names[id]), ...a.scenarios.map(s => `<span class="${id === 'liquidityHeadroom' ? cls(s.kpis[id]) : ''}">${money(s.kpis[id])}</span>`)]), ['Cash policy', ...a.scenarios.map(s => (s.breaches ? '<span class="neg">breached</span>' : '<span class="pos">met</span>'))]])}
+    ${table(['Indicator', ...a.scenarios.map(s => s.label)], [...setup, ...ids.map(id => [esc(names[id]), ...a.scenarios.map(s => `<span class="${id === 'liquidityHeadroom' ? cls(s.kpis[id]) : ''}">${money(s.kpis[id])}</span>`)]), ['Cash policy', ...a.scenarios.map(s => (s.breaches ? '<span class="neg">breached</span>' : '<span class="pos">met</span>'))], first, ...vsBase])}
     ${chart(a.scenarios.map(s => ({label: s.label, values: s.cash})), {policy: S.plan.minimumCash, labels: a.base.months.map(m => m.month)})}</section>`;
 }
 const DEC_FIELDS = {

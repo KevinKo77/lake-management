@@ -328,10 +328,12 @@ export function financialNotice(r) {
   const incomplete = affected.length > 0, strategies = affected.map(k => STRATEGIES[k].label);
   const parts = [];
   if (unknown.length) parts.push(incomplete
-    ? `${FINANCIAL_INCOMPLETE}: the financial gain of ${unknown.join(', ')} is not estimable. The cash figures leave it out (prudent cash), so they do not describe its full benefit, and the ranking could change once it is known (${strategies.join('; ')}).`
+    ? `The financial gain of ${unknown.join(', ')} is not estimable. The cash figures leave it out (prudent cash), so they do not describe its full benefit, and the ranking could change once it is known (${strategies.join('; ')}).`
     : `The financial gain of ${unknown.join(', ')} is not estimable and is left out of the cash figures (prudent cash). No strategy ranking here depends on it.`);
   if (ranges.length) parts.push(`Documented gain ranges for ${ranges.join(', ')}: cash uses the low end; the ranking accounts for both ends.`);
-  return {incomplete, title: incomplete ? FINANCIAL_INCOMPLETE : unknown.length ? 'Financial gains not estimable' : 'Financial gains as documented ranges', optionsWithUnknownGain: unknown, optionsWithGainRange: ranges, strategies, text: parts.join(' ')};
+  const title = incomplete ? FINANCIAL_INCOMPLETE : unknown.length ? 'Financial gains not estimable' : 'Financial gains as documented ranges', text = parts.join(' ');
+  // The title is stated once, followed by the explanation (full = what every export prints).
+  return {incomplete, title, text, full: `${title}. ${text}`, optionsWithUnknownGain: unknown, optionsWithGainRange: ranges, strategies};
 }
 /** Net financial effect over the horizon, as text: a figure, a documented range, or costs only when the gain is unknown. */
 export const netFinancialText = o => o.totals.financialStatus === 'complete' ? fmt(o.totals.netFinancialInHorizon) : o.totals.financialStatus === 'range'
@@ -345,7 +347,7 @@ export function brief(m, r) {
     preferences: Object.fromEntries(Object.entries(r.strategies).map(([k, s]) => [STRATEGIES[k].label, s.weights])),
     scenariosStudied: ['Base case: revenue and costs as entered', `Downside: revenue −${f.downsideRevenuePct}% in every month (option gains included)`],
     baseline: {lowestCash: round2(r.baseMinCash), lowestCashDownside: round2(r.baseMinCashDownside), cashAtEnd: round2(r.base.base.at(-1))},
-    financialComparison: {status: notice?.incomplete ? 'incomplete' : 'complete', warning: notice?.text ?? null, optionsWithUnknownGain: r.financial.optionsWithUnknownGain, optionsWithGainRange: r.financial.optionsWithGainRange,
+    financialComparison: {status: notice?.incomplete ? 'incomplete' : 'complete', title: notice?.title ?? null, warning: notice?.full ?? null, optionsWithUnknownGain: r.financial.optionsWithUnknownGain, optionsWithGainRange: r.financial.optionsWithGainRange,
       strategiesAffected: notice?.strategies ?? [], prudentCash: PRUDENT_CASH},
     options: r.options.map(o => ({name: o.name, status: o.status, financialStatus: o.totals.financialStatus, immediateCost: o.totals.upfront, runningCostInHorizon: o.totals.runningInHorizon, commitmentsAfterHorizon: o.totals.commitmentsAfterHorizon,
       totalCost: o.totals.totalCost, financialGainInHorizon: o.totals.gainInHorizon, netFinancialInHorizon: o.totals.netFinancialInHorizon,
@@ -380,7 +382,7 @@ export function briefCsv(m, r) {
   const strat = Object.entries(r.strategies).map(([k, s]) => [STRATEGIES[k].label, READINGS[s.status], s.status === 'no-feasible' ? 'none' : s.best.options.join(' + ') || 'Do nothing',
     s.financial.optionsWithUnknownGain.map(x => `${x.name} (${x.role})`).join(' | ')]);
   return [[`LANOVA Advantage Lab — ${m.label || 'Untitled'}${m.fictional ? ' (illustrative example, all figures invented)' : ''}. Contributions are your estimates (0–10), not predictions. EUR.`],
-    [notice ? `WARNING — ${notice.text}` : `Financial comparison complete. ${PRUDENT_CASH}`], head, ...rows, [],
+    [notice ? `WARNING — ${notice.full}` : `Financial comparison complete. ${PRUDENT_CASH}`], head, ...rows, [],
     ['Strategy', 'Reading', 'Best combination', 'Options with a gain that is not estimable (role)'], ...strat].map(l => l.map(cell).join(',')).join('\r\n') + '\r\n';
 }
 const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));

@@ -98,7 +98,7 @@ function results(r, m) {
       <dl><div><dt>Immediate cost</dt><dd>${fmt(b.upfront)}</dd></div><div><dt>Total cost</dt><dd>${fmt(b.totalCost)}</dd></div><div><dt>Lowest cash</dt><dd>${fmt(b.minCashBase)}</dd></div><div><dt>Lowest cash, downside</dt><dd class="${b.minCashDownside < m.finance.minimumCash ? 'neg' : ''}">${fmt(b.minCashDownside)}</dd></div></dl>
       ${s.runnerUp ? `<p class="small muted">Alternative to examine: ${esc(s.runnerUp.options.join(' + ') || 'do nothing')}</p>` : ''}
       ${s.assumptionsNeeded.length ? `<p class="small neg">The ranking could change once these estimates are known: ${esc(s.assumptionsNeeded.join('; '))}.${s.contenders.length ? ` Could rank higher: ${esc(s.contenders.map(c => c.options.join(' + ') || 'do nothing').join(' · '))}.` : ''}</p>` : ''}
-      ${s.financial.incomplete ? `<p class="small neg" data-financial-incomplete="${k}"><b>Financial comparison incomplete.</b> ${esc(s.financial.reasons.join(' '))} Gain not estimable: ${esc(s.financial.optionsWithUnknownGain.map(x => `${x.name} (${x.role})`).join('; '))}.</p>`
+      ${s.financial.incomplete ? `<p class="small neg" data-financial-incomplete="${k}"><b>Why:</b> ${esc(s.financial.reasons.join(' '))} Gain not estimable: ${esc(s.financial.optionsWithUnknownGain.map(x => `${x.name} (${x.role})`).join('; '))}.</p>`
         : s.unboundedGains.length ? `<p class="small muted">Gain not estimable, left out of the cash; this ranking does not depend on it: ${esc(s.unboundedGains.join(', '))}.</p>` : ''}
       ${b.highRisk.length ? `<p class="small">High risk in your view: ${esc(b.highRisk.join(', '))}</p>` : ''}
       ${b.minCashDownside < m.finance.minimumCash ? '<p class="small neg">In the downside case, cash falls below the reserve.</p>' : ''}

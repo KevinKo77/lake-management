@@ -338,9 +338,11 @@ function compute(plan, sc, decisionIds) {
     src.kinds[l.kind] += total;
   }
   // Prepaid items (signing bonuses): cash when paid, expense spread over the contract months (within the horizon).
+  // The scenario factor applies only if the bonus is paid on or after the scenario's "applies from" month, like every
+  // other monthly amount; one factor for both the cash and its expense, so the expense still adds up to the cash paid.
   let prepaidCash = 0, prepaidExpense = 0;
   for (const c of components) for (const x of c.prepaid) {
-    const f = factorOf(x.category);
+    const f = x.paidMonth >= sc.fromMonth ? factorOf(x.category) : 1;
     if (x.paidMonth < H) { cash[x.category][x.paidMonth] += x.amount * f; prepaidCash += x.amount * f; }
     for (let t = x.fromMonth; t < Math.min(H, x.fromMonth + x.months); t++) { accrual[x.category][t] += x.amount * f / x.months; prepaidExpense += x.amount * f / x.months; }
   }

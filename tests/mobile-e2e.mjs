@@ -106,7 +106,7 @@ await t('4 · rugby path (Advantage Lab, tap to load): engine figures, no financ
 await t('5 · basketball path: "Financial comparison incomplete" on the map notice, every strategy card and the brief, with the same options', async () => {
   await page.goto(BASE + '/lanova/advantage/'); await page.locator('[data-example="semipro"]').tap(); await page.waitForSelector('svg.map');
   const want = evaluate(EXAMPLES.semipro.make()), n = financialNotice(want);
-  for (const id of ['#map-fin-notice', '#brief-fin-notice']) assert.equal(await page.innerText(id), `${FINANCIAL_INCOMPLETE}. ${n.text}`, id);
+  for (const id of ['#map-fin-notice', '#brief-fin-notice']) assert.equal(await page.innerText(id), n.full, id);
   assert.equal(await page.locator('.sres.financial-incomplete').count(), want.financial.strategiesAffected.length);
   for (const k of want.financial.strategiesAffected) for (const x of want.financial.optionsWithUnknownGain) assert.ok((await page.innerText(`[data-financial-incomplete="${k}"]`)).includes(x));
   await noOverflow('basketball');
@@ -118,7 +118,7 @@ await t('6 · exports on the phone (tap): HTML, JSON and CSV carry the same warn
   const want = evaluate(EXAMPLES.semipro.make()), n = financialNotice(want);
   const get = async kind => { const b = page.locator(`[data-export="${kind}"]`); await b.scrollIntoViewIfNeeded(); const [d] = await Promise.all([page.waitForEvent('download'), b.tap()]); const f = join(out, `mobile_${d.suggestedFilename()}`); await d.saveAs(f); return readFileSync(f, 'utf8'); };
   const html = await get('html'), json = JSON.parse(await get('json')), csv = await get('csv');
-  assert.equal(json.brief.financialComparison.warning, n.text); assert.deepEqual(json.brief.financialComparison.optionsWithUnknownGain, want.financial.optionsWithUnknownGain);
+  assert.equal(json.brief.financialComparison.warning, n.full); assert.deepEqual(json.brief.financialComparison.optionsWithUnknownGain, want.financial.optionsWithUnknownGain);
   assert.ok(html.includes('id="financial-notice"')); assert.ok(csv.split('\r\n')[1].startsWith('"WARNING — Financial comparison incomplete'));
   want.options.forEach((o, i) => { assert.equal(json.brief.options[i].totalCost, o.totals.totalCost); assert.ok(csv.includes(`"${o.name}","${o.status}"`)); assert.ok(html.includes(o.name)); });
   await page.locator('#h-brief').scrollIntoViewIfNeeded(); await shot('lab_brief');
@@ -140,7 +140,7 @@ await t('7 · multi-sport path from a neutral start: entered by touch, recalcula
   assert.equal(await page.locator('#map [role=alert]').count(), 0);
   assert.equal(await page.locator('svg.map .pt').count(), 2);
   assert.equal(await page.locator('.sres.financial-incomplete').count(), 3);
-  assert.match(await page.innerText('#map-fin-notice'), /^Financial comparison incomplete\. .*the financial gain of Indoor hall booking system is not estimable/);
+  assert.match(await page.innerText('#map-fin-notice'), /^Financial comparison incomplete\. The financial gain of Indoor hall booking system is not estimable/);
   await noOverflow('multi-sport'); await page.locator('#map-fin-notice').scrollIntoViewIfNeeded(); await shot('lab_multisport_incomplete');
   // Recalculation: raising the reserve makes options infeasible, as the engine says.
   await type('finance.minimumCash', 395000);

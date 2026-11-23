@@ -90,6 +90,15 @@ await t('3 · home: the first screen says what LANOVA is, for every sport, with 
   await page.close();
 });
 
+await t('3b · Squad Economics (available module): the existing tools still load and render, without page errors', async () => {
+  for (const [path, title, text] of [['/lanova/workspace/', /Recruitment Workspace/, /Decision dashboard/], ['/lanova/recruitment/', /Recruitment Optimizer/, /Decision Lab/], ['/lanova/optimizer/', /Recruitment Optimizer/, /Recruitment optimizer/i]]) {
+    const page = await desk.newPage(), errs = [], bad = []; page.on('pageerror', e => errs.push(e.message)); page.on('response', r => { if (r.status() >= 400 && r.url().startsWith(BASE)) bad.push(`${r.status()} ${r.url()}`); });
+    const res = await page.goto(BASE + path); assert.equal(res.status(), 200, path); await page.waitForTimeout(800);
+    assert.match(await page.title(), title, path); assert.match(await page.innerText('body'), text, path);
+    assert.deepEqual(errs, [], `${path}: page errors`); assert.deepEqual(bad, [], `${path}: missing files`); await page.close();
+  }
+});
+
 await t('4 · demo page: every entry point opens a working tool; neutral starts open nothing by themselves', async () => {
   const page = await desk.newPage(); watch(page, 'demo');
   const cases = [['advantage-blank', /advantage\/\?start=blank$/, async () => { await page.waitForSelector('#map [role=alert]'); assert.match(await page.innerText('main'), /Your own workspace/); }],

@@ -90,10 +90,10 @@ await t('5 · decision brief: HTML, JSON and CSV exports carry the same figures'
   assert.match(html, /Hard constraints/); assert.match(html, /Data missing for a definitive decision/); assert.match(html, /every figure is invented/);
   // P0: a gain that is not estimable is flagged identically in the five places: interface, brief, HTML, JSON, CSV.
   const names = want.financial.optionsWithUnknownGain, n = financialNotice(want); assert.ok(names.length && n.incomplete);
-  for (const id of ['#map-fin-notice', '#brief-fin-notice']) { const ui = await page.innerText(id); assert.ok(ui.startsWith(`${FINANCIAL_INCOMPLETE}.`), id); assert.ok(ui.includes(n.text), id); }
+  for (const id of ['#map-fin-notice', '#brief-fin-notice']) { const ui = await page.innerText(id); assert.equal(ui, n.full, id); assert.equal(ui.split(FINANCIAL_INCOMPLETE).length, 2, `${id}: stated once`); }
   for (const k of want.financial.strategiesAffected) { const card = await page.innerText(`[data-financial-incomplete="${k}"]`); for (const x of names) assert.ok(card.includes(x), `${k}: ${x}`); }
   assert.equal(await page.locator('.sres.financial-incomplete').count(), want.financial.strategiesAffected.length);
-  assert.equal(json.brief.financialComparison.status, 'incomplete'); assert.deepEqual(json.brief.financialComparison.optionsWithUnknownGain, names); assert.equal(json.brief.financialComparison.warning, n.text);
+  assert.equal(json.brief.financialComparison.status, 'incomplete'); assert.deepEqual(json.brief.financialComparison.optionsWithUnknownGain, names); assert.equal(json.brief.financialComparison.warning, n.full);
   assert.ok(html.includes('id="financial-notice"') && html.includes(FINANCIAL_INCOMPLETE));
   assert.ok(csv.split('\r\n')[1].startsWith('"WARNING — Financial comparison incomplete'));
   for (const x of names) { assert.ok(html.includes(x) && csv.includes(x)); assert.match(await rowOf(page, x).then(r => r[4]), /gain not estimable: costs only/); }

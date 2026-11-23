@@ -1,12 +1,12 @@
 {
  "source": "KevinKo77/lake-intelligence",
- "commit": "aaac1121abd639f3a4c9f7d71dc847c23396fe10",
- "sourceBranch": "claude/lanova-finance-v1-p1p2 (PR #56, stacked on PR #55)",
+ "commit": "96b99091b14af3d06d06a8baceda71e230d2e571",
+ "sourceBranch": "claude/finance-v1-production-candidate (PR #58)",
  "sourcePath": "finance/",
  "engineVersion": "finance-1.1",
  "copiedUnchanged": true,
  "files": {
-  "model.js": "2133ef49d2d782619b159f6ad49cbf7821b6865f7f48179009f67d7584f58223",
+  "model.js": "eaeadedba9e58e7a11ee5b9e48df136deabe4a3955b1ad5e3ca26bf688cd90ed",
   "report.js": "ed759878b21896d922605f7fb1e22470f100111ad9a712f572ffe22602998cb6",
   "pdf.js": "0f618a84fd8569878a38c1789af4f22ec00f0df82f34ac083cdc9eeb1bbed216",
   "cases.js": "1a05579b7f77f42092c675f9fa6e40ac87a2efb6824f2da3e34ec4e1a2ad0827"
