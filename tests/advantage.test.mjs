@@ -9,13 +9,14 @@ import {forecast} from '../lanova/finance/engine/model.js';
 
 const dir = 'lanova/advantage/', read = f => readFileSync(dir + f, 'utf8');
 const opt = (id, o) => ({id, name: id, category: '', upfront: 0, upfrontType: 'expense', usefulLifeMonths: null, startMonth: 0, commitmentMonths: 0, monthlyCost: 0, effectMonths: 0, monthlyGain: 0, gainMonths: 12, shortTermScore: 5, longTermScore: 5, risk: 'low', confidence: 'medium', ...o});
-const model = (options, f = {}, o = {}) => ({schema: SCHEMA, fictional: true, label: 'Test', sport: 'Handball', structure: 'Test', startMonth: '2027-01', horizonMonths: 12, objective: 'immediate',
+const model = (options, f = {}, o = {}) => ({schema: 'lanova-advantage-v0', fictional: true, label: 'Test', sport: 'Handball', structure: 'Test', startMonth: '2027-01', horizonMonths: 12, objective: 'immediate',
   finance: {openingCash: 100_000, annualRevenue: 120_000, annualOperatingCosts: 120_000, minimumCash: 20_000, decisionBudget: 50_000, downsideRevenuePct: 10, ...f}, options, ...o});
 const close = (a, b, msg) => assert.ok(Math.abs(a - b) < 0.01, `${msg}: ${a} vs ${b}`);
 
 test('one engine: the lab imports only the published Finance engine; the page sends and stores nothing', () => {
   const imports = f => [...read(f).matchAll(/^import .* from '([^']+)';$/gm)].map(m => m[1]);
-  assert.deepEqual(imports('lab.js'), ['../finance/engine/model.js']); assert.deepEqual(imports('examples.js'), ['./lab.js']); assert.deepEqual(imports('app.js'), ['./lab.js', './examples.js', './map.js']); assert.deepEqual(imports('map.js'), ['./lab.js']);
+  assert.deepEqual(imports('lab.js'), ['../finance/engine/model.js']); assert.deepEqual(imports('examples.js'), ['./lab.js']); assert.deepEqual(imports('app.js'), ['./lab.js', './examples.js', './map.js', './sensitivity.js', './project.js']); assert.deepEqual(imports('map.js'), ['./lab.js']);
+  assert.deepEqual(imports('sensitivity.js'), ['./lab.js'], 'sensitivity recalculates through lab.js and the Finance engine only'); assert.deepEqual(imports('project.js'), ['./lab.js']);
   const all = readdirSync(dir).filter(f => /\.(js|html|css)$/.test(f)).map(read).join('\n');
   assert.doesNotMatch(all, /\bfetch\(|XMLHttpRequest|localStorage|sessionStorage|document\.cookie|sendBeacon|https?:\/\/(?!www\.lakecapitalmanagement)/);
   assert.match(read('index.html'), /http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self';[^"]*connect-src 'self'/);
