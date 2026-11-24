@@ -1,0 +1,322 @@
+/**
+ * LANOVA Winter Transfer Intelligence — case study "Málaga CF — Attack or Defence? The January 2027 Survival
+ * Decision". Pure functions, no DOM, no network (the dataset is passed in).
+ *
+ * Three kinds of information are kept apart everywhere (interface and exports):
+ *   OBSERVED   — verified public facts, with their sources and dates;
+ *   ESTIMATE   — outputs of the explicit goal model in ../football.js (not validated as a forecast);
+ *   HYPOTHESIS — values the user sets (intervention size, timing, costs, finances).
+ *
+ * Every financial figure is computed by the Advantage Lab V1 (../../advantage/lab.js), which runs the validated LANOVA
+ * Finance engine. Unknown costs stay unknown: nothing is computed until the user enters them.
+ *
+ * LANOVA is independent and is not affiliated with, endorsed by or working for Málaga CF.
+ */
+import {outcome, expectedPoints, leagueRates, strengths, matchMeans, positionPoints, rows} from '../football.js';
+import {evaluate, scenarioResults, directCombination, SCHEMA, fmt, prepare, optionDecisions, basePlan} from '../../advantage/lab.js';
+import {forecast, decisionComponents, monthLabel} from '../../finance/engine/model.js';
+
+export const TEAM = 'Málaga CF';
+export const SEASON = '2026-27';
+export const KINDS = Object.freeze({observed: 'Observed (verified public fact)', estimate: 'Model estimate (not a validated forecast)', hypothesis: 'Your hypothesis'});
+
+/** Verified starting point. Each figure is a public match fact; the chain of sources is given and dated. */
+export const SNAPSHOT = Object.freeze({
+  team: TEAM, competition: 'LaLiga EA Sports 2026/27 (Primera División)', asOf: '2026-11-22', checkedOn: '2026-11-24',
+  state: 'After matchday 13 (Osasuna 1–0 Málaga CF, 22 November 2026)',
+  position: 20, played: 13, won: 0, drawn: 5, lost: 8, goalsFor: 9, goalsAgainst: 24, points: 5, matchesInSeason: 38, relegationPlaces: 3,
+  derivation: [
+    'After matchday 11 (table updated 2 November 2026): 11 played, 0 won, 5 drawn, 6 lost, goal difference −13 (8 scored, 21 conceded), 5 points, 20th.',
+    'Matchday 12, 7 November 2026: Málaga CF 1–2 Real Racing Club de Santander (La Rosaleda).',
+    'Matchday 13, 22 November 2026: CA Osasuna 1–0 Málaga CF (El Sadar); Málaga CF remain last on 5 points.',
+    'Hence 13 played, 0 won, 5 drawn, 8 lost, 9 scored, 24 conceded, 5 points, 20th.',
+  ],
+  sources: [
+    {name: 'Zonadepor — Clasificación de LALIGA 2026/27 (after matchday 11)', url: 'https://zonadepor.net/clasificacion.htm', date: '2026-11-02'},
+    {name: 'La Nación — Racing de Santander venció 2-1 a Málaga', url: 'https://www.lanacion.com.ar/deportes/canchallena/racing-de-santander-vencio-2-1-a-malaga-por-la-liga-de-espana-nid07112026/', date: '2026-11-07'},
+    {name: 'Futeros — Málaga 1-2 Racing', url: 'https://futeros.com/malaga-1-2-racing-la-rosaleda-se-indigesta-con-la-remontada-del-racing-de-santander/', date: '2026-11-07'},
+    {name: 'La Nación — Osasuna venció 1-0 a Málaga', url: 'https://www.lanacion.com.ar/deportes/canchallena/osasuna-vencio-1-0-a-malaga-por-la-liga-de-espana-nid22112026/', date: '2026-11-22'},
+    {name: 'El Desmarque — crónica Osasuna–Málaga, jornada 13', url: 'https://www.eldesmarque.com/futbol/liga-1a-division/20261122/cronica-resumen-analisis-osasuna-malaga-jornada-13-laliga-ea-sports_18_020782913.html', date: '2026-11-22'},
+    {name: 'Málaga CF — next fixture: matchday 14 v Athletic Club', url: 'https://www.malagacf.com/en/matches/season-2026-2027-laliga-ea-sports-14-malaga-cf-vs-athletic-club-3056', date: '2026-11-24'},
+  ],
+  rights: 'Only public match facts are used (results, points, goals, position), entered by hand and attributed. No league table, logo, photograph, text or data feed of LaLiga, Málaga CF or the cited media is reproduced.',
+  independence: 'LANOVA Sports is independent. It is not affiliated with, endorsed by or working for Málaga CF or LaLiga. This case study uses public facts and states its own assumptions.',
+});
+
+// ------------------------------------------------------------------ model context
+/**
+ * Model context: league scoring rates (2025/26 complete season and the 2026/27 matches in the dataset), each team's
+ * strengths from its 2026/27 matches in the dataset, Málaga's from its verified line (more recent), and Málaga's
+ * remaining fixtures. `k` = shrinkage (prior matches at the league average).
+ */
+export function context(dataset, {k = 5} = {}) {
+  const cur = rows(dataset.seasons[SEASON].matches), prev = rows(dataset.seasons['2025-26'].matches);
+  const played = cur.filter(m => m.hg !== null), rates = leagueRates([...prev, ...played]);
+  const S = strengths(cur, rates, {k, override: {[TEAM]: {played: SNAPSHOT.played, gf: SNAPSHOT.goalsFor, ga: SNAPSHOT.goalsAgainst}}});
+  const lastDate = played.reduce((d, m) => (m.date > d ? m.date : d), ''), mine = cur.filter(m => m.home === TEAM || m.away === TEAM);
+  const remaining = mine.filter(m => m.matchday > SNAPSHOT.played).sort((a, b) => a.date.localeCompare(b.date));
+  // Consistency check: the dataset's own Málaga results must be compatible with the verified (more recent) line.
+  const dsM = mine.filter(m => m.hg !== null), dsPts = dsM.reduce((s, m) => { const f = m.home === TEAM ? m.hg : m.ag, a = m.home === TEAM ? m.ag : m.hg; return s + (f > a ? 3 : f === a ? 1 : 0); }, 0);
+  const dsGF = dsM.reduce((s, m) => s + (m.home === TEAM ? m.hg : m.ag), 0), dsGA = dsM.reduce((s, m) => s + (m.home === TEAM ? m.ag : m.hg), 0);
+  const consistent = dsM.length <= SNAPSHOT.played && dsPts <= SNAPSHOT.points && dsGF <= SNAPSHOT.goalsFor && dsGA <= SNAPSHOT.goalsAgainst;
+  const safe = positionPoints(dataset, 17), drop = positionPoints(dataset, 18);
+  return {rates, strengths: S, k, remaining, datasetThrough: lastDate, datasetMatches: played.length, datasetMalaga: {played: dsM.length, points: dsPts, gf: dsGF, ga: dsGA}, consistent,
+    history: {safe, drop}, source: dataset.source};
+}
+
+// ------------------------------------------------------------------ interventions
+/**
+ * A scenario: attack and/or defence improvements, each a % change of Málaga's own rate from the first remaining
+ * match on or after its activation date. attackPct: +% to goals scored; defencePct: −% to goals conceded.
+ */
+export function scenario(ctx, {attackPct = 0, attackFrom = null, defencePct = 0, defenceFrom = null} = {}) {
+  if (!(attackPct >= 0 && attackPct <= 300)) throw new RangeError('Attack improvement: 0 to 300%');
+  if (!(defencePct >= 0 && defencePct <= 90)) throw new RangeError('Defence improvement: 0 to 90%');
+  return scenarioBy(ctx, m => ({attack: attackPct && (!attackFrom || m.date >= attackFrom) ? 1 + attackPct / 100 : 1, defence: defencePct && (!defenceFrom || m.date >= defenceFrom) ? 1 - defencePct / 100 : 1}));
+}
+/**
+ * Same calculation with a multiplier per remaining match: `fn(match, index)` returns {attack, defence}, the factors on
+ * Málaga's scoring rate and conceding rate for that match (used by the role-based player profiles).
+ */
+export function scenarioBy(ctx, fn) {
+  const per = ctx.remaining.map((m, i) => {
+    const home = m.home === TEAM, opp = home ? m.away : m.home, {attack: a = 1, defence: d = 1} = fn(m, i);
+    if (!(a > 0 && d > 0 && Number.isFinite(a) && Number.isFinite(d))) throw new RangeError(`Invalid multipliers for ${m.date}`);
+    const mm = matchMeans(m.home, m.away, ctx.strengths, ctx.rates, {[TEAM]: {attack: a, defence: d}});
+    const o = outcome(mm.home, mm.away), mine = home ? o : {win: o.loss, draw: o.draw, loss: o.win};
+    return {date: m.date, matchday: m.matchday, opponent: opp, venue: home ? 'home' : 'away', goalsFor: home ? mm.home : mm.away, goalsAgainst: home ? mm.away : mm.home,
+      win: mine.win, draw: mine.draw, loss: mine.loss, points: expectedPoints(mine), attackOn: a !== 1, defenceOn: d !== 1};
+  });
+  const sum = k => per.reduce((s, x) => s + x[k], 0);
+  return {matches: per, points: sum('points'), goalsFor: sum('goalsFor'), goalsAgainst: sum('goalsAgainst'), wins: sum('win'), draws: sum('draw'), finalPoints: SNAPSHOT.points + sum('points'),
+    affected: {attack: per.filter(x => x.attackOn).length, defence: per.filter(x => x.defenceOn).length}};
+}
+/** Baseline, attack only, defence only and both, with the differences from the baseline. */
+export function compare(ctx, h) {
+  const base = scenario(ctx), attack = scenario(ctx, {attackPct: h.attackPct, attackFrom: h.attackFrom}), defence = scenario(ctx, {defencePct: h.defencePct, defenceFrom: h.defenceFrom});
+  const both = scenario(ctx, h), d = x => ({...x, gain: x.points - base.points});
+  const att = d(attack), def = d(defence), comb = d(both), diff = att.gain - def.gain;
+  const best = Math.abs(diff) < 0.05 ? 'equivalent' : diff > 0 ? 'attack' : 'defence';
+  return {baseline: d(base), attack: att, defence: def, both: comb, best, difference: diff, interaction: comb.gain - att.gain - def.gain};
+}
+/**
+ * What would change the recommendation: the attack improvement (%) giving the same expected points as the chosen
+ * defence improvement, and the defence improvement giving the same as the chosen attack improvement (bisection on
+ * the model; expected points increase with each improvement). null when not reached within the allowed range.
+ */
+export function breakEven(ctx, h, tol = 0.01) {
+  const target = (field, from, other) => {
+    const goal = other.gain, max = field === 'attackPct' ? 300 : 90, g = x => scenario(ctx, {[field]: x, [field === 'attackPct' ? 'attackFrom' : 'defenceFrom']: from}).points - scenario(ctx).points - goal;
+    if (goal <= 1e-9) return 0;
+    if (g(max) < 0) return null;
+    let lo = 0, hi = max; while (hi - lo > tol) { const c = (lo + hi) / 2; if (g(c) < 0) lo = c; else hi = c; }
+    return hi;
+  };
+  const c = compare(ctx, h);
+  return {attackEquivalentToDefence: target('attackPct', h.attackFrom, c.defence), defenceEquivalentToAttack: target('defencePct', h.defenceFrom, c.attack)};
+}
+/** Historical reference: points of the 17th (last safe place) and 18th in each complete season of the dataset. */
+export function historyBand(ctx) {
+  const pts = ctx.history.safe.map(x => x.points).sort((a, b) => a - b), q = p => pts[Math.min(pts.length - 1, Math.max(0, Math.round(p * (pts.length - 1))))];
+  return {seasons: ctx.history.safe.length, min: pts[0], median: q(0.5), max: pts.at(-1), safe: ctx.history.safe, drop: ctx.history.drop};
+}
+
+// ------------------------------------------------------------------ explanation
+const r1 = v => (Math.round(v * 10) / 10).toFixed(1), pct = v => `${Math.round(v)}%`;
+export function explain(ctx, h, c = compare(ctx, h), be = breakEven(ctx, h)) {
+  const name = {attack: `the attack improvement (+${pct(h.attackPct)} goals scored)`, defence: `the defence improvement (−${pct(h.defencePct)} goals conceded)`};
+  const head = c.best === 'equivalent' ? `Under these assumptions the two interventions are equivalent within the model's precision (${r1(c.attack.gain)} vs ${r1(c.defence.gain)} expected points).`
+    : `Under these assumptions, ${name[c.best]} adds more expected points: ${r1(c[c.best].gain)} against ${r1(c[c.best === 'attack' ? 'defence' : 'attack'].gain)} for ${name[c.best === 'attack' ? 'defence' : 'attack']}, over ${ctx.remaining.length} remaining matches.`;
+  const m = ctx.strengths[TEAM], perFor = ctx.rates.perTeamMatch * m.attack, perAg = ctx.rates.perTeamMatch * m.defence;
+  const drivers = [
+    `Málaga's estimated rates: ${perFor.toFixed(2)} goals scored and ${perAg.toFixed(2)} conceded per match (league average ${ctx.rates.perTeamMatch.toFixed(2)}). The same percentage removes more goals where the rate is higher: ${pct(h.defencePct)} fewer conceded is about ${(perAg * h.defencePct / 100).toFixed(2)} goals a match; ${pct(h.attackPct)} more scored is about ${(perFor * h.attackPct / 100).toFixed(2)}.`,
+    `Expected goals over the remaining matches: baseline ${r1(c.baseline.goalsFor)} scored and ${r1(c.baseline.goalsAgainst)} conceded; with attack ${r1(c.attack.goalsFor)} scored; with defence ${r1(c.defence.goalsAgainst)} conceded.`,
+    `Timing: the attack improvement applies to ${c.attack.affected.attack} matches and the defence improvement to ${c.defence.affected.defence} (from their activation dates).`,
+    `Both together add ${r1(c.both.gain)} expected points (${c.interaction >= 0 ? '+' : ''}${r1(c.interaction)} compared with the sum of the two separately).`,
+  ];
+  const change = [
+    be.attackEquivalentToDefence === null ? `No attack improvement up to +300% matches the chosen defence improvement.` : `The attack improvement would have to be +${r1(be.attackEquivalentToDefence)}% to match −${pct(h.defencePct)} goals conceded.`,
+    be.defenceEquivalentToAttack === null ? `No defence improvement up to −90% matches the chosen attack improvement.` : `The defence improvement would have to be −${r1(be.defenceEquivalentToAttack)}% to match +${pct(h.attackPct)} goals scored.`,
+    'A later activation date, a different size of improvement, or updated opponent strengths (the dataset stops before matchday 8 for other teams) can reverse the ranking.',
+  ];
+  const band = historyBand(ctx), need = (band.median - SNAPSHOT.points) / ctx.remaining.length;
+  const uncertainty = [
+    `These are expected values from an explicit Poisson goal model; it is not a validated forecast and gives no probability of survival.`,
+    `Málaga's rates come from 13 matches; other teams' from ${ctx.datasetMatches} matches of 2026/27 in the open dataset (to ${ctx.datasetThrough}), shrunk towards the league average (k = ${ctx.k}). Opponent quality is not separated from Málaga's own rates.`,
+    `For reference only (observed, ${band.seasons} complete seasons 2012/13–2025/26): the 17th-placed team finished on ${band.min} to ${band.max} points (median ${band.median}). Reaching ${band.median} would need ${need.toFixed(2)} points per remaining match. Past thresholds do not predict this season's.`,
+    'A percentage improvement is an assumption about a player or a system change; this case does not estimate what any particular signing would deliver.',
+  ];
+  const needed = ['Results of matchdays 8–13 for every team (the open dataset will add them; until then opponent strengths are older than Málaga\'s line)',
+    'Minutes, availability and role of the current alternative at each position', 'Verified transfer or loan fees, wages and payment terms of real candidates', 'Málaga CF\'s budget, cash position and squad-cost limit (not public in verified form)'];
+  return {headline: head, drivers, change, uncertainty, needed};
+}
+
+// ------------------------------------------------------------------ financial impact (Advantage Lab V1 / Finance engine)
+export const FIN_FIELDS = ['openingCash', 'annualRevenue', 'annualOperatingCosts', 'staffCosts', 'minimumCash', 'decisionBudget'];
+export const COST_FIELDS = ['transferFee', 'feeInstalments', 'agentFee', 'signingBonus', 'monthlyWage', 'employerChargeRate', 'contractMonths'];
+/** The financial measures shown for each intervention: one definition, period and unit each (EUR). */
+export const FIN_DEFINITIONS = Object.freeze({
+  cashAtSigning: 'Paid at signing (January 2027): transfer-fee instalment due at signing + agent fee + signing bonus. Cash.',
+  cashPaid2027: 'Cash paid January–December 2027 under the payment schedules: fee instalments due in 2027, agent fee, bonus, wages and employer charges.',
+  futurePayments: 'Contractual payments after December 2027 (later fee instalments, wages for the rest of the contract). Not yet paid.',
+  totalContractualCommitment: 'All payments under the contract, 2027 and later = cash paid in 2027 + future payments.',
+  budgetCommitment: 'Commitment counted against the January budget (Advantage Lab V1 definition): transfer fee + agent fee + signing bonus, in full at signing, whatever the payment dates.',
+  accountingExpense2027: 'Accounting cost in 2027 from the Finance engine (not cash): wages, charges and the bonus spread over the contract, plus amortisation of fee + agent fee over the contract.',
+  lowestCash: 'Lowest month-end cash in 2027 with the intervention (Finance engine), base and downside cases; compared with the minimum reserve.',
+  totalCommitmentPerExpectedPoint: 'Total contractual commitment ÷ expected points gained (model estimate).',
+});
+/** Empty financial inputs: everything unknown until the user enters it. */
+export const emptyFinance = () => ({...Object.fromEntries(FIN_FIELDS.map(k => [k, null])), downsideRevenuePct: null, downsideFromMonth: 6, downsideMustHold: false,
+  attack: Object.fromEntries(COST_FIELDS.map(k => [k, null])), defence: Object.fromEntries(COST_FIELDS.map(k => [k, null]))});
+/** Hypothetical illustration (button in the interface). NOT Málaga CF data and NOT market prices. */
+export const HYPOTHETICAL = Object.freeze({openingCash: 12_000_000, annualRevenue: 70_000_000, annualOperatingCosts: 68_000_000, staffCosts: 42_000_000, minimumCash: 4_000_000, decisionBudget: 3_000_000,
+  downsideRevenuePct: -45, downsideFromMonth: 6, downsideMustHold: false,
+  attack: {transferFee: 800_000, feeInstalments: 1, agentFee: 80_000, signingBonus: 0, monthlyWage: 110_000, employerChargeRate: 0.3, contractMonths: 6},
+  defence: {transferFee: 1_800_000, feeInstalments: 2, agentFee: 150_000, signingBonus: 120_000, monthlyWage: 75_000, employerChargeRate: 0.3, contractMonths: 18}});
+const known = v => typeof v === 'number' && Number.isFinite(v);
+/** Which inputs are still missing (never filled in with a guess). */
+export function missingFinance(f) {
+  const miss = FIN_FIELDS.filter(k => !known(f[k])).map(k => `organisation: ${k}`);
+  if (!known(f.downsideRevenuePct)) miss.push('downside: revenue change if relegated (%)');
+  for (const side of ['attack', 'defence']) for (const k of COST_FIELDS) if (!known(f[side][k])) miss.push(`${side} intervention: ${k}`);
+  return miss;
+}
+/** The Advantage Lab V1 model for these hypotheses (only the interventions whose costs are fully entered). */
+export function financeModel(f) {
+  const opt = (id, name, c) => ({id, name, category: 'Squad', kind: 'signing', startMonth: 0, effectMonths: 0, transferFee: c.transferFee, feeInstalments: c.feeInstalments, agentFee: c.agentFee, signingBonus: c.signingBonus,
+    contractMonths: c.contractMonths, monthlyWage: c.monthlyWage, employerChargeRate: c.employerChargeRate, monthlyGain: null, gainMonths: 12, shortTermScore: null, longTermScore: null, risk: null, confidence: 'low', mandatory: false, requires: [], exclusiveGroup: '',
+    upfront: 0, upfrontType: 'expense', usefulLifeMonths: null, instalments: 1, instalmentEveryMonths: 1, monthlyCost: 0, costType: 'staff', commitmentMonths: 0});
+  const ready = side => COST_FIELDS.every(k => known(f[side][k]));
+  return {schema: SCHEMA, fictional: true, asOf: SNAPSHOT.checkedOn, label: 'Hypothetical financial assumptions — not Málaga CF data', sport: 'Football', structure: 'Professional club', startMonth: '2027-01', horizonMonths: 12, currency: 'EUR', objective: 'immediate',
+    finance: Object.fromEntries(FIN_FIELDS.map(k => [k, f[k]])),
+    scenarios: {downside: {revenuePct: f.downsideRevenuePct, operatingPct: 0, wagePct: 0, fromMonth: f.downsideFromMonth}, upside: {revenuePct: 0, operatingPct: 0, wagePct: 0, fromMonth: 0}},
+    constraints: {downsideMustHold: Boolean(f.downsideMustHold)},
+    options: [...(ready('attack') ? [opt('attack', 'Attacking reinforcement (hypothetical)', f.attack)] : []), ...(ready('defence') ? [opt('defence', 'Defensive reinforcement (hypothetical)', f.defence)] : [])]};
+}
+/**
+ * Payment profile of a set of signings, from the LANOVA Finance engine (not inferred from total costs).
+ * Definitions (all in EUR, from the signing month, January 2027 = month 1 of the 12-month horizon):
+ *   cashAtSigning          payments due in the signing month other than that month's wages: the transfer-fee instalment
+ *                          due at signing, the agent fee and the signing bonus (engine payment schedules).
+ *   cashPaid2027           every payment dated January–December 2027: fee instalments due in 2027, agent fee, bonus,
+ *                          wages and employer charges. Reconciled with the engine's month-end cash (base and downside).
+ *   futurePayments         contractual payments dated after December 2027: later fee instalments (engine schedule;
+ *                          equals the engine's transfer payments after the horizon) and wages for the remaining contract.
+ *   totalCommitment        cashPaid2027 + futurePayments; equals the Advantage Lab total cost.
+ *   budgetCommitment       the Advantage Lab V1 "immediate cost" tested against the January budget: transfer fee + agent
+ *                          fee + signing bonus, committed at signing whatever the payment dates (documented definition).
+ *   accounting2027         the engine's accounting for 2027 (not cash): operating expense (wages, charges, bonus
+ *                          expensed over the contract) and amortisation of the registration (fee + agent fee).
+ */
+export function paymentProfile(m0, ids) {
+  const m = prepare(m0), H = m.horizonMonths, opts = m.options.filter(o => ids.includes(o.id)), decisions = opts.flatMap(o => optionDecisions(m, o));
+  const plan = basePlan(m, decisions), items = [];
+  for (const d of decisions.filter(x => x.type === 'player')) {
+    const c = decisionComponents(d, plan, {}), who = d.label.replace(/ — signing$/, '');
+    // The engine's registration payments are the fee instalments, then the agent fee (decisionComponents order).
+    for (const cap of c.capex) cap.payments.forEach((pmt, i) => items.push({month: pmt.month, kind: i < d.feePayments.length ? 'transfer fee instalment' : 'agent fee', amount: pmt.amount, who}));
+    for (const pp of c.prepaid) items.push({month: pp.paidMonth, kind: 'signing bonus', amount: pp.amount, who});
+    const monthly = d.monthlyWage * (1 + d.employerChargeRate);
+    for (let t = d.startMonth; t < d.startMonth + d.contractMonths; t++) items.push({month: t, kind: 'wages and employer charges', amount: monthly, who});
+  }
+  const within = items.filter(x => x.month < H), after = items.filter(x => x.month >= H), sumOf = a => a.reduce((s, x) => s + x.amount, 0);
+  const cashByMonth = Array.from({length: H}, (_, t) => sumOf(within.filter(x => x.month === t)));
+  const start = Math.min(...decisions.map(d => d.startMonth)), atSigning = within.filter(x => x.month === start && x.kind !== 'wages and employer charges');
+  const feeAfter = after.filter(x => x.kind === 'transfer fee instalment'), wagesAfter = sumOf(after.filter(x => x.kind === 'wages and employer charges'));
+  // Engine reconciliation: month-end cash with and without the signings (no revenue effect is modelled here).
+  const run = (scen, ds) => forecast(basePlan(m, ds), {scenario: scen, decisions: ds.map(d => d.id)});
+  const eng = Object.fromEntries(['base', 'downside'].map(sc => { const a = run(sc, decisions), b = run(sc, []); return [sc, {a, b}]; }));
+  const engineCashPaid = Object.fromEntries(Object.entries(eng).map(([sc, {a, b}]) => [sc, b.months[H - 1].closingCash - a.months[H - 1].closingCash]));
+  const engineByMonth = eng.base.a.months.map((x, t) => eng.base.b.months[t].closingCash - eng.base.b.months[t].openingCash - (x.closingCash - x.openingCash));
+  const opex = eng.base.a.months.reduce((s, x, t) => s + (eng.base.b.months[t].ebitda - x.ebitda), 0), amort = eng.base.a.months.reduce((s, x, t) => s + (x.depreciation - eng.base.b.months[t].depreciation), 0);
+  const total = sumOf(within) + sumOf(after), labTotal = opts.reduce((s, o) => s + o.transferFee + o.agentFee + o.signingBonus + o.monthlyWage * (1 + o.employerChargeRate) * o.contractMonths, 0);
+  return {signingMonth: monthLabel(m.startMonth, start),
+    cashAtSigning: sumOf(atSigning), cashAtSigningItems: atSigning.map(x => ({kind: x.kind, who: x.who, amount: x.amount})), cashInSigningMonth: cashByMonth[start],
+    cashPaid2027: sumOf(within), cashPaid2027ByKind: Object.fromEntries(['transfer fee instalment', 'agent fee', 'signing bonus', 'wages and employer charges'].map(k => [k, sumOf(within.filter(x => x.kind === k))])),
+    cashByMonth: cashByMonth.map((v, t) => ({month: monthLabel(m.startMonth, t), amount: v})),
+    futurePayments: {total: sumOf(after), transferInstalments: feeAfter.map(x => ({month: monthLabel(m.startMonth, x.month), amount: x.amount, who: x.who})), wagesAfter2027: wagesAfter},
+    totalCommitment: total, budgetCommitment: opts.reduce((s, o) => s + o.transferFee + o.agentFee + o.signingBonus, 0),
+    accounting2027: {operatingExpense: opex, amortisation: amort, total: opex + amort, note: 'Finance engine accounting (not cash): wages, charges and the signing bonus spread over the contract; registration (fee + agent fee) amortised over the contract.'},
+    reconciliation: {engineCashPaid2027: engineCashPaid, engineTransferPaymentsAfterHorizon: eng.base.a.capitalPaymentsAfterHorizon - eng.base.b.capitalPaymentsAfterHorizon,
+      maxMonthlyDifference: Math.max(...cashByMonth.map((v, t) => Math.abs(v - engineByMonth[t]))), cashDifference: Math.max(...Object.values(engineCashPaid).map(v => Math.abs(v - sumOf(within)))),
+      futureFeeDifference: Math.abs(sumOf(feeAfter) - (eng.base.a.capitalPaymentsAfterHorizon - eng.base.b.capitalPaymentsAfterHorizon)), totalVsAdvantageLab: Math.abs(total - labTotal)}};
+}
+/**
+ * Affordability of each intervention and of both, in the base and downside cases, from the Finance engine. Returns
+ * {computed: false, missing} until every organisation figure is entered; an intervention without its costs is
+ * reported as "costs unknown", never priced.
+ */
+export function affordability(f, sport) {
+  const miss = missingFinance(f), orgMissing = miss.filter(x => x.startsWith('organisation') || x.startsWith('downside'));
+  if (orgMissing.length) return {computed: false, missing: miss, reason: 'Enter the organisation figures (or load the hypothetical illustration) to compute affordability. Nothing is assumed.'};
+  const m = financeModel(f), r = evaluate(m);
+  if (r.problems.length) return {computed: false, missing: miss, problems: r.problems};
+  const ids = r.options.map(o => o.id), sets = [['attack', ['attack']], ['defence', ['defence']], ['both', ['attack', 'defence']]];
+  const out = {computed: true, model: m, missing: miss, months: r.months, reserve: m.finance.minimumCash, budget: m.finance.decisionBudget, baseline: scenarioResults(r, []), items: {}};
+  for (const [k, set] of sets) {
+    if (!set.every(id => ids.includes(id))) { out.items[k] = {known: false, reason: `Costs unknown for ${set.filter(id => !ids.includes(id)).join(' and ')}: enter them to test affordability.`}; continue; }
+    const x = scenarioResults(r, set), opts = r.options.filter(o => set.includes(o.id)), totalCost = opts.reduce((s, o) => s + o.totals.totalCost, 0), pay = paymentProfile(m, set);
+    const gain = sport ? sport[k].gain : null, direct = directCombination(m, set);
+    // upfront = budget commitment (Advantage Lab definition); cash figures come from the engine payment schedules.
+    out.items[k] = {known: true, upfront: x.upfront, budgetCommitment: x.upfront, withinBudget: x.withinBudget, totalCost, payments: pay, base: x.scenarios.base, downside: x.scenarios.downside,
+      affordable: x.withinBudget && x.scenarios.base.meetsReserve && (!m.constraints.downsideMustHold || x.scenarios.downside.meetsReserve),
+      costPerExpectedPoint: gain && gain > 0.01 ? totalCost / gain : null, reconciled: direct ? Math.max(...['base', 'downside'].flatMap(s => direct[s].map((v, t) => Math.abs(v - x.scenarios[s].cash[t])))) : null};
+  }
+  return out;
+}
+
+// ------------------------------------------------------------------ report (JSON and HTML)
+export function report(ctx, h, f, when = new Date().toISOString().slice(0, 10), profiles = []) {
+  const c = compare(ctx, h), be = breakEven(ctx, h), ex = explain(ctx, h, c, be), af = affordability(f, c), band = historyBand(ctx);
+  // Each scenario carries its identity: the exact intervention it was computed with and the matches it affects.
+  const id = {baseline: {attackPct: 0, attackFrom: null, defencePct: 0, defenceFrom: null}, attack: {attackPct: h.attackPct, attackFrom: h.attackFrom, defencePct: 0, defenceFrom: null},
+    defence: {attackPct: 0, attackFrom: null, defencePct: h.defencePct, defenceFrom: h.defenceFrom}, both: {attackPct: h.attackPct, attackFrom: h.attackFrom, defencePct: h.defencePct, defenceFrom: h.defenceFrom}};
+  const sc = (x, k) => ({scenario: k, intervention: id[k], matchesAffected: {attack: x.affected.attack, defence: x.affected.defence}, expectedPointsGained: +x.gain.toFixed(3), expectedFinalPoints: +x.finalPoints.toFixed(2), expectedGoalsFor: +x.goalsFor.toFixed(2), expectedGoalsAgainst: +x.goalsAgainst.toFixed(2),
+    // As shown on screen: rounded once, from the unrounded value (never re-rounded from the figures above).
+    shown: {expectedPointsGained: r1(x.gain), expectedFinalPoints: r1(x.finalPoints), expectedGoalsFor: r1(x.goalsFor), expectedGoalsAgainst: r1(x.goalsAgainst)}});
+  return {schema: 'lanova-case-malaga-winter-2027-v1', generated: when, title: 'Málaga CF — Attack or Defence? The January 2027 Survival Decision', independence: SNAPSHOT.independence,
+    observed: {kind: KINDS.observed, snapshot: {asOf: SNAPSHOT.asOf, checkedOn: SNAPSHOT.checkedOn, position: SNAPSHOT.position, played: SNAPSHOT.played, won: SNAPSHOT.won, drawn: SNAPSHOT.drawn, lost: SNAPSHOT.lost,
+      goalsFor: SNAPSHOT.goalsFor, goalsAgainst: SNAPSHOT.goalsAgainst, points: SNAPSHOT.points}, derivation: SNAPSHOT.derivation, sources: SNAPSHOT.sources,
+      history17th: {seasons: band.seasons, min: band.min, median: band.median, max: band.max, bySeason: band.safe}, dataset: {...ctx.source, files: undefined, matchesUsed: ctx.datasetMatches, through: ctx.datasetThrough}},
+    hypotheses: {kind: KINDS.hypothesis, interventions: h, finance: f, profiles: profiles.map(x => x.input)},
+    estimates: {kind: KINDS.estimate, model: `Independent Poisson goals; strengths from goals with shrinkage k = ${ctx.k}; league rates home ${ctx.rates.home.toFixed(3)}, away ${ctx.rates.away.toFixed(3)} per match`,
+      remainingMatches: ctx.remaining.length, baseline: sc(c.baseline, 'baseline'), attack: sc(c.attack, 'attack'), defence: sc(c.defence, 'defence'), both: sc(c.both, 'both'), best: c.best, breakEven: be,
+      affordability: {...(af.computed ? Object.fromEntries(Object.entries(af.items).map(([k, v]) => [k, v.known ? {definitions: FIN_DEFINITIONS, budgetCommitment: v.budgetCommitment, withinBudget: v.withinBudget, cashAtSigning: v.payments.cashAtSigning, cashPaid2027: v.payments.cashPaid2027, cashPaid2027ByKind: v.payments.cashPaid2027ByKind,
+        cashByMonth2027: v.payments.cashByMonth, futurePayments: v.payments.futurePayments, totalContractualCommitment: v.payments.totalCommitment, accountingExpense2027: {operatingExpense: Math.round(v.payments.accounting2027.operatingExpense), amortisation: Math.round(v.payments.accounting2027.amortisation), total: Math.round(v.payments.accounting2027.total)},
+        engineReconciliation: {cashPaid2027Base: v.payments.reconciliation.engineCashPaid2027.base, cashPaid2027Downside: v.payments.reconciliation.engineCashPaid2027.downside, maxDifference: v.payments.reconciliation.cashDifference},
+        lowestCashBase: Math.round(v.base.lowest), lowestCashDownside: Math.round(v.downside.lowest), reserveMetBase: v.base.meetsReserve, reserveMetDownside: v.downside.meetsReserve, totalCommitmentPerExpectedPoint: v.costPerExpectedPoint && Math.round(v.costPerExpectedPoint)} : {costs: 'unknown', reason: v.reason}])) : {notComputed: af.reason, missing: af.missing}), missingFinancialInputs: af.missing}},
+    profiles: {kind: KINDS.estimate, note: 'Role-based profiles: expected points from your hypotheses with the same goal model; not a measured or causal player effect.',
+      items: profiles.map(x => (x.result.computed ? {label: x.result.label, labelNote: x.result.labelNote, role: x.result.role, ...Object.fromEntries(['low', 'central', 'high'].map(l => [l, {expectedPointsGained: +x.result[l].gain.toFixed(3), expectedFinalPoints: +x.result[l].finalPoints.toFixed(2)}])),
+        equivalentAtFullEffect: {attackPct: +x.result.equivalentAtFullEffect.attackPct.toFixed(2), defencePct: +x.result.equivalentAtFullEffect.defencePct.toFixed(2)}} : {label: x.input.label || null, notComputed: true, missing: x.result.missing, problems: x.result.problems}))},
+    explanation: ex, notShown: ['No probability of survival or relegation: the forecasting engine is not yet independently validated (see the Football Forecast Lab).', 'No named player data and no measured player impact: no verified player data is used; profiles are role-based hypotheses and any name is your own unverified label.']};
+}
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+export function reportHtml(rep) {
+  const li = a => `<ul>${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`, e = rep.estimates, o = rep.observed.snapshot, n = v => (v === null || v === undefined ? '—' : Number(v).toFixed(1));
+  const ident = x => { const i = x.intervention, p = []; if (i.attackPct) p.push(`goals scored +${i.attackPct}% from ${i.attackFrom ?? 'the next match'} (${x.matchesAffected.attack} matches)`); if (i.defencePct) p.push(`goals conceded −${i.defencePct}% from ${i.defenceFrom ?? 'the next match'} (${x.matchesAffected.defence} matches)`); return p.length ? p.join('; ') : 'no change'; };
+  const rowsHtml = ['baseline', 'attack', 'defence', 'both'].map(k => `<tr data-scenario="${k}"><td>${esc({baseline: 'Baseline (no change)', attack: 'Attack improvement', defence: 'Defence improvement', both: 'Both'}[k])}<br><small>${esc(ident(e[k]))}</small></td><td>${esc(e[k].shown.expectedPointsGained)}</td><td>${esc(e[k].shown.expectedFinalPoints)}</td><td>${esc(e[k].shown.expectedGoalsFor)}</td><td>${esc(e[k].shown.expectedGoalsAgainst)}</td></tr>`).join('');
+  const A = e.affordability, cols = ['attack', 'defence', 'both'].filter(k => A[k]), cell = (k, f) => (A[k].costs ? 'costs unknown' : f(A[k]));
+  const frow = (label, def, f) => `<tr><td><b>${esc(label)}</b><br><small>${esc(def)}</small></td>${cols.map(k => `<td>${cell(k, f)}</td>`).join('')}</tr>`, D = FIN_DEFINITIONS;
+  const fut = v => `${fmt(v.futurePayments.total)}${v.futurePayments.transferInstalments.length ? `<br><small>incl. fee instalment${v.futurePayments.transferInstalments.length > 1 ? 's' : ''} ${v.futurePayments.transferInstalments.map(x => `${fmt(x.amount)} due ${esc(x.month)}`).join(', ')}</small>` : ''}${v.futurePayments.wagesAfter2027 ? `<br><small>wages after 2027: ${fmt(v.futurePayments.wagesAfter2027)}</small>` : ''}`;
+  const aff = A.notComputed ? `<p>${esc(A.notComputed)}</p>` : `<table class="fin"><tr><th>Measure (EUR)</th>${cols.map(k => `<th>${esc({attack: 'Attack', defence: 'Defence', both: 'Both'}[k])}</th>`).join('')}</tr>
+    ${frow('Paid at signing', D.cashAtSigning, v => fmt(v.cashAtSigning))}${frow('Cash paid in 2027', D.cashPaid2027, v => fmt(v.cashPaid2027))}${frow('Future payments (after 2027)', D.futurePayments, fut)}
+    ${frow('Total contractual commitment', D.totalContractualCommitment, v => fmt(v.totalContractualCommitment))}${frow('Budget commitment', D.budgetCommitment, v => `${fmt(v.budgetCommitment)} · ${v.withinBudget ? 'within budget' : '<b>over budget</b>'}`)}
+    ${frow('Accounting cost 2027 (engine)', D.accountingExpense2027, v => fmt(v.accountingExpense2027.total))}${frow('Lowest cash 2027, base', D.lowestCash, v => `${fmt(v.lowestCashBase)}${v.reserveMetBase ? '' : ' (below reserve)'}`)}
+    ${frow('Lowest cash 2027, downside', D.lowestCash, v => `${fmt(v.lowestCashDownside)}${v.reserveMetDownside ? '' : ' (below reserve)'}`)}${frow('Commitment per expected point', D.totalCommitmentPerExpectedPoint, v => fmt(v.totalCommitmentPerExpectedPoint))}</table>
+    ${cols.filter(k => A[k].costs).map(k => `<p><small>${esc(k)}: Costs unknown — not computed. ${esc(A[k].reason ?? '')}</small></p>`).join('')}`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(rep.title)} — LANOVA case report</title>
+<style>body{font:14px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#141821;max-width:1000px;margin:24px auto;padding:0 16px}h1{font-size:23px;margin:0 0 6px}h2{font-size:17px;margin:24px 0 8px}table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}th,td{border:1px solid #d6d9e0;padding:5px 7px;text-align:left;vertical-align:top}th{background:#f1f2f5}
+.k{display:inline-block;font:600 11px/1 system-ui;padding:3px 7px;border-radius:999px;margin-right:6px}.obs{background:#e2f0e9;color:#0b6b4e}.est{background:#e6ecfb;color:#2346a3}.hyp{background:#fbefdc;color:#9a4a06}.box{border-left:4px solid;padding:8px 12px;margin:10px 0}.box.obs{border-color:#0b6b4e}.box.est{border-color:#2346a3}.box.hyp{border-color:#9a4a06}small{color:#555}@media print{body{margin:0;max-width:none}}</style></head><body>
+<p><small>LANOVA Winter Transfer Intelligence · case report · ${esc(rep.generated)}</small></p><h1>${esc(rep.title)}</h1><p><b>${esc(rep.independence)}</b></p>
+<p><span class="k obs">Observed</span>verified public facts · <span class="k est">Model estimate</span>not a validated forecast · <span class="k hyp">Your hypothesis</span>values you set</p>
+<h2><span class="k obs">Observed</span>Starting point — ${esc(o.asOf)}</h2><div class="box obs"><p>20th of 20 · ${o.played} played · ${o.won} won, ${o.drawn} drawn, ${o.lost} lost · ${o.goalsFor} scored, ${o.goalsAgainst} conceded · <b>${o.points} points</b></p>${li(rep.observed.derivation)}
+<p>Sources (checked ${esc(o.checkedOn)}):</p><ul>${rep.observed.sources.map(s => `<li>${esc(s.name)} (${esc(s.date)}) — ${esc(s.url)}</li>`).join('')}</ul>
+<p>17th place (last safe place) in ${rep.observed.history17th.seasons} complete seasons: ${rep.observed.history17th.min}–${rep.observed.history17th.max} points (median ${rep.observed.history17th.median}). Open dataset: ${esc(rep.observed.dataset.name)} @ ${esc(String(rep.observed.dataset.commit).slice(0, 10))}, ${esc(rep.observed.dataset.licence)}.</p></div>
+<h2><span class="k hyp">Your hypothesis</span>Interventions</h2><div class="box hyp"><p>Attack: +${rep.hypotheses.interventions.attackPct}% goals scored from ${esc(rep.hypotheses.interventions.attackFrom ?? 'the next match')}. Defence: −${rep.hypotheses.interventions.defencePct}% goals conceded from ${esc(rep.hypotheses.interventions.defenceFrom ?? 'the next match')}.</p></div>
+<h2><span class="k est">Model estimate</span>Expected outcomes over ${e.remainingMatches} remaining matches</h2><div class="box est"><table><tr><th>Scenario</th><th>Expected points gained vs baseline</th><th>Expected final points</th><th>Expected goals scored</th><th>Expected goals conceded</th></tr>${rowsHtml}</table><p><small>${esc(e.model)}</small></p></div>
+${rep.profiles.items.length ? `<h2><span class="k hyp">Your hypothesis</span><span class="k est">Model estimate</span>Role-based player profiles</h2><div class="box hyp"><table><tr><th>Profile</th><th>Role</th><th>Expected points gained: low</th><th>central</th><th>high</th><th>Expected final points (central)</th></tr>${rep.profiles.items.map((x, i) => x.notComputed ? `<tr><td>${esc(x.label ?? `Profile ${i + 1}`)}</td><td colspan="5">Not computed — missing: ${esc(x.missing.join(', '))}${x.problems.length ? `; invalid: ${esc(x.problems.join(', '))}` : ''}</td></tr>` : `<tr><td>${esc(x.label ?? `Profile ${i + 1}`)}</td><td>${esc(x.role)}</td><td>${n(x.low.expectedPointsGained)}</td><td>${n(x.central.expectedPointsGained)}</td><td>${n(x.high.expectedPointsGained)}</td><td>${n(x.central.expectedFinalPoints)}</td></tr>`).join('')}</table><p><small>${esc(rep.profiles.note)} Labels are yours, exploratory and unverified.</small></p></div>` : ''}
+<h2>Decision explanation</h2><p><b>${esc(rep.explanation.headline)}</b></p><h3>What drives the difference</h3>${li(rep.explanation.drivers)}<h3>What would change the recommendation</h3>${li(rep.explanation.change)}
+<h2><span class="k est">Finance engine</span><span class="k hyp">on your hypotheses</span>Financial impact</h2><div class="box hyp">${aff}${e.affordability.missingFinancialInputs?.length ? `<p><small>Inputs not entered (never assumed): ${esc(e.affordability.missingFinancialInputs.join(', '))}.</small></p>` : ''}<p><small>Computed by the LANOVA Advantage Lab V1 and the LANOVA Finance engine on hypothetical figures; not Málaga CF data, not market prices.</small></p></div>
+<h2>Uncertainties</h2>${li(rep.explanation.uncertainty)}<h2>Information needed for a decision</h2>${li(rep.explanation.needed)}<h2>Not shown in this release</h2>${li(rep.notShown)}
+<p><small>Decision-support analysis, not financial, investment or sporting advice. No probability is given. © 2026 Lake Management.</small></p></body></html>`;
+}

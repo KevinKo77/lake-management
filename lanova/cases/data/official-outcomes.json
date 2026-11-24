@@ -1,0 +1,40 @@
+{
+  "schema": "lanova-official-outcomes-v1",
+  "purpose": "Verified official outcomes used to check the tables rebuilt from the open results with the RFEF ranking rules. Facts only (positions, points, relegations), entered by hand from the cited pages; no table, text or logo is reproduced.",
+  "checkedOn": "2026-11-24",
+  "method": "Web search results (titles, snippets and summaries) of the cited pages. The pages themselves (Wikipedia, laliga.com, rfef.es) could not be opened from the build environment, so only the facts below were verified; positions not listed were not checked against an official source.",
+  "adjustments": {
+    "2014-15": {"UD Almería": {"points": -3, "note": "Point deduction: Almería ended the season on 29 points (32 from results). Source: citation 'Almería retira el recurso y acaba la Liga con 29 puntos' on the 2014–15 SD Eibar season page. Does not change any position (19th either way)."}}
+  },
+  "administrative": {
+    "2014-15": "Elche CF (13th) was relegated administratively for financial reasons on 5 June 2015; SD Eibar (18th, relegated on sporting grounds) kept its place. The backtest uses the sporting outcome (18th to 20th), which is what a sporting forecast predicts."
+  },
+  "seasons": {
+    "2012-13": {"relegated": ["RCD Mallorca", "Deportivo La Coruña", "Real Zaragoza"], "positions": [[17, "RC Celta", 37], [18, "RCD Mallorca", 36], [19, "Deportivo La Coruña", 35], [20, "Real Zaragoza", 34]],
+      "sources": ["https://www.football-espana.net/2013/06/01/celta-survive-trio-relegated", "https://en.wikipedia.org/wiki/2012%E2%80%9313_La_Liga"]},
+    "2013-14": {"relegated": ["CA Osasuna", "Real Valladolid", "Real Betis"], "positions": [[17, "UD Almería", 40], [18, "CA Osasuna", 39], [19, "Real Valladolid", 36], [20, "Real Betis", 25]],
+      "sources": ["https://en.wikipedia.org/wiki/2013%E2%80%9314_La_Liga", "https://www.uefa.com/news-media/news/025e-0f90b67e0e7a-e4fa0cecd202-1000--osasuna-and-valladolid-suffer-relegation"]},
+    "2014-15": {"relegated": ["SD Eibar", "UD Almería", "Córdoba CF"], "positions": [[16, "Deportivo La Coruña", 35], [17, "Granada CF", 35], [18, "SD Eibar", 35], [20, "Córdoba CF", 20]],
+      "tie": "Deportivo, Granada and Eibar level on 35 points; ordered by the head-to-head table of the three, Eibar last.",
+      "sources": ["https://www.football-espana.net/2015/05/31/2014-15-season-review-granada-eibar-almeria-cordoba", "https://en.wikipedia.org/wiki/2014%E2%80%9315_SD_Eibar_season", "https://en.wikipedia.org/wiki/2014%E2%80%9315_Granada_CF_season"]},
+    "2015-16": {"relegated": ["Rayo Vallecano", "Getafe CF", "Levante UD"], "positions": [[16, "Granada CF", 39], [17, "Sporting Gijón", 39], [18, "Rayo Vallecano", 38], [19, "Getafe CF", 36], [20, "Levante UD", 32]],
+      "tie": "Granada (goal difference −23) above Sporting (−22) on 39 points: decided by head-to-head, not by overall goal difference.",
+      "sources": ["https://en.wikipedia.org/wiki/2015%E2%80%9316_La_Liga", "https://www.skysports.com/football/news/11827/10283933/la-liga-getafe-and-rayo-vallecano-relegated-sporting-gijon-stay-up"]},
+    "2016-17": {"relegated": ["Sporting Gijón", "CA Osasuna", "Granada CF"], "positions": [],
+      "sources": ["https://www.skysports.com/football/news/11827/10878197/la-liga-round-up-sporting-gijon-relegated-despite-victory-over-eibar"]},
+    "2017-18": {"relegated": ["Deportivo La Coruña", "UD Las Palmas", "Málaga CF"], "positions": [[16, "Athletic Club", 43], [17, "CD Leganés", 43], [18, "Deportivo La Coruña", 29], [19, "UD Las Palmas", 22], [20, "Málaga CF", 20]],
+      "sources": ["https://en.wikipedia.org/wiki/2017%E2%80%9318_La_Liga", "https://www.sportsmole.co.uk/football/La-Liga/2017-18/table.html"]},
+    "2018-19": {"relegated": ["Girona FC", "SD Huesca", "Rayo Vallecano"], "positions": [], "sources": ["https://en.wikipedia.org/wiki/2018%E2%80%9319_La_Liga"]},
+    "2019-20": {"relegated": ["CD Leganés", "RCD Mallorca", "Espanyol Barcelona"], "positions": [], "sources": ["https://en.wikipedia.org/wiki/2019%E2%80%9320_La_Liga"]},
+    "2020-21": {"relegated": ["SD Huesca", "Real Valladolid CF", "SD Eibar"], "positions": [], "sources": ["https://en.wikipedia.org/wiki/2020%E2%80%9321_La_Liga"]},
+    "2021-22": {"relegated": ["Granada CF", "Levante UD", "Deportivo Alavés"], "positions": [], "sources": ["https://en.wikipedia.org/wiki/2021%E2%80%9322_La_Liga"]},
+    "2022-23": {"relegated": ["Real Valladolid CF", "RCD Espanyol de Barcelona", "Elche CF"], "positions": [[14, "Cádiz CF", 42], [15, "Getafe CF", 42], [17, "UD Almería", 41], [18, "Real Valladolid CF", 40], [19, "RCD Espanyol de Barcelona", 37], [20, "Elche CF", 25]],
+      "sources": ["https://www.90min.com/es/posts/asi-queda-el-descenso-a-segunda-el-valladolid-acompana-a-espanyol-y-a-elche", "https://www.sportsmole.co.uk/football/real-valladolid/result/real-valladolid-relegated-from-la-liga-alongside-espanyol-elche_515559.html"]},
+    "2023-24": {"relegated": ["Cádiz CF", "UD Almería", "Granada CF"], "positions": [], "sources": ["https://www.sportsmole.co.uk/football/cadiz/news/cadiz-relegated-to-segunda-division-alongside-almeria-granada_544082.html"]},
+    "2024-25": {"relegated": ["CD Leganés", "UD Las Palmas", "Real Valladolid CF"], "positions": [[16, "Girona FC", 41], [18, "CD Leganés", 40], [19, "UD Las Palmas", 32], [20, "Real Valladolid CF", 16]],
+      "sources": ["https://www.nbcsports.com/soccer/news/barcelona-win-la-liga-2024-25-standings-spanish-first-division-table", "https://khelnow.com/football/world-football-laliga-2024-25-final-table-202505"]},
+    "2025-26": {"relegated": ["RCD Mallorca", "Girona FC", "Real Oviedo"], "positions": [[18, "RCD Mallorca", 42], [19, "Girona FC", 41], [20, "Real Oviedo", 29]],
+      "tie": "Three clubs level on 42 points (CA Osasuna, Levante UD, RCD Mallorca); Mallorca relegated on the head-to-head between the three. The previous engine (overall goal difference) relegated Levante instead.",
+      "sources": ["https://en.wikipedia.org/wiki/Template:2025%E2%80%9326_La_Liga_table", "https://en.wikipedia.org/wiki/2025%E2%80%9326_La_Liga", "https://bolavip.com/mx/uefa/la-tabla-de-posiciones-de-laliga-en-vivo-estos-son-los-equipos-que-descienden-a-la-segunda-division"]}
+  }
+}

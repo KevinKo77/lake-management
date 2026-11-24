@@ -1,0 +1,714 @@
+{
+ "schema": "lanova-current-season-readiness-v1",
+ "season": "2026-27",
+ "asOf": "2026-11-24",
+ "dataset": {
+  "provider": "openfootball/espana",
+  "commit": "80035a93dd4920985af52aa097a54a6fb888563b",
+  "licence": "CC0 1.0 Universal (public domain dedication)"
+ },
+ "resultsDue": 130,
+ "resultsAvailable": 69,
+ "resultsMissing": 61,
+ "missingByMatchday": {
+  "6": 1,
+  "8": 10,
+  "9": 10,
+  "10": 10,
+  "11": 10,
+  "12": 10,
+  "13": 10
+ },
+ "requiredSource": "Each missing result needs a source whose licence permits commercial reuse (CC0, CC BY, ODbL or a paid licence), with the actual playing date and score, verified against the official LaLiga result.",
+ "missing": [
+  {
+   "id": "2026-27/md08/Málaga CF v RCD Espanyol de Barcelona",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-09",
+   "home": "Málaga CF",
+   "away": "RCD Espanyol de Barcelona",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md08/Deportivo Alavés v Club Atlético de Madrid",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-10",
+   "home": "Deportivo Alavés",
+   "away": "Club Atlético de Madrid",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md08/FC Barcelona v Getafe CF",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-10",
+   "home": "FC Barcelona",
+   "away": "Getafe CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md08/Rayo Vallecano de Madrid v Athletic Club",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-10",
+   "home": "Rayo Vallecano de Madrid",
+   "away": "Athletic Club",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md08/Real Madrid CF v Villarreal CF",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-10",
+   "home": "Real Madrid CF",
+   "away": "Villarreal CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md08/Elche CF v RC Celta de Vigo",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-11",
+   "home": "Elche CF",
+   "away": "RC Celta de Vigo",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md08/Real Betis Balompié v CA Osasuna",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-11",
+   "home": "Real Betis Balompié",
+   "away": "CA Osasuna",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md08/Real Racing Club de Santander v Valencia CF",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-11",
+   "home": "Real Racing Club de Santander",
+   "away": "Valencia CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md08/Real Sociedad de Fútbol v RC Deportivo La Coruña",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-11",
+   "home": "Real Sociedad de Fútbol",
+   "away": "RC Deportivo La Coruña",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md08/Levante UD v Sevilla FC",
+   "season": "2026-27",
+   "matchday": 8,
+   "scheduledDate": "2026-10-12",
+   "home": "Levante UD",
+   "away": "Sevilla FC",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/RC Deportivo La Coruña v Levante UD",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-16",
+   "home": "RC Deportivo La Coruña",
+   "away": "Levante UD",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/RCD Espanyol de Barcelona v Club Atlético de Madrid",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-17",
+   "home": "RCD Espanyol de Barcelona",
+   "away": "Club Atlético de Madrid",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/Real Betis Balompié v FC Barcelona",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-17",
+   "home": "Real Betis Balompié",
+   "away": "FC Barcelona",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/Valencia CF v Athletic Club",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-17",
+   "home": "Valencia CF",
+   "away": "Athletic Club",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/Villarreal CF v Elche CF",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-17",
+   "home": "Villarreal CF",
+   "away": "Elche CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/CA Osasuna v Real Racing Club de Santander",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-18",
+   "home": "CA Osasuna",
+   "away": "Real Racing Club de Santander",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/Málaga CF v Real Sociedad de Fútbol",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-18",
+   "home": "Málaga CF",
+   "away": "Real Sociedad de Fútbol",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/RC Celta de Vigo v Deportivo Alavés",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-18",
+   "home": "RC Celta de Vigo",
+   "away": "Deportivo Alavés",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/Real Madrid CF v Sevilla FC",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-18",
+   "home": "Real Madrid CF",
+   "away": "Sevilla FC",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md09/Getafe CF v Rayo Vallecano de Madrid",
+   "season": "2026-27",
+   "matchday": 9,
+   "scheduledDate": "2026-10-19",
+   "home": "Getafe CF",
+   "away": "Rayo Vallecano de Madrid",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md06/Levante UD v Athletic Club",
+   "season": "2026-27",
+   "matchday": 6,
+   "scheduledDate": "2026-10-21",
+   "home": "Levante UD",
+   "away": "Athletic Club",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/Athletic Club v Getafe CF",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Athletic Club",
+   "away": "Getafe CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/Club Atlético de Madrid v RC Deportivo La Coruña",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Club Atlético de Madrid",
+   "away": "RC Deportivo La Coruña",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/Deportivo Alavés v Málaga CF",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Deportivo Alavés",
+   "away": "Málaga CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/FC Barcelona v Real Madrid CF",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "FC Barcelona",
+   "away": "Real Madrid CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/Rayo Vallecano de Madrid v Elche CF",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Rayo Vallecano de Madrid",
+   "away": "Elche CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/RC Celta de Vigo v Real Betis Balompié",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "RC Celta de Vigo",
+   "away": "Real Betis Balompié",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/Real Racing Club de Santander v RCD Espanyol de Barcelona",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Real Racing Club de Santander",
+   "away": "RCD Espanyol de Barcelona",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/Real Sociedad de Fútbol v Levante UD",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Real Sociedad de Fútbol",
+   "away": "Levante UD",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/Sevilla FC v CA Osasuna",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Sevilla FC",
+   "away": "CA Osasuna",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md10/Valencia CF v Villarreal CF",
+   "season": "2026-27",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Valencia CF",
+   "away": "Villarreal CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/Athletic Club v Real Sociedad de Fútbol",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Athletic Club",
+   "away": "Real Sociedad de Fútbol",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/Elche CF v Valencia CF",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Elche CF",
+   "away": "Valencia CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/FC Barcelona v Deportivo Alavés",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "FC Barcelona",
+   "away": "Deportivo Alavés",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/Getafe CF v Sevilla FC",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Getafe CF",
+   "away": "Sevilla FC",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/Levante UD v Club Atlético de Madrid",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Levante UD",
+   "away": "Club Atlético de Madrid",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/Rayo Vallecano de Madrid v RC Celta de Vigo",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Rayo Vallecano de Madrid",
+   "away": "RC Celta de Vigo",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/RC Deportivo La Coruña v CA Osasuna",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "RC Deportivo La Coruña",
+   "away": "CA Osasuna",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/Real Betis Balompié v Málaga CF",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Real Betis Balompié",
+   "away": "Málaga CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/Real Racing Club de Santander v Real Madrid CF",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Real Racing Club de Santander",
+   "away": "Real Madrid CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md11/Villarreal CF v RCD Espanyol de Barcelona",
+   "season": "2026-27",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Villarreal CF",
+   "away": "RCD Espanyol de Barcelona",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/CA Osasuna v Athletic Club",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "CA Osasuna",
+   "away": "Athletic Club",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/Club Atlético de Madrid v FC Barcelona",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Club Atlético de Madrid",
+   "away": "FC Barcelona",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/Elche CF v Real Betis Balompié",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Elche CF",
+   "away": "Real Betis Balompié",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/Málaga CF v Real Racing Club de Santander",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Málaga CF",
+   "away": "Real Racing Club de Santander",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/RC Celta de Vigo v Levante UD",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "RC Celta de Vigo",
+   "away": "Levante UD",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/RCD Espanyol de Barcelona v RC Deportivo La Coruña",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "RCD Espanyol de Barcelona",
+   "away": "RC Deportivo La Coruña",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/Real Sociedad de Fútbol v Rayo Vallecano de Madrid",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Real Sociedad de Fútbol",
+   "away": "Rayo Vallecano de Madrid",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/Sevilla FC v Deportivo Alavés",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Sevilla FC",
+   "away": "Deportivo Alavés",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/Valencia CF v Real Madrid CF",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Valencia CF",
+   "away": "Real Madrid CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md12/Villarreal CF v Getafe CF",
+   "season": "2026-27",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Villarreal CF",
+   "away": "Getafe CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/Athletic Club v RCD Espanyol de Barcelona",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Athletic Club",
+   "away": "RCD Espanyol de Barcelona",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/CA Osasuna v Málaga CF",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "CA Osasuna",
+   "away": "Málaga CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/Deportivo Alavés v RC Deportivo La Coruña",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Deportivo Alavés",
+   "away": "RC Deportivo La Coruña",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/FC Barcelona v Villarreal CF",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "FC Barcelona",
+   "away": "Villarreal CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/Getafe CF v Club Atlético de Madrid",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Getafe CF",
+   "away": "Club Atlético de Madrid",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/Levante UD v Elche CF",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Levante UD",
+   "away": "Elche CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/Rayo Vallecano de Madrid v Valencia CF",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Rayo Vallecano de Madrid",
+   "away": "Valencia CF",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/Real Madrid CF v RC Celta de Vigo",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Real Madrid CF",
+   "away": "RC Celta de Vigo",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/Real Racing Club de Santander v Real Sociedad de Fútbol",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Real Racing Club de Santander",
+   "away": "Real Sociedad de Fútbol",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  },
+  {
+   "id": "2026-27/md13/Sevilla FC v Real Betis Balompié",
+   "season": "2026-27",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Sevilla FC",
+   "away": "Real Betis Balompié",
+   "result": null,
+   "requiredSource": "licensed or open-licence result, verified against the official LaLiga result"
+  }
+ ],
+ "sources": [
+  {
+   "name": "openfootball/espana",
+   "licence": "CC0 1.0",
+   "licenceUrl": "https://github.com/openfootball/espana/blob/master/LICENSE.md",
+   "commercialReuse": true,
+   "coverage": "Latest commit 80035a93dd (2026-10-15) has 2026/27 results to matchday 7 only; no newer commit on 2026-11-24 (git fetch).",
+   "complete": false,
+   "verdict": "not usable: incomplete"
+  },
+  {
+   "name": "openfootball/football.json",
+   "licence": "CC0 1.0",
+   "licenceUrl": "https://github.com/openfootball/football.json",
+   "commercialReuse": true,
+   "coverage": "Derived from openfootball; latest update e674442 (2026-09-22), older than espana.",
+   "complete": false,
+   "verdict": "not usable: incomplete"
+  },
+  {
+   "name": "football-data.co.uk",
+   "licence": "Not established",
+   "licenceUrl": null,
+   "commercialReuse": null,
+   "coverage": "Not assessed: terms for commercial reuse could not be confirmed. A downloadable CSV is not a licence.",
+   "complete": null,
+   "verdict": "blocked: licence not established"
+  },
+  {
+   "name": "OpenLigaDB",
+   "licence": "ODbL (reported by third parties; primary text not read)",
+   "licenceUrl": "https://www.openligadb.de",
+   "commercialReuse": null,
+   "coverage": "No evidence of LaLiga coverage found.",
+   "complete": null,
+   "verdict": "blocked: coverage and licence not confirmed"
+  },
+  {
+   "name": "LaLiga official website",
+   "licence": "Personal, non-commercial use only (legal notice)",
+   "licenceUrl": "https://www.laliga.com/aviso-legal/legal-web",
+   "commercialReuse": false,
+   "coverage": "Authoritative results. May be consulted to verify, not reproduced as a dataset.",
+   "complete": true,
+   "verdict": "verification reference only, not a data source"
+  },
+  {
+   "name": "Wikipedia (2026–27 La Liga results table)",
+   "licence": "CC BY-SA 4.0",
+   "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+   "commercialReuse": true,
+   "coverage": "Community-maintained, not authoritative; could not be opened from the build environment. Reuse requires attribution and share-alike for the derived snapshot, and each result verified against LaLiga.",
+   "complete": null,
+   "verdict": "possible path: needs founder decision on share-alike, access, and manual verification"
+  },
+  {
+   "name": "Commercial feeds (Stats Perform/Opta, Sportradar, API providers)",
+   "licence": "Paid licence",
+   "licenceUrl": null,
+   "commercialReuse": true,
+   "coverage": "Complete and authoritative under contract.",
+   "complete": true,
+   "verdict": "blocked: not available at €0"
+  }
+ ],
+ "snapshot": {
+  "checked": false,
+  "usable": false,
+  "problems": [
+   "no candidate snapshot meets the requirements"
+  ]
+ },
+ "gate": {
+  "complete": false,
+  "rule": "Every result scheduled before the as-of date must be present from a permitted, verified source; otherwise no current-season probability is computed."
+ },
+ "verdict": "BLOCKED DATA",
+ "usableSources": [],
+ "sourcesCheckedOn": "2026-11-24"
+}

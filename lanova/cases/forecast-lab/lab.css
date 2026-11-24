@@ -1,0 +1,22 @@
+/* Football Forecast Lab — on top of v3.css and the case-study styles. */
+.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.crit { border: 1px solid var(--line); border-radius: var(--r-sm); padding: 12px 14px; background: var(--surface-2); display: grid; gap: 4px; font-size: 13.5px; }
+.crit b { font-family: var(--display); font-size: 15px; } .crit.ok { border-left: 4px solid #0b6b4e; } .crit.no { border-left: 4px solid var(--neg); } .crit.hold { border-left: 4px solid #9a4a06; }
+.seasons { margin-top: 12px; }
+.rels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 10px; } .rels.one { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); align-items: center; }
+.rel { margin: 0 auto; width: 100%; max-width: 320px; } .rel svg { width: 100%; height: auto; display: block; } .rel figcaption { font-size: 13px; text-align: center; color: var(--ink-2); }
+.rel text { font: 10.5px var(--sans); fill: var(--muted); } .rel .frame { fill: var(--surface-2); stroke: var(--line); } .rel .diag { stroke: var(--line-2); stroke-dasharray: 4 3; } .rel circle { fill: rgba(35, 70, 163, .55); stroke: #2346a3; } .rel circle.few { fill: none; stroke-dasharray: 2 2; }
+.replay-ctl { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 12px; }
+.replay-ctl label { display: grid; gap: 4px; font-size: 13px; } .replay-ctl select { font: inherit; padding: 8px 10px; border: 1px solid var(--line-2); border-radius: 8px; background: #fff; }
+.replay td .bar { display: inline-block; width: 60px; height: 8px; margin-right: 8px; border-radius: 4px; background: linear-gradient(90deg, #b42318 var(--w), var(--line) var(--w)); vertical-align: middle; }
+@media (max-width: 720px) { .rels, .rels.one { grid-template-columns: minmax(0, 1fr); } .replay td .bar { width: 36px; } }
+/* Validation v2 */
+.rel .ci { stroke: #2346a3; stroke-width: 1.5; opacity: .55; }
+.rules { margin: 6px 0 12px 18px; display: grid; gap: 4px; }
+.tiles.rk { margin: 8px 0 12px; }
+.notice.warn { border-left: 4px solid #9a4a06; }
+.sens tr.chosen td { font-weight: 600; }
+.unc { display: grid; gap: 6px; padding-left: 18px; }
+.missing summary { cursor: pointer; font-weight: 600; margin: 6px 0; }
+.bands td:last-child { white-space: nowrap; }
+.method .mono { overflow-wrap: anywhere; word-break: break-word; }

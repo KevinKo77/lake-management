@@ -1,0 +1,21 @@
+{
+  "schema": "lanova-current-season-sources-v1",
+  "checkedOn": "2026-11-24",
+  "note": "Candidate sources for the missing LaLiga 2026/27 results, assessed for licence, completeness and verifiability. Facts about each source come from its repository or the cited pages, read on the date above.",
+  "sources": [
+    {"name": "openfootball/espana", "licence": "CC0 1.0", "licenceUrl": "https://github.com/openfootball/espana/blob/master/LICENSE.md", "commercialReuse": true,
+      "coverage": "Latest commit 80035a93dd (2026-10-15) has 2026/27 results to matchday 7 only; no newer commit on 2026-11-24 (git fetch).", "complete": false, "verdict": "not usable: incomplete"},
+    {"name": "openfootball/football.json", "licence": "CC0 1.0", "licenceUrl": "https://github.com/openfootball/football.json", "commercialReuse": true,
+      "coverage": "Derived from openfootball; latest update e674442 (2026-09-22), older than espana.", "complete": false, "verdict": "not usable: incomplete"},
+    {"name": "football-data.co.uk", "licence": "Not established", "licenceUrl": null, "commercialReuse": null,
+      "coverage": "Not assessed: terms for commercial reuse could not be confirmed. A downloadable CSV is not a licence.", "complete": null, "verdict": "blocked: licence not established"},
+    {"name": "OpenLigaDB", "licence": "ODbL (reported by third parties; primary text not read)", "licenceUrl": "https://www.openligadb.de", "commercialReuse": null,
+      "coverage": "No evidence of LaLiga coverage found.", "complete": null, "verdict": "blocked: coverage and licence not confirmed"},
+    {"name": "LaLiga official website", "licence": "Personal, non-commercial use only (legal notice)", "licenceUrl": "https://www.laliga.com/aviso-legal/legal-web", "commercialReuse": false,
+      "coverage": "Authoritative results. May be consulted to verify, not reproduced as a dataset.", "complete": true, "verdict": "verification reference only, not a data source"},
+    {"name": "Wikipedia (2026–27 La Liga results table)", "licence": "CC BY-SA 4.0", "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0/", "commercialReuse": true,
+      "coverage": "Community-maintained, not authoritative; could not be opened from the build environment. Reuse requires attribution and share-alike for the derived snapshot, and each result verified against LaLiga.", "complete": null, "verdict": "possible path: needs founder decision on share-alike, access, and manual verification"},
+    {"name": "Commercial feeds (Stats Perform/Opta, Sportradar, API providers)", "licence": "Paid licence", "licenceUrl": null, "commercialReuse": true,
+      "coverage": "Complete and authoritative under contract.", "complete": true, "verdict": "blocked: not available at €0"}
+  ]
+}
