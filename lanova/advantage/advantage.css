@@ -65,3 +65,38 @@ details.howto dt { font-weight: 700; color: var(--accent-2); font-size: 13px; } 
 .map-list b { display: block; font-weight: 600; font-size: 13.5px; line-height: 1.35; } .map-list small { color: var(--muted); font-size: 12px; }
 .map-list li.infeasible .badge { background: rgba(240, 97, 109, .25); } .map-list li.dominated .badge { background: rgba(163, 171, 189, .22); } .map-list li.not-comparable .badge { background: none; border: 1.5px solid var(--accent-2); }
 @media (max-width: 980px) { .map-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------------- V1: workflow steps, scenarios, constraints, sensitivity, cash chart */
+.labbar .spacer { flex: 1; }
+.labbar { flex-wrap: wrap; }
+.steps { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 14px; }
+.steps a { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px 7px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); text-decoration: none; font-size: 13px; background: var(--bg-2); }
+.steps a span { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(82, 211, 164, .2); font-weight: 700; font-size: 12px; }
+.steps a:hover, .steps a:focus-visible { border-color: var(--accent); }
+.constraints-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 16px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); align-items: start; }
+.constraints-row .check-inline { font-size: 13px; color: var(--text); }
+.requires { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; margin: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; grid-column: 1 / -1; }
+.requires legend { font-size: 12px; color: var(--muted); padding: 0 4px; }
+.scen-table input, .scen-table select { width: 100%; min-width: 90px; }
+.scen-results tr.breach td { background: rgba(240, 97, 109, .08); }
+.cash-chart { width: 100%; height: auto; display: block; margin-top: 10px; }
+.cash-chart text { fill: var(--muted); font-size: 11.5px; } .cash-chart .grid { stroke: var(--line); }
+.cash-chart path { fill: none; stroke-width: 2.4; } .cash-chart .l-base { stroke: var(--accent); } .cash-chart .l-downside { stroke: var(--bad); } .cash-chart .l-upside { stroke: #8ab4ff; stroke-dasharray: 5 4; }
+.cash-chart .reserve { stroke: var(--warn); stroke-dasharray: 3 3; stroke-width: 1.5; } .cash-chart .rl { fill: var(--warn); }
+.legend .ln { display: inline-block; width: 18px; height: 3px; margin-right: 6px; vertical-align: 3px; background: var(--accent); } .legend .ln.downside { background: var(--bad); } .legend .ln.upside { background: #8ab4ff; } .legend .ln.reserve { background: var(--warn); }
+.sens-table td { vertical-align: top; } .sens-table .nd { color: var(--warn); }
+#sens h3 { margin: 16px 0 6px; font-size: 15px; }
+.club.worked { margin-top: 10px; border-style: dashed; }
+@media (max-width: 700px) { .constraints-row { grid-template-columns: minmax(0, 1fr); } .steps a { font-size: 12px; padding: 6px 10px 6px 6px; } .cash-chart text { font-size: 15px; } }
+@media print { .steps, .labbar, .next { display: none; } }
+label.check-inline { display: flex; flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 4px 8px; }
+label.check-inline input[type="checkbox"] { width: auto; flex: none; margin: 3px 0 0; min-height: 0; }
+label.check-inline .hint { flex-basis: 100%; padding-left: 24px; }
+.scen-table { table-layout: fixed; width: 100%; } .scen-table th:first-child, .scen-table td:first-child { width: 46%; }
+.scen-table input, .scen-table select { min-width: 0; }
+@media (max-width: 700px) { .scen-table th:first-child, .scen-table td:first-child { width: 40%; font-size: 12.5px; } .scen-table td, .scen-table th { padding: 6px; } }
+
+.scen-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.scen { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin: 0; display: grid; gap: 8px; min-width: 0; }
+.scen legend { font-weight: 700; padding: 0 6px; }
+@media (max-width: 700px) { .scen-grid { grid-template-columns: minmax(0, 1fr); } }
