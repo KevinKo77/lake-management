@@ -1,0 +1,1525 @@
+{
+ "schema": "lanova-spain-coverage-v1",
+ "season": "2026-27",
+ "asOf": "2026-11-24",
+ "source": {
+  "openfootballbase": {
+   "repository": "https://github.com/florentfougeres/OpenFootballBase-Data",
+   "release": "data-1.24.6",
+   "releaseCommit": "99fcbb686b3c685ea43a3ad2f1e1bcb6d0c0f14d",
+   "archive": "https://github.com/florentfougeres/OpenFootballBase-Data/releases/download/data-1.24.6/openfootballbase-data.tar.gz",
+   "archiveSha256": "16539db3ce2b28ef3c0e4500ac31c24d90995a02eafab57daf4cef8b6b8680f9",
+   "manifestGeneratedAt": "2026-11-23T13:49:13+00:00",
+   "files": {
+    "squad": {
+     "path": "squad/2026-27.2ff12b07.parquet",
+     "sha256": "2ff12b07aead2862a9c1eaea04ed5f6d88f2c4d5c7a8e14dcdc4aa91161b086e",
+     "rows": 16827
+    },
+    "club_season": {
+     "path": "club_season/2026-27.f2fdf0ee.parquet",
+     "sha256": "f2fdf0ee6f7f125a2219f41fdcbf13e2965c71f3803e2637924ed2cd1cac7cc6",
+     "rows": 1216
+    },
+    "club": {
+     "path": "club/club.1441a283.parquet",
+     "sha256": "1441a2839a656a8291e1999740da3629ffca9945efec2dfce684576b465519ce",
+     "rows": 43566
+    },
+    "match": {
+     "path": "match/match.215661ea.parquet",
+     "sha256": "215661ea7813d85e1cffb33250094fd7a6a171e7f073c93c47bf077bd9e6c61e",
+     "rows": 165719
+    },
+    "birth": {
+     "path": "birth/birth.a17ad497.parquet",
+     "sha256": "a17ad49793bc04b6a7ff3d274f990a020a62ba4d9ce84c58eead299c4004b55d",
+     "rows": 63024
+    }
+   }
+  }
+ },
+ "countNote": "verified / inferred / unverified count the internal quality codes: verified = dated Wikipedia listings, not official verification or registration.",
+ "divisions": {
+  "laliga": {
+   "clubs": 20,
+   "clubsWithSquad": 20,
+   "players": 543,
+   "verified": 538,
+   "inferred": 0,
+   "unverified": 5,
+   "clubsFlagged": 3,
+   "positionCounts": {
+    "GK": 52,
+    "DF": 175,
+    "MF": 157,
+    "FW": 137
+   }
+  },
+  "segunda": {
+   "clubs": 22,
+   "clubsWithSquad": 22,
+   "players": 597,
+   "verified": 564,
+   "inferred": 27,
+   "unverified": 6,
+   "clubsFlagged": 6,
+   "positionCounts": {
+    "GK": 55,
+    "DF": 197,
+    "MF": 193,
+    "FW": 148
+   }
+  }
+ },
+ "clubs": [
+  {
+   "club": "es-athletic-bilbao",
+   "name": "Athletic Bilbao",
+   "competition": "laliga",
+   "players": 30,
+   "verified": 30,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 29,
+   "wikidataChecked": 20,
+   "withShirtNumber": 29,
+   "withPosition": 30,
+   "withNationality": 29,
+   "withDateOfBirth": 29,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 8,
+     "FW": 9
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 8,
+     "FW": 9
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T23:30:11Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-atletico-madrid",
+   "name": "Atlético Madrid",
+   "competition": "laliga",
+   "players": 25,
+   "verified": 25,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 25,
+   "wikidataChecked": 11,
+   "withShirtNumber": 25,
+   "withPosition": 25,
+   "withNationality": 25,
+   "withDateOfBirth": 25,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 7,
+     "MF": 11,
+     "FW": 4
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 7,
+     "MF": 11,
+     "FW": 4
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T22:12:40Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-ca-osasuna",
+   "name": "CA Osasuna",
+   "competition": "laliga",
+   "players": 24,
+   "verified": 24,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 24,
+   "wikidataChecked": 12,
+   "withShirtNumber": 24,
+   "withPosition": 24,
+   "withNationality": 24,
+   "withDateOfBirth": 24,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 9,
+     "FW": 5
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 9,
+     "FW": 5
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-07T20:20:13Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-celta-de-vigo",
+   "name": "Celta de Vigo",
+   "competition": "laliga",
+   "players": 25,
+   "verified": 25,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 25,
+   "wikidataChecked": 16,
+   "withShirtNumber": 25,
+   "withPosition": 25,
+   "withNationality": 25,
+   "withDateOfBirth": 25,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 3,
+     "FW": 9
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 3,
+     "FW": 9
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-05T23:10:48Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-deportivo-alaves",
+   "name": "Deportivo Alavés",
+   "competition": "laliga",
+   "players": 27,
+   "verified": 27,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 26,
+   "wikidataChecked": 16,
+   "withShirtNumber": 27,
+   "withPosition": 27,
+   "withNationality": 27,
+   "withDateOfBirth": 26,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 8,
+     "MF": 12,
+     "FW": 4
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 8,
+     "MF": 12,
+     "FW": 4
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:52:39Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-deportivo-de-la-coruna",
+   "name": "Deportivo de La Coruña",
+   "competition": "laliga",
+   "players": 28,
+   "verified": 28,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 28,
+   "wikidataChecked": 21,
+   "withShirtNumber": 28,
+   "withPosition": 28,
+   "withNationality": 28,
+   "withDateOfBirth": 28,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 8,
+     "FW": 7
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 8,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-07T20:17:25Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-elche-cf",
+   "name": "Elche CF",
+   "competition": "laliga",
+   "players": 28,
+   "verified": 28,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 28,
+   "wikidataChecked": 17,
+   "withShirtNumber": 28,
+   "withPosition": 28,
+   "withNationality": 28,
+   "withDateOfBirth": 28,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 12,
+     "FW": 6
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 12,
+     "FW": 6
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T14:59:22Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-fc-barcelona",
+   "name": "FC Barcelona",
+   "competition": "laliga",
+   "players": 27,
+   "verified": 27,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 26,
+   "wikidataChecked": 18,
+   "withShirtNumber": 27,
+   "withPosition": 27,
+   "withNationality": 27,
+   "withDateOfBirth": 26,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 8,
+     "MF": 8,
+     "FW": 8
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 8,
+     "MF": 8,
+     "FW": 8
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T18:51:23Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-getafe-cf",
+   "name": "Getafe CF",
+   "competition": "laliga",
+   "players": 24,
+   "verified": 23,
+   "inferred": 0,
+   "unverified": 1,
+   "withWikidataQid": 24,
+   "wikidataChecked": 15,
+   "withShirtNumber": 24,
+   "withPosition": 24,
+   "withNationality": 24,
+   "withDateOfBirth": 24,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 11,
+     "MF": 5,
+     "FW": 6
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 11,
+     "MF": 5,
+     "FW": 6
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:31:59Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
+  },
+  {
+   "club": "es-levante-ud",
+   "name": "Levante UD",
+   "competition": "laliga",
+   "players": 43,
+   "verified": 40,
+   "inferred": 0,
+   "unverified": 3,
+   "withWikidataQid": 31,
+   "wikidataChecked": 22,
+   "withShirtNumber": 40,
+   "withPosition": 23,
+   "withNationality": 0,
+   "withDateOfBirth": 31,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 7,
+     "MF": 6,
+     "FW": 7
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 7,
+     "MF": 6,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T13:54:21Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "43 players listed: the source may include non-first-team players",
+    "3 contradictory player record(s)"
+   ]
+  },
+  {
+   "club": "es-malaga-cf",
+   "name": "Málaga CF",
+   "competition": "laliga",
+   "players": 28,
+   "verified": 28,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 28,
+   "wikidataChecked": 28,
+   "withShirtNumber": 28,
+   "withPosition": 28,
+   "withNationality": 28,
+   "withDateOfBirth": 27,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 13,
+     "FW": 3
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 9,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 4,
+   "sourceRevisionDate": "2026-11-07T20:13:19Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-rcd-espanyol",
+   "name": "RCD Espanyol",
+   "competition": "laliga",
+   "players": 25,
+   "verified": 25,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 25,
+   "wikidataChecked": 14,
+   "withShirtNumber": 25,
+   "withPosition": 25,
+   "withNationality": 25,
+   "withDateOfBirth": 25,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 6,
+     "FW": 9
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 6,
+     "FW": 9
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-07T20:17:43Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-racing-de-santander",
+   "name": "Racing de Santander",
+   "competition": "laliga",
+   "players": 24,
+   "verified": 24,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 24,
+   "wikidataChecked": 16,
+   "withShirtNumber": 24,
+   "withPosition": 24,
+   "withNationality": 24,
+   "withDateOfBirth": 24,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 7,
+     "FW": 7
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 7,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T02:06:33Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-rayo-vallecano",
+   "name": "Rayo Vallecano",
+   "competition": "laliga",
+   "players": 26,
+   "verified": 26,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 26,
+   "wikidataChecked": 10,
+   "withShirtNumber": 26,
+   "withPosition": 26,
+   "withNationality": 26,
+   "withDateOfBirth": 26,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 8,
+     "FW": 6
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 8,
+     "FW": 6
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:55:29Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-real-betis",
+   "name": "Real Betis",
+   "competition": "laliga",
+   "players": 28,
+   "verified": 27,
+   "inferred": 0,
+   "unverified": 1,
+   "withWikidataQid": 27,
+   "wikidataChecked": 10,
+   "withShirtNumber": 27,
+   "withPosition": 26,
+   "withNationality": 25,
+   "withDateOfBirth": 27,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 8,
+     "MF": 8,
+     "FW": 7
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 8,
+     "MF": 8,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-11T22:10:05Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
+  },
+  {
+   "club": "es-real-madrid-cf",
+   "name": "Real Madrid CF",
+   "competition": "laliga",
+   "players": 27,
+   "verified": 27,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 27,
+   "wikidataChecked": 12,
+   "withShirtNumber": 27,
+   "withPosition": 27,
+   "withNationality": 27,
+   "withDateOfBirth": 27,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 8,
+     "FW": 7
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 8,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T22:17:38Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-real-sociedad",
+   "name": "Real Sociedad",
+   "competition": "laliga",
+   "players": 24,
+   "verified": 24,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 24,
+   "wikidataChecked": 14,
+   "withShirtNumber": 24,
+   "withPosition": 24,
+   "withNationality": 24,
+   "withDateOfBirth": 24,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 8,
+     "FW": 6
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 8,
+     "FW": 6
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T21:07:39Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-sevilla-fc",
+   "name": "Sevilla FC",
+   "competition": "laliga",
+   "players": 27,
+   "verified": 27,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 25,
+   "wikidataChecked": 14,
+   "withShirtNumber": 27,
+   "withPosition": 27,
+   "withNationality": 27,
+   "withDateOfBirth": 25,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 7,
+     "FW": 8
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 7,
+     "FW": 8
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T22:12:46Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-valencia-cf",
+   "name": "Valencia CF",
+   "competition": "laliga",
+   "players": 29,
+   "verified": 29,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 26,
+   "wikidataChecked": 10,
+   "withShirtNumber": 28,
+   "withPosition": 29,
+   "withNationality": 29,
+   "withDateOfBirth": 26,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 7,
+     "FW": 9
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 7,
+     "FW": 9
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:51:52Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-villarreal-cf",
+   "name": "Villarreal CF",
+   "competition": "laliga",
+   "players": 24,
+   "verified": 24,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 24,
+   "wikidataChecked": 15,
+   "withShirtNumber": 24,
+   "withPosition": 24,
+   "withNationality": 24,
+   "withDateOfBirth": 24,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 8,
+     "MF": 7,
+     "FW": 6
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 8,
+     "MF": 7,
+     "FW": 6
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:31:37Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-ad-ceuta-fc",
+   "name": "AD Ceuta FC",
+   "competition": "segunda",
+   "players": 30,
+   "verified": 30,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 23,
+   "wikidataChecked": 2,
+   "withShirtNumber": 30,
+   "withPosition": 30,
+   "withNationality": 30,
+   "withDateOfBirth": 23,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 9,
+     "MF": 16,
+     "FW": 3
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 9,
+     "MF": 16,
+     "FW": 3
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T01:45:22Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-albacete-balompie",
+   "name": "Albacete Balompié",
+   "competition": "segunda",
+   "players": 24,
+   "verified": 24,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 22,
+   "wikidataChecked": 1,
+   "withShirtNumber": 24,
+   "withPosition": 24,
+   "withNationality": 24,
+   "withDateOfBirth": 22,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 9,
+     "MF": 7,
+     "FW": 6
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 9,
+     "MF": 7,
+     "FW": 6
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-30T12:41:44Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-burgos-cf",
+   "name": "Burgos CF",
+   "competition": "segunda",
+   "players": 27,
+   "verified": 27,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 24,
+   "wikidataChecked": 2,
+   "withShirtNumber": 26,
+   "withPosition": 27,
+   "withNationality": 27,
+   "withDateOfBirth": 24,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 11,
+     "MF": 10,
+     "FW": 4
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 11,
+     "MF": 10,
+     "FW": 4
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T11:39:07Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-cd-castellon",
+   "name": "CD Castellón",
+   "competition": "segunda",
+   "players": 29,
+   "verified": 29,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 23,
+   "wikidataChecked": 3,
+   "withShirtNumber": 29,
+   "withPosition": 29,
+   "withNationality": 29,
+   "withDateOfBirth": 23,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 6,
+     "FW": 10
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 6,
+     "FW": 10
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-04T03:26:59Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-cd-eldense",
+   "name": "CD Eldense",
+   "competition": "segunda",
+   "players": 27,
+   "verified": 26,
+   "inferred": 0,
+   "unverified": 1,
+   "withWikidataQid": 18,
+   "wikidataChecked": 2,
+   "withShirtNumber": 27,
+   "withPosition": 27,
+   "withNationality": 27,
+   "withDateOfBirth": 18,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 8,
+     "FW": 7
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 8,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-24T13:59:30Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
+  },
+  {
+   "club": "es-cd-leganes",
+   "name": "CD Leganés",
+   "competition": "segunda",
+   "players": 24,
+   "verified": 24,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 24,
+   "wikidataChecked": 3,
+   "withShirtNumber": 24,
+   "withPosition": 24,
+   "withNationality": 24,
+   "withDateOfBirth": 24,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 9,
+     "MF": 8,
+     "FW": 5
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 9,
+     "MF": 8,
+     "FW": 5
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-31T17:57:13Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-cd-tenerife",
+   "name": "CD Tenerife",
+   "competition": "segunda",
+   "players": 27,
+   "verified": 27,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 19,
+   "wikidataChecked": 0,
+   "withShirtNumber": 25,
+   "withPosition": 27,
+   "withNationality": 26,
+   "withDateOfBirth": 18,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 9,
+     "MF": 6,
+     "FW": 10
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 9,
+     "MF": 6,
+     "FW": 10
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T14:01:03Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-ce-sabadell-fc",
+   "name": "CE Sabadell FC",
+   "competition": "segunda",
+   "players": 27,
+   "verified": 27,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 27,
+   "wikidataChecked": 0,
+   "withShirtNumber": 27,
+   "withPosition": 27,
+   "withNationality": 27,
+   "withDateOfBirth": 26,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 6,
+     "MF": 11,
+     "FW": 7
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 6,
+     "MF": 11,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T09:12:07Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-cadiz-cf",
+   "name": "Cádiz CF",
+   "competition": "segunda",
+   "players": 27,
+   "verified": 26,
+   "inferred": 0,
+   "unverified": 1,
+   "withWikidataQid": 21,
+   "wikidataChecked": 1,
+   "withShirtNumber": 26,
+   "withPosition": 27,
+   "withNationality": 26,
+   "withDateOfBirth": 20,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 8,
+     "FW": 7
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 8,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:08:19Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
+  },
+  {
+   "club": "es-cordoba-cf",
+   "name": "Córdoba CF",
+   "competition": "segunda",
+   "players": 30,
+   "verified": 29,
+   "inferred": 0,
+   "unverified": 1,
+   "withWikidataQid": 25,
+   "wikidataChecked": 2,
+   "withShirtNumber": 27,
+   "withPosition": 27,
+   "withNationality": 0,
+   "withDateOfBirth": 25,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 6,
+     "FW": 9
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 10,
+     "MF": 6,
+     "FW": 9
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T12:31:04Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
+  },
+  {
+   "club": "es-fc-andorra",
+   "name": "FC Andorra",
+   "competition": "segunda",
+   "players": 28,
+   "verified": 28,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 27,
+   "wikidataChecked": 2,
+   "withShirtNumber": 28,
+   "withPosition": 28,
+   "withNationality": 28,
+   "withDateOfBirth": 27,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 7,
+     "FW": 9
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 7,
+     "FW": 9
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-03T11:56:11Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-girona-fc",
+   "name": "Girona FC",
+   "competition": "segunda",
+   "players": 29,
+   "verified": 29,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 25,
+   "wikidataChecked": 0,
+   "withShirtNumber": 29,
+   "withPosition": 29,
+   "withNationality": 27,
+   "withDateOfBirth": 25,
+   "positionCounts": {
+    "source": {
+     "GK": 4,
+     "DF": 9,
+     "MF": 8,
+     "FW": 8
+    },
+    "effective": {
+     "GK": 4,
+     "DF": 9,
+     "MF": 8,
+     "FW": 8
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-11T14:43:42Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-granada-cf",
+   "name": "Granada CF",
+   "competition": "segunda",
+   "players": 26,
+   "verified": 26,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 26,
+   "wikidataChecked": 0,
+   "withShirtNumber": 26,
+   "withPosition": 26,
+   "withNationality": 26,
+   "withDateOfBirth": 21,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 8,
+     "FW": 5
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 8,
+     "FW": 5
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-03T01:52:29Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-rc-celta-fortuna",
+   "name": "RC Celta Fortuna",
+   "competition": "segunda",
+   "players": 25,
+   "verified": 25,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 8,
+   "wikidataChecked": 0,
+   "withShirtNumber": 24,
+   "withPosition": 24,
+   "withNationality": 0,
+   "withDateOfBirth": 8,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 6,
+     "FW": 6
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 6,
+     "FW": 6
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T12:46:54Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-rcd-mallorca",
+   "name": "RCD Mallorca",
+   "competition": "segunda",
+   "players": 28,
+   "verified": 28,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 25,
+   "wikidataChecked": 1,
+   "withShirtNumber": 28,
+   "withPosition": 28,
+   "withNationality": 28,
+   "withDateOfBirth": 25,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 7,
+     "MF": 10,
+     "FW": 8
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 7,
+     "MF": 10,
+     "FW": 8
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T18:45:57Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-real-oviedo",
+   "name": "Real Oviedo",
+   "competition": "segunda",
+   "players": 27,
+   "verified": 26,
+   "inferred": 0,
+   "unverified": 1,
+   "withWikidataQid": 23,
+   "wikidataChecked": 2,
+   "withShirtNumber": 27,
+   "withPosition": 27,
+   "withNationality": 27,
+   "withDateOfBirth": 23,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 9,
+     "FW": 8
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 9,
+     "FW": 8
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T13:57:48Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
+  },
+  {
+   "club": "es-real-sociedad-b",
+   "name": "Real Sociedad B",
+   "competition": "segunda",
+   "players": 27,
+   "verified": 0,
+   "inferred": 27,
+   "unverified": 0,
+   "withWikidataQid": 21,
+   "wikidataChecked": 0,
+   "withShirtNumber": 27,
+   "withPosition": 27,
+   "withNationality": 0,
+   "withDateOfBirth": 21,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 6,
+     "FW": 9
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 6,
+     "FW": 9
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-09-01T07:05:47Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "squad source dated 2026-09-01, before the summer window closed"
+   ]
+  },
+  {
+   "club": "es-real-valladolid",
+   "name": "Real Valladolid",
+   "competition": "segunda",
+   "players": 31,
+   "verified": 29,
+   "inferred": 0,
+   "unverified": 2,
+   "withWikidataQid": 31,
+   "wikidataChecked": 3,
+   "withShirtNumber": 28,
+   "withPosition": 31,
+   "withNationality": 31,
+   "withDateOfBirth": 30,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 11,
+     "FW": 7
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 10,
+     "MF": 11,
+     "FW": 7
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-12T06:31:58Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "2 contradictory player record(s)"
+   ]
+  },
+  {
+   "club": "es-sd-eibar",
+   "name": "SD Eibar",
+   "competition": "segunda",
+   "players": 24,
+   "verified": 24,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 23,
+   "wikidataChecked": 1,
+   "withShirtNumber": 20,
+   "withPosition": 24,
+   "withNationality": 18,
+   "withDateOfBirth": 23,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 8,
+     "FW": 6
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 8,
+     "FW": 6
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-31T17:54:37Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-sporting-de-gijon",
+   "name": "Sporting de Gijón",
+   "competition": "segunda",
+   "players": 24,
+   "verified": 24,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 23,
+   "wikidataChecked": 1,
+   "withShirtNumber": 24,
+   "withPosition": 24,
+   "withNationality": 24,
+   "withDateOfBirth": 23,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 8,
+     "FW": 6
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 8,
+     "FW": 6
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-26T10:04:29Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-ud-almeria",
+   "name": "UD Almería",
+   "competition": "segunda",
+   "players": 27,
+   "verified": 27,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 25,
+   "wikidataChecked": 0,
+   "withShirtNumber": 26,
+   "withPosition": 27,
+   "withNationality": 27,
+   "withDateOfBirth": 25,
+   "positionCounts": {
+    "source": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 10,
+     "FW": 5
+    },
+    "effective": {
+     "GK": 3,
+     "DF": 9,
+     "MF": 10,
+     "FW": 5
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:40:55Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  },
+  {
+   "club": "es-ud-las-palmas",
+   "name": "UD Las Palmas",
+   "competition": "segunda",
+   "players": 29,
+   "verified": 29,
+   "inferred": 0,
+   "unverified": 0,
+   "withWikidataQid": 28,
+   "wikidataChecked": 0,
+   "withShirtNumber": 29,
+   "withPosition": 29,
+   "withNationality": 29,
+   "withDateOfBirth": 27,
+   "positionCounts": {
+    "source": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 16,
+     "FW": 3
+    },
+    "effective": {
+     "GK": 2,
+     "DF": 8,
+     "MF": 16,
+     "FW": 3
+    }
+   },
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-09-12T07:03:33Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
+  }
+ ],
+ "wikidata": {
+  "playersWithQid": 1028,
+  "checked": 333,
+  "membership": {
+   "open": 151,
+   "ended": 1,
+   "no-statement": 185,
+   "not-checked": 803
+  }
+ },
+ "results": {
+  "laliga": {
+   "due": 130,
+   "completed": 129,
+   "unfinished": [
+    "2026-27/md08/es-rayo-vallecano-v-es-athletic-bilbao"
+   ],
+   "statusCounts": {
+    "completed": 129,
+    "postponed": 0,
+    "suspended": 1,
+    "missing": 0,
+    "scheduled": 0
+   },
+   "missing": [],
+   "suspended": [
+    "2026-27/md08/es-rayo-vallecano-v-es-athletic-bilbao"
+   ],
+   "agreeWithOpenfootball": 69,
+   "conflicts": [],
+   "singleSource": 57,
+   "gate": "closed",
+   "gateReasons": [
+    "1 fixture(s) due by 2026-11-24 remain unfinished (suspended)",
+    "57 result(s) from a single, non-authoritative source"
+   ]
+  },
+  "segunda": {
+   "due": null,
+   "completed": 0,
+   "note": "No usable 2026/27 Segunda results: none in openfootball (CC0), OpenFootballBase (no 2026/27 Segunda match table) or OpenLigaDB (no league)."
+  }
+ }
+}

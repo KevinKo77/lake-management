@@ -1,0 +1,59 @@
+{
+ "repository": "https://github.com/florentfougeres/OpenFootballBase-Data",
+ "release": "data-1.24.6",
+ "releaseCommit": "99fcbb686b3c685ea43a3ad2f1e1bcb6d0c0f14d",
+ "releaseCommitDate": "2026-11-23T14:49:27+01:00",
+ "headCommit": "65ddc66aa44aa21cb454fc1b6f4414d24f7ca0ca",
+ "archive": "https://github.com/florentfougeres/OpenFootballBase-Data/releases/download/data-1.24.6/openfootballbase-data.tar.gz",
+ "archiveSha256": "16539db3ce2b28ef3c0e4500ac31c24d90995a02eafab57daf4cef8b6b8680f9",
+ "manifestGeneratedAt": "2026-11-23T13:49:13+00:00",
+ "schemaVersion": 32,
+ "season2026_27": {
+  "status": "open",
+  "content_hash": null,
+  "coverage": {
+   "club_seasons": 1216,
+   "with_squad": 558,
+   "known_gaps": 0
+  },
+  "files": {
+   "squad": {
+    "path": "squad/2026-27.2ff12b07.parquet",
+    "sha256": "2ff12b07aead2862a9c1eaea04ed5f6d88f2c4d5c7a8e14dcdc4aa91161b086e",
+    "rows": 16827
+   },
+   "club_season": {
+    "path": "club_season/2026-27.f2fdf0ee.parquet",
+    "sha256": "f2fdf0ee6f7f125a2219f41fdcbf13e2965c71f3803e2637924ed2cd1cac7cc6",
+    "rows": 1216
+   }
+  }
+ },
+ "tablesUsed": {
+  "club": {
+   "path": "club/club.1441a283.parquet",
+   "sha256": "1441a2839a656a8291e1999740da3629ffca9945efec2dfce684576b465519ce",
+   "rows": 43566
+  },
+  "competition": {
+   "path": "competition/competition.b393c4a4.parquet",
+   "sha256": "b393c4a4b4a18e04b6871faf80645685307cfd4cce65bdd1ac458cb7603f97f8",
+   "rows": 152
+  },
+  "match": {
+   "path": "match/match.215661ea.parquet",
+   "sha256": "215661ea7813d85e1cffb33250094fd7a6a171e7f073c93c47bf077bd9e6c61e",
+   "rows": 165719
+  },
+  "birth": {
+   "path": "birth/birth.a17ad497.parquet",
+   "sha256": "a17ad49793bc04b6a7ff3d274f990a020a62ba4d9ce84c58eead299c4004b55d",
+   "rows": 63024
+  }
+ },
+ "licence": {
+  "code": "MIT (LICENSE file: software only)",
+  "data": "CC BY-SA 4.0 — derived from Wikipedia (README, \"Sources, licences and limits\"); Wikidata parts CC0",
+  "logos": "not part of the data licence (often non-free); not used by LANOVA"
+ }
+}

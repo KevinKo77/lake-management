@@ -1,0 +1,64 @@
+{
+ "schema": "lanova-spain-manual-corrections-v1",
+ "asOf": "2026-11-24",
+ "positionCorrections": [
+  {
+   "wikidataQid": "Q104708933",
+   "name": "Haitam",
+   "club": "es-malaga-cf",
+   "sourcePosition": "MF",
+   "correctedPosition": "FW",
+   "officialLabel": "Delantero",
+   "field": "first-team squad position",
+   "reason": "The OpenFootballBase/Wikipedia snapshot lists MF; the Málaga CF official first-team squad page lists this player as a forward.",
+   "source": "https://www.malagacf.com/malaga-club-de-futbol",
+   "verifiedAt": "2026-11-24"
+  },
+  {
+   "wikidataQid": "Q59914882",
+   "name": "Joaquín Muñoz",
+   "club": "es-malaga-cf",
+   "sourcePosition": "MF",
+   "correctedPosition": "FW",
+   "officialLabel": "Delantero",
+   "field": "first-team squad position",
+   "reason": "The OpenFootballBase/Wikipedia snapshot lists MF; the Málaga CF official first-team squad page lists this player as a forward.",
+   "source": "https://www.malagacf.com/malaga-club-de-futbol",
+   "verifiedAt": "2026-11-24"
+  },
+  {
+   "wikidataQid": "Q53855510",
+   "name": "Juan Cruz",
+   "club": "es-malaga-cf",
+   "sourcePosition": "MF",
+   "correctedPosition": "FW",
+   "officialLabel": "Delantero",
+   "field": "first-team squad position",
+   "reason": "The OpenFootballBase/Wikipedia snapshot lists MF; the Málaga CF official first-team squad page lists this player as a forward.",
+   "source": "https://www.malagacf.com/malaga-club-de-futbol",
+   "verifiedAt": "2026-11-24"
+  },
+  {
+   "wikidataQid": "Q106930365",
+   "name": "Julen Lobete",
+   "club": "es-malaga-cf",
+   "sourcePosition": "MF",
+   "correctedPosition": "FW",
+   "officialLabel": "Delantero",
+   "field": "first-team squad position",
+   "reason": "The OpenFootballBase/Wikipedia snapshot lists MF; the Málaga CF official first-team squad page lists this player as a forward.",
+   "source": "https://www.malagacf.com/malaga-club-de-futbol",
+   "verifiedAt": "2026-11-24"
+  }
+ ],
+ "cityCorrections": [
+  {
+   "club": "es-athletic-bilbao",
+   "sourceCity": "Ibaigane Palace",
+   "correctedCity": "Bilbao",
+   "reason": "The source value is the club headquarters building, not the city. The club's official contact page gives the Ibaigane address in Bilbao.",
+   "source": "https://www.athletic-club.eus/en/contacto/",
+   "verifiedAt": "2026-11-24"
+  }
+ ]
+}

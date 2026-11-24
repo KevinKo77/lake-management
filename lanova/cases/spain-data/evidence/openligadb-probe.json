@@ -1,0 +1,124 @@
+{
+ "retrievedOn": "2026-11-24",
+ "endpoint": "https://api.openligadb.de",
+ "licence": "ODbL 1.0 (https://www.openligadb.de/en/license; German version authoritative)",
+ "availableLeaguesTotal": 849,
+ "spanishLeaguesListed": [
+  {
+   "leagueId": 239,
+   "leagueName": "Primera Division 2010/2011",
+   "leagueShortcut": "PD",
+   "leagueSeason": "2010"
+  },
+  {
+   "leagueId": 363,
+   "leagueName": "Primera Division 2011/2012",
+   "leagueShortcut": "PD",
+   "leagueSeason": "2011"
+  },
+  {
+   "leagueId": 505,
+   "leagueName": "Primera Division 2012/2013",
+   "leagueShortcut": "PD",
+   "leagueSeason": "2012"
+  },
+  {
+   "leagueId": 641,
+   "leagueName": "Primera Division 2013/2014",
+   "leagueShortcut": "PD",
+   "leagueSeason": "2013"
+  },
+  {
+   "leagueId": 754,
+   "leagueName": "Primera Division 2014/2015",
+   "leagueShortcut": "PD",
+   "leagueSeason": "2014"
+  },
+  {
+   "leagueId": 861,
+   "leagueName": "Primera Division 2015/2016",
+   "leagueShortcut": "PD",
+   "leagueSeason": "2015"
+  },
+  {
+   "leagueId": 2972,
+   "leagueName": "Primera Division 2016/2017",
+   "leagueShortcut": "PD",
+   "leagueSeason": "2016"
+  },
+  {
+   "leagueId": 3119,
+   "leagueName": "La Liga",
+   "leagueShortcut": "ll",
+   "leagueSeason": "2016"
+  },
+  {
+   "leagueId": 3120,
+   "leagueName": "La Liga 2016/2017",
+   "leagueShortcut": "lali",
+   "leagueSeason": "2016"
+  },
+  {
+   "leagueId": 4122,
+   "leagueName": "La Liga 2016",
+   "leagueShortcut": "lali2016",
+   "leagueSeason": "2017"
+  },
+  {
+   "leagueId": 4171,
+   "leagueName": "·Primera División·",
+   "leagueShortcut": "laliga",
+   "leagueSeason": "2017"
+  },
+  {
+   "leagueId": 3052,
+   "leagueName": "Primera División",
+   "leagueShortcut": "mbpd",
+   "leagueSeason": "2016"
+  },
+  {
+   "leagueId": 3056,
+   "leagueName": "-Primera División-",
+   "leagueShortcut": "mbprim",
+   "leagueSeason": "2016"
+  },
+  {
+   "leagueId": 4295,
+   "leagueName": "'Primera Division'",
+   "leagueShortcut": "PD18",
+   "leagueSeason": "2018"
+  },
+  {
+   "leagueId": 4595,
+   "leagueName": "La Liga (Spanien)",
+   "leagueShortcut": "la",
+   "leagueSeason": "2022"
+  },
+  {
+   "leagueId": 4672,
+   "leagueName": "LaLiga EA Sports 2023/2024",
+   "leagueShortcut": "laliga1",
+   "leagueSeason": "2023"
+  }
+ ],
+ "probes": {
+  "getmatchdata/<shortcut>/2026 (number of matches)": {
+   "la1/2026": 0,
+   "la2/2026": 0,
+   "laliga/2026": 0,
+   "laliga1/2026": 0,
+   "laliga2/2026": 0,
+   "la/2026": 0,
+   "PD/2026": 0,
+   "pd/2026": 0,
+   "lali/2026": 0,
+   "esp1/2026": 0,
+   "sd/2026": 0,
+   "segunda/2026": 0
+  },
+  "getmatchdata/la/2022": 150,
+  "getmatchdata/laliga1/2023": "380 fixtures, 249 finished (last 2024-05-26)",
+  "getmatchdata/la1/2025": 0
+ },
+ "conclusion": "No LaLiga or Segunda 2026/27 league exists; la1/2026 returns no match."
+}

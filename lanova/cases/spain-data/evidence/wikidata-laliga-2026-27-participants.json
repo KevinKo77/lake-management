@@ -1,0 +1,35 @@
+{
+ "retrievedOn": "2026-11-24",
+ "item": "Q138806502",
+ "label": "2026–27 La Liga",
+ "licence": "CC0 1.0",
+ "method": "wbgetentities claims P1923",
+ "P1923": [
+  "Q7156",
+  "Q8682",
+  "Q12297",
+  "Q8701",
+  "Q8723",
+  "Q8749",
+  "Q8806",
+  "Q10300",
+  "Q10333",
+  "Q10315",
+  "Q8780",
+  "Q8687",
+  "Q10329",
+  "Q223620",
+  "Q10512",
+  "Q8823",
+  "Q10286",
+  "Q12236",
+  "Q8760",
+  "Q8857"
+ ],
+ "segundaItem": {
+  "item": "Q139897969",
+  "label": "2026–27 Segunda División",
+  "P1923": [],
+  "note": "no participating teams recorded on Wikidata on 2026-11-24"
+ }
+}

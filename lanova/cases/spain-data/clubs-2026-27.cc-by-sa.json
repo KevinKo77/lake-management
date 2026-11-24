@@ -1,0 +1,1238 @@
+{
+ "schema": "lanova-spain-clubs-v1",
+ "licence": "CC BY-SA 4.0",
+ "attribution": [
+  "Squads, club seasons and results: OpenFootballBase-Data release data-1.24.6 (github.com/florentfougeres/OpenFootballBase-Data), derived from Wikipedia by its contributors — CC BY-SA 4.0. Each player cites its Wikipedia page and revision.",
+  "Identities and facts: Wikidata (www.wikidata.org) — CC0 1.0."
+ ],
+ "modifiedByLanova": true,
+ "modifications": [
+  "Filtered the OpenFootballBase release to LaLiga and Segunda División 2026/27 (competitions ESP-LL, ESP-SD).",
+  "Normalized club identities and aliases; mapped clubs to LANOVA ids, Wikidata QIDs and the club names used in LANOVA results.",
+  "Added the date of each cited Wikipedia revision, evidence codes with reasons, Wikidata membership checks and dates of birth (Wikidata, CC0).",
+  "Recorded dated corrections with the source value kept: 4 Málaga CF positions (positionCorrection / effectivePosition), 2 LaLiga fixtures (sourceSnapshot), 1 club city (sourceCity).",
+  "Cross-checked results against openfootball (CC0), LANOVA's verified Málaga CF line and official LaLiga match pages."
+ ],
+ "season": "2026-27",
+ "asOf": "2026-11-24",
+ "source": {
+  "openfootballbase": {
+   "repository": "https://github.com/florentfougeres/OpenFootballBase-Data",
+   "release": "data-1.24.6",
+   "releaseCommit": "99fcbb686b3c685ea43a3ad2f1e1bcb6d0c0f14d",
+   "archive": "https://github.com/florentfougeres/OpenFootballBase-Data/releases/download/data-1.24.6/openfootballbase-data.tar.gz",
+   "archiveSha256": "16539db3ce2b28ef3c0e4500ac31c24d90995a02eafab57daf4cef8b6b8680f9",
+   "manifestGeneratedAt": "2026-11-23T13:49:13+00:00",
+   "files": {
+    "squad": {
+     "path": "squad/2026-27.2ff12b07.parquet",
+     "sha256": "2ff12b07aead2862a9c1eaea04ed5f6d88f2c4d5c7a8e14dcdc4aa91161b086e",
+     "rows": 16827
+    },
+    "club_season": {
+     "path": "club_season/2026-27.f2fdf0ee.parquet",
+     "sha256": "f2fdf0ee6f7f125a2219f41fdcbf13e2965c71f3803e2637924ed2cd1cac7cc6",
+     "rows": 1216
+    },
+    "club": {
+     "path": "club/club.1441a283.parquet",
+     "sha256": "1441a2839a656a8291e1999740da3629ffca9945efec2dfce684576b465519ce",
+     "rows": 43566
+    },
+    "match": {
+     "path": "match/match.215661ea.parquet",
+     "sha256": "215661ea7813d85e1cffb33250094fd7a6a171e7f073c93c47bf077bd9e6c61e",
+     "rows": 165719
+    },
+    "birth": {
+     "path": "birth/birth.a17ad497.parquet",
+     "sha256": "a17ad49793bc04b6a7ff3d274f990a020a62ba4d9ce84c58eead299c4004b55d",
+     "rows": 63024
+    }
+   }
+  }
+ },
+ "clubs": [
+  {
+   "id": "es-athletic-bilbao",
+   "name": "Athletic Bilbao",
+   "officialName": "Athletic Club",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "Athletic Bilbao"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8687",
+   "city": "Bilbao",
+   "founded": "1898-07-18",
+   "lanovaResultNames": [
+    "Athletic Club"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page es:Anexo:Temporada 2026-27 del Athletic Club rev 176244176",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)",
+    "City corrected from source value 'Ibaigane Palace' to Bilbao using https://www.athletic-club.eus/en/contacto/"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Anexo:Temporada 2026-27 del Athletic Club",
+    "revid": 176244176
+   },
+   "sourceCity": "Ibaigane Palace",
+   "cityCorrection": {
+    "club": "es-athletic-bilbao",
+    "sourceCity": "Ibaigane Palace",
+    "correctedCity": "Bilbao",
+    "reason": "The source value is the club headquarters building, not the city. The club's official contact page gives the Ibaigane address in Bilbao.",
+    "source": "https://www.athletic-club.eus/en/contacto/",
+    "verifiedAt": "2026-11-24"
+   }
+  },
+  {
+   "id": "es-atletico-madrid",
+   "name": "Atlético Madrid",
+   "officialName": "Atlético de Madrid",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Atlético Madrid",
+    "Club Atlético de Madrid"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8701",
+   "city": "Madrid",
+   "founded": "1903",
+   "lanovaResultNames": [
+    "Atlético Madrid",
+    "Atlético de Madrid",
+    "Club Atlético de Madrid"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Atlético Madrid season rev 1384566416",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Atlético Madrid season",
+    "revid": 1384566416
+   }
+  },
+  {
+   "id": "es-ca-osasuna",
+   "name": "CA Osasuna",
+   "officialName": "Club Atlético Osasuna",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "CA Osasuna"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q10286",
+   "city": "Pampelune",
+   "founded": "1920-10-24",
+   "lanovaResultNames": [
+    "CA Osasuna"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 CA Osasuna season rev 1384339593",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 CA Osasuna season",
+    "revid": 1384339593
+   }
+  },
+  {
+   "id": "es-celta-de-vigo",
+   "name": "Celta de Vigo",
+   "officialName": "Real Club Celta de Vigo",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Celta de Vigo",
+    "RC Celta",
+    "RC Celta de Vigo"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8749",
+   "city": "Vigo",
+   "founded": "1923-08-23",
+   "lanovaResultNames": [
+    "RC Celta",
+    "RC Celta de Vigo"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 RC Celta de Vigo season rev 1383976557",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 RC Celta de Vigo season",
+    "revid": 1383976557
+   }
+  },
+  {
+   "id": "es-deportivo-alaves",
+   "name": "Deportivo Alavés",
+   "officialName": "Deportivo Alavés",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "CD Alavés"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q223620",
+   "city": "Vitoria-Gasteiz",
+   "founded": "1921-01-23",
+   "lanovaResultNames": [
+    "CD Alavés",
+    "Deportivo Alavés"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Deportivo Alavés season rev 1384542416",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Deportivo Alavés season",
+    "revid": 1384542416
+   }
+  },
+  {
+   "id": "es-deportivo-de-la-coruna",
+   "name": "Deportivo de La Coruña",
+   "officialName": "Real Club Deportivo de A Coruña",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Deportivo La Coruña",
+    "Deportivo de A Coruña",
+    "Deportivo de La Coruña",
+    "RC Deportivo La Coruña"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8760",
+   "city": "La Corogne",
+   "founded": "1906-03-02",
+   "lanovaResultNames": [
+    "Deportivo La Coruña",
+    "RC Deportivo La Coruña"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Deportivo de A Coruña season rev 1384339158",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Deportivo de A Coruña season",
+    "revid": 1384339158
+   }
+  },
+  {
+   "id": "es-elche-cf",
+   "name": "Elche CF",
+   "officialName": "Elche Club de Fútbol",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "Elche CF"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q10512",
+   "city": null,
+   "founded": "1923",
+   "lanovaResultNames": [
+    "Elche CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Elche CF season rev 1384498995",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Elche CF season",
+    "revid": 1384498995
+   }
+  },
+  {
+   "id": "es-fc-barcelona",
+   "name": "FC Barcelona",
+   "officialName": "Foot-ball Club Barcelona",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "Barcelona",
+    "FC Barcelona",
+    "Fútbol Club Barcelona"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q7156",
+   "city": "Barcelone",
+   "founded": "1899-11-29",
+   "lanovaResultNames": [
+    "Barcelona",
+    "FC Barcelona"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page es:Anexo:Temporada 2026-27 del Fútbol Club Barcelona rev 176224987",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Anexo:Temporada 2026-27 del Fútbol Club Barcelona",
+    "revid": 176224987
+   }
+  },
+  {
+   "id": "es-getafe-cf",
+   "name": "Getafe CF",
+   "officialName": "Getafe Club de Fútbol",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Getafe CF"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8806",
+   "city": "Getafe",
+   "founded": "1983",
+   "lanovaResultNames": [
+    "Getafe CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Getafe CF season rev 1384538927",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Getafe CF season",
+    "revid": 1384538927
+   }
+  },
+  {
+   "id": "es-levante-ud",
+   "name": "Levante UD",
+   "officialName": "Levante Unión Deportiva",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Levante UD"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8823",
+   "city": "Valence",
+   "founded": "1909",
+   "lanovaResultNames": [
+    "Levante UD"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page es:Levante Unión Deportiva rev 176236998",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Levante Unión Deportiva",
+    "revid": 176236998
+   }
+  },
+  {
+   "id": "es-malaga-cf",
+   "name": "Málaga CF",
+   "officialName": "Málaga Club de Fútbol",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "Málaga CF"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8857",
+   "city": "Malaga",
+   "founded": "1904-04-03",
+   "lanovaResultNames": [
+    "Málaga CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Málaga CF season rev 1384338452",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Málaga CF season",
+    "revid": 1384338452
+   }
+  },
+  {
+   "id": "es-rcd-espanyol",
+   "name": "RCD Espanyol",
+   "officialName": "Reial Club Deportiu Espanyol de Barcelona S.A.D.",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "Espanyol Barcelona",
+    "RCD Espanyol",
+    "RCD Espanyol de Barcelona",
+    "Real Club Deportivo Espanyol de Barcelona"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8780",
+   "city": "Cornellà de Llobregat",
+   "founded": "1900",
+   "lanovaResultNames": [
+    "Espanyol Barcelona",
+    "RCD Espanyol",
+    "RCD Espanyol de Barcelona"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 RCD Espanyol season rev 1384339210",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 RCD Espanyol season",
+    "revid": 1384339210
+   }
+  },
+  {
+   "id": "es-racing-de-santander",
+   "name": "Racing de Santander",
+   "officialName": "Racing de Santander",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Real Racing Club de Santander"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q12236",
+   "city": "Santander",
+   "founded": "1913-02-23",
+   "lanovaResultNames": [
+    "Real Racing Club de Santander"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Racing de Santander season rev 1384401128",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Racing de Santander season",
+    "revid": 1384401128
+   }
+  },
+  {
+   "id": "es-rayo-vallecano",
+   "name": "Rayo Vallecano",
+   "officialName": "Rayo Vallecano",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Rayo Vallecano de Madrid"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q10300",
+   "city": "Madrid",
+   "founded": "1924-05-29",
+   "lanovaResultNames": [
+    "Rayo Vallecano",
+    "Rayo Vallecano de Madrid"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Rayo Vallecano season rev 1384542917",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Rayo Vallecano season",
+    "revid": 1384542917
+   }
+  },
+  {
+   "id": "es-real-betis",
+   "name": "Real Betis",
+   "officialName": "Real Betis",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Real Betis Balompié"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8723",
+   "city": "Séville",
+   "founded": "1907",
+   "lanovaResultNames": [
+    "Real Betis",
+    "Real Betis Balompié"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page es:Anexo:Temporada 2026-27 del Real Betis Balompié rev 176257765",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Anexo:Temporada 2026-27 del Real Betis Balompié",
+    "revid": 176257765
+   }
+  },
+  {
+   "id": "es-real-madrid-cf",
+   "name": "Real Madrid CF",
+   "officialName": "Real Madrid CF",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Real Madrid",
+    "Real Madrid C.F.",
+    "Real Madrid Club de Fútbol"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q8682",
+   "city": "Madrid",
+   "founded": "1902-03-06",
+   "lanovaResultNames": [
+    "Real Madrid",
+    "Real Madrid C.F.",
+    "Real Madrid CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page es:Anexo:Temporada 2026-27 del Real Madrid Club de Fútbol rev 176211602",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Anexo:Temporada 2026-27 del Real Madrid Club de Fútbol",
+    "revid": 176211602
+   }
+  },
+  {
+   "id": "es-real-sociedad",
+   "name": "Real Sociedad",
+   "officialName": "Real Sociedad de Fútbol Sociedad Anónima Deportiva",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "Real Sociedad",
+    "Real Sociedad de Fútbol"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q10315",
+   "city": "Saint-Sébastien",
+   "founded": "1909-09-07",
+   "lanovaResultNames": [
+    "Real Sociedad",
+    "Real Sociedad de Fútbol"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Real Sociedad season rev 1384925521",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Real Sociedad season",
+    "revid": 1384925521
+   }
+  },
+  {
+   "id": "es-sevilla-fc",
+   "name": "Sevilla FC",
+   "officialName": "Sevilla Fútbol Club",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Sevilla",
+    "Sevilla FC"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q10329",
+   "city": "Séville",
+   "founded": "1905",
+   "lanovaResultNames": [
+    "Sevilla",
+    "Sevilla FC"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Sevilla FC season rev 1384566435",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Sevilla FC season",
+    "revid": 1384566435
+   }
+  },
+  {
+   "id": "es-valencia-cf",
+   "name": "Valencia CF",
+   "officialName": "Valencia Club de Fútbol",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Valencia CF"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q10333",
+   "city": "Valence",
+   "founded": "1919-03-18",
+   "lanovaResultNames": [
+    "Valencia CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Valencia CF season rev 1384542281",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Valencia CF season",
+    "revid": 1384542281
+   }
+  },
+  {
+   "id": "es-villarreal-cf",
+   "name": "Villarreal CF",
+   "officialName": "Villarreal Club de Fútbol",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Villarreal",
+    "Villarreal CF"
+   ],
+   "competition": "laliga",
+   "season": "2026-27",
+   "wikidataQid": "Q12297",
+   "city": "Villarreal",
+   "founded": "1923-03-10",
+   "lanovaResultNames": [
+    "Villarreal",
+    "Villarreal CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-LL), source page en:2026–27 Villarreal CF season rev 1384538862",
+    "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 Villarreal CF season",
+    "revid": 1384538862
+   }
+  },
+  {
+   "id": "es-ad-ceuta-fc",
+   "name": "AD Ceuta FC",
+   "officialName": "Club Atlético de Ceuta",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "AD Ceuta FC"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q5773365",
+   "city": null,
+   "founded": "1956",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Agrupación Deportiva Ceuta Fútbol Club rev 176214687",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Agrupación Deportiva Ceuta Fútbol Club",
+    "revid": 176214687
+   }
+  },
+  {
+   "id": "es-albacete-balompie",
+   "name": "Albacete Balompié",
+   "officialName": "Albacete Balompié, S. A. D.",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "Albacete Balompié"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q576285",
+   "city": "Albacete",
+   "founded": "1940-08-01",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Albacete Balompié rev 176068760",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Albacete Balompié",
+    "revid": 176068760
+   }
+  },
+  {
+   "id": "es-burgos-cf",
+   "name": "Burgos CF",
+   "officialName": "Burgos Club de Fútbol",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Burgos CF"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q852079",
+   "city": "Burgos",
+   "founded": "1922",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Burgos Club de Fútbol (1985) rev 176235544",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Burgos Club de Fútbol (1985)",
+    "revid": 176235544
+   }
+  },
+  {
+   "id": "es-cd-castellon",
+   "name": "CD Castellón",
+   "officialName": "Club Deportivo Castellón S.A.D.",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "CD Castellón",
+    "Club Deportivo Castellón"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q743557",
+   "city": "Castelló de la Plana",
+   "founded": "1922",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Club Deportivo Castellón rev 175651126",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Club Deportivo Castellón",
+    "revid": 175651126
+   }
+  },
+  {
+   "id": "es-cd-eldense",
+   "name": "CD Eldense",
+   "officialName": "Club Deportivo Eldense",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "CD Eldense"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q600232",
+   "city": "Elda",
+   "founded": "1921",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Club Deportivo Eldense rev 175977039",
+    "promoted from Primera Federación, 16 May 2026 (same sources)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Club Deportivo Eldense",
+    "revid": 175977039
+   }
+  },
+  {
+   "id": "es-cd-leganes",
+   "name": "CD Leganés",
+   "officialName": "Club Deportivo Leganés",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "CD Leganés"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q856119",
+   "city": "Leganés",
+   "founded": "1928",
+   "lanovaResultNames": [
+    "CD Leganés"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Club Deportivo Leganés rev 176086177",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Club Deportivo Leganés",
+    "revid": 176086177
+   }
+  },
+  {
+   "id": "es-cd-tenerife",
+   "name": "CD Tenerife",
+   "officialName": "Club Deportivo Tenerife",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "C.D. Tenerife",
+    "CD Tenerife"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q216661",
+   "city": "Santa Cruz de Ténérife",
+   "founded": "1922",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Club Deportivo Tenerife rev 176220981",
+    "promoted from Primera Federación, 1 May 2026 (search-indexed reports of the 2025–26 Primera Federación / 2026–27 Segunda División pages)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Club Deportivo Tenerife",
+    "revid": 176220981
+   }
+  },
+  {
+   "id": "es-ce-sabadell-fc",
+   "name": "CE Sabadell FC",
+   "officialName": "CE Sabadell FC",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Centre d'Esports Sabadell Futbol Club"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q12260",
+   "city": "Sabadell",
+   "founded": "1903",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page en:2026–27 CE Sabadell FC season rev 1384843453",
+    "promoted via the Primera Federación play-off final v Zamora (same sources)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 CE Sabadell FC season",
+    "revid": 1384843453
+   }
+  },
+  {
+   "id": "es-cadiz-cf",
+   "name": "Cádiz CF",
+   "officialName": "Cádiz CF",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Cádiz Club de Fútbol"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q460448",
+   "city": "Cadix",
+   "founded": "1910",
+   "lanovaResultNames": [
+    "Cádiz CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Cádiz Club de Fútbol rev 176208460",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Cádiz Club de Fútbol",
+    "revid": 176208460
+   }
+  },
+  {
+   "id": "es-cordoba-cf",
+   "name": "Córdoba CF",
+   "officialName": "Córdoba Club de Fútbol",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Córdoba CF"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q10499",
+   "city": "Cordoue",
+   "founded": "1906",
+   "lanovaResultNames": [
+    "Córdoba CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Córdoba Club de Fútbol rev 176236057",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Córdoba Club de Fútbol",
+    "revid": 176236057
+   }
+  },
+  {
+   "id": "es-fc-andorra",
+   "name": "FC Andorra",
+   "officialName": "Futbol Club Andorra",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "FC Andorra"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q1386854",
+   "city": "Andorre-la-Vieille",
+   "founded": "1942-10-15",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page en:2026–27 FC Andorra season rev 1383571521",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "en",
+    "title": "2026–27 FC Andorra season",
+    "revid": 1383571521
+   }
+  },
+  {
+   "id": "es-girona-fc",
+   "name": "Girona FC",
+   "officialName": "Girona Futbol Club S.A.D.",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "Girona FC",
+    "Girona Fútbol Club"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q11945",
+   "city": "Gérone",
+   "founded": "1930",
+   "lanovaResultNames": [
+    "Girona FC"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Anexo:Temporada 2026-27 del Girona Fútbol Club rev 176251978",
+    "relegated from LaLiga 2025/26 (LANOVA RFEF-ranked table, lanova/cases/data/official-outcomes.json)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Anexo:Temporada 2026-27 del Girona Fútbol Club",
+    "revid": 176251978
+   }
+  },
+  {
+   "id": "es-granada-cf",
+   "name": "Granada CF",
+   "officialName": "Granada Club de Fútbol",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Granada CF"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q8812",
+   "city": "Grenade",
+   "founded": "1931",
+   "lanovaResultNames": [
+    "Granada CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Granada Club de Fútbol rev 176121453",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Granada Club de Fútbol",
+    "revid": 176121453
+   }
+  },
+  {
+   "id": "es-rc-celta-fortuna",
+   "name": "RC Celta Fortuna",
+   "officialName": "Real Club Celta de Vigo \"B\"",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "RC Celta Fortuna"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q2311865",
+   "city": "Vigo",
+   "founded": "1927",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Real Club Celta de Vigo Fortuna rev 176220203",
+    "promoted via the play-off final v SD Ponferradina, 20 June 2026 (RFEF news \"Histórico ascenso del RC Celta Fortuna\", rfef.es/es/noticias/historico-ascenso-del-rc-celta-fortuna)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Real Club Celta de Vigo Fortuna",
+    "revid": 176220203
+   }
+  },
+  {
+   "id": "es-rcd-mallorca",
+   "name": "RCD Mallorca",
+   "officialName": "Real Club Deportivo Mallorca, S. A. D.",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "RCD Mallorca",
+    "Real Club Deportivo Mallorca"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q8835",
+   "city": "Palma",
+   "founded": "1916-03-05",
+   "lanovaResultNames": [
+    "RCD Mallorca"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Real Club Deportivo Mallorca rev 176208109",
+    "relegated from LaLiga 2025/26 (LANOVA RFEF-ranked table, lanova/cases/data/official-outcomes.json)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Real Club Deportivo Mallorca",
+    "revid": 176208109
+   }
+  },
+  {
+   "id": "es-real-oviedo",
+   "name": "Real Oviedo",
+   "officialName": "Real Oviedo",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q271574",
+   "city": "Oviedo",
+   "founded": "1926",
+   "lanovaResultNames": [
+    "Real Oviedo"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Real Oviedo rev 176220954",
+    "relegated from LaLiga 2025/26 (LANOVA RFEF-ranked table, lanova/cases/data/official-outcomes.json)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Real Oviedo",
+    "revid": 176220954
+   }
+  },
+  {
+   "id": "es-real-sociedad-b",
+   "name": "Real Sociedad B",
+   "officialName": "Real Sociedad de Fútbol \"B\"",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Real Sociedad B"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q1067750",
+   "city": "Saint-Sébastien",
+   "founded": "1951",
+   "lanovaResultNames": [],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Real Sociedad de Fútbol \"B\" rev 175139224",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Real Sociedad de Fútbol \"B\"",
+    "revid": 175139224
+   }
+  },
+  {
+   "id": "es-real-valladolid",
+   "name": "Real Valladolid",
+   "officialName": "Real Valladolid Club de Fútbol",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Real Valladolid",
+    "Real Valladolid CF"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q10319",
+   "city": "Valladolid",
+   "founded": "1928",
+   "lanovaResultNames": [
+    "Real Valladolid",
+    "Real Valladolid CF"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Real Valladolid Club de Fútbol rev 176262665",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Real Valladolid Club de Fútbol",
+    "revid": 176262665
+   }
+  },
+  {
+   "id": "es-sd-eibar",
+   "name": "SD Eibar",
+   "officialName": "Sociedad Deportiva Eibar",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "SD Eibar"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q770740",
+   "city": "Eibar",
+   "founded": "1940",
+   "lanovaResultNames": [
+    "SD Eibar"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Sociedad Deportiva Eibar rev 176086140",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Sociedad Deportiva Eibar",
+    "revid": 176086140
+   }
+  },
+  {
+   "id": "es-sporting-de-gijon",
+   "name": "Sporting de Gijón",
+   "officialName": "Real Sporting de Gijón S.A.D.",
+   "officialNameSource": "Wikidata P1448",
+   "aliases": [
+    "Real Sporting de Gijón",
+    "Sporting Gijón",
+    "Sporting de Gijón"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q12278",
+   "city": "Gijón",
+   "founded": "1905-07-01",
+   "lanovaResultNames": [
+    "Sporting Gijón"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Real Sporting de Gijón rev 176007238",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Real Sporting de Gijón",
+    "revid": 176007238
+   }
+  },
+  {
+   "id": "es-ud-almeria",
+   "name": "UD Almería",
+   "officialName": "UD Almería",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "Unión Deportiva Almería"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q10407",
+   "city": "Almería",
+   "founded": "1989",
+   "lanovaResultNames": [
+    "UD Almería"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page es:Unión Deportiva Almería rev 176209033",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "es",
+    "title": "Unión Deportiva Almería",
+    "revid": 176209033
+   }
+  },
+  {
+   "id": "es-ud-las-palmas",
+   "name": "UD Las Palmas",
+   "officialName": "Unión Deportiva Las Palmas",
+   "officialNameSource": "OpenFootballBase club.name_local",
+   "aliases": [
+    "UD Las Palmas"
+   ],
+   "competition": "segunda",
+   "season": "2026-27",
+   "wikidataQid": "Q11979",
+   "city": "Las Palmas de Grande Canarie",
+   "founded": "1949-08-22",
+   "lanovaResultNames": [
+    "UD Las Palmas"
+   ],
+   "verification": [
+    "OpenFootballBase club_season 2026/27 (ESP-SD), source page it:Unión Deportiva Las Palmas 2026-2027 rev 152432228",
+    "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)"
+   ],
+   "verified": true,
+   "squadSource": {
+    "lang": "it",
+    "title": "Unión Deportiva Las Palmas 2026-2027",
+    "revid": 152432228
+   }
+  }
+ ]
+}

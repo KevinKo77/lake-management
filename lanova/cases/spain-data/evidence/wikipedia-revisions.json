@@ -1,0 +1,316 @@
+{
+ "retrievedOn": "2026-11-24",
+ "method": "MediaWiki API action=query&prop=revisions&revids=… (en, es, it, fr Wikipedia)",
+ "revisions": {
+  "1383571521": {
+   "lang": "en",
+   "title": "2026–27 FC Andorra season",
+   "timestamp": "2026-11-03T11:56:11Z"
+  },
+  "1383976557": {
+   "lang": "en",
+   "title": "2026–27 RC Celta de Vigo season",
+   "timestamp": "2026-11-05T23:10:48Z"
+  },
+  "1384338452": {
+   "lang": "en",
+   "title": "2026–27 Málaga CF season",
+   "timestamp": "2026-11-07T20:13:19Z"
+  },
+  "1384339158": {
+   "lang": "en",
+   "title": "2026–27 Deportivo de A Coruña season",
+   "timestamp": "2026-11-07T20:17:25Z"
+  },
+  "1384339210": {
+   "lang": "en",
+   "title": "2026–27 RCD Espanyol season",
+   "timestamp": "2026-11-07T20:17:43Z"
+  },
+  "1384339593": {
+   "lang": "en",
+   "title": "2026–27 CA Osasuna season",
+   "timestamp": "2026-11-07T20:20:13Z"
+  },
+  "1384401128": {
+   "lang": "en",
+   "title": "2026–27 Racing de Santander season",
+   "timestamp": "2026-11-08T02:06:33Z"
+  },
+  "1384490698": {
+   "lang": "en",
+   "title": "2026–27 Athletic Bilbao season",
+   "timestamp": "2026-11-08T13:57:06Z"
+  },
+  "1384498995": {
+   "lang": "en",
+   "title": "2026–27 Elche CF season",
+   "timestamp": "2026-11-08T14:59:22Z"
+  },
+  "1384538862": {
+   "lang": "en",
+   "title": "2026–27 Villarreal CF season",
+   "timestamp": "2026-11-08T19:31:37Z"
+  },
+  "1384538927": {
+   "lang": "en",
+   "title": "2026–27 Getafe CF season",
+   "timestamp": "2026-11-08T19:31:59Z"
+  },
+  "1384539812": {
+   "lang": "en",
+   "title": "2026–27 Real Betis season",
+   "timestamp": "2026-11-08T19:37:22Z"
+  },
+  "1384542281": {
+   "lang": "en",
+   "title": "2026–27 Valencia CF season",
+   "timestamp": "2026-11-08T19:51:52Z"
+  },
+  "1384542416": {
+   "lang": "en",
+   "title": "2026–27 Deportivo Alavés season",
+   "timestamp": "2026-11-08T19:52:39Z"
+  },
+  "1384542917": {
+   "lang": "en",
+   "title": "2026–27 Rayo Vallecano season",
+   "timestamp": "2026-11-08T19:55:29Z"
+  },
+  "1384566416": {
+   "lang": "en",
+   "title": "2026–27 Atlético Madrid season",
+   "timestamp": "2026-11-08T22:12:40Z"
+  },
+  "1384566435": {
+   "lang": "en",
+   "title": "2026–27 Sevilla FC season",
+   "timestamp": "2026-11-08T22:12:46Z"
+  },
+  "1384709897": {
+   "lang": "en",
+   "title": "2026–27 Real Madrid CF season",
+   "timestamp": "2026-11-09T18:52:54Z"
+  },
+  "1384731905": {
+   "lang": "en",
+   "title": "2026–27 FC Barcelona season",
+   "timestamp": "2026-11-09T21:22:56Z"
+  },
+  "1384843453": {
+   "lang": "en",
+   "title": "2026–27 CE Sabadell FC season",
+   "timestamp": "2026-11-10T09:12:07Z"
+  },
+  "1384925521": {
+   "lang": "en",
+   "title": "2026–27 Real Sociedad season",
+   "timestamp": "2026-11-10T21:07:39Z"
+  },
+  "152432228": {
+   "lang": "it",
+   "title": "Unión Deportiva Las Palmas 2026-2027",
+   "timestamp": "2026-09-12T07:03:33Z"
+  },
+  "153095173": {
+   "lang": "it",
+   "title": "Girona Futbol Club 2026-2027",
+   "timestamp": "2026-10-27T20:32:39Z"
+  },
+  "153131634": {
+   "lang": "it",
+   "title": "Athletic Club 2026-2027",
+   "timestamp": "2026-10-30T07:30:39Z"
+  },
+  "153246874": {
+   "lang": "it",
+   "title": "Sevilla Fútbol Club 2026-2027",
+   "timestamp": "2026-11-07T10:56:44Z"
+  },
+  "153306502": {
+   "lang": "it",
+   "title": "Real Betis Balompié 2026-2027",
+   "timestamp": "2026-11-10T18:11:33Z"
+  },
+  "153306574": {
+   "lang": "it",
+   "title": "Real Club Celta de Vigo 2026-2027",
+   "timestamp": "2026-11-10T18:19:27Z"
+  },
+  "153306625": {
+   "lang": "it",
+   "title": "Villarreal Club de Fútbol 2026-2027",
+   "timestamp": "2026-11-10T18:22:47Z"
+  },
+  "153306636": {
+   "lang": "it",
+   "title": "Getafe Club de Fútbol 2026-2027",
+   "timestamp": "2026-11-10T18:24:01Z"
+  },
+  "153306682": {
+   "lang": "it",
+   "title": "Club Atlético de Madrid 2026-2027",
+   "timestamp": "2026-11-10T18:28:05Z"
+  },
+  "153306702": {
+   "lang": "it",
+   "title": "Futbol Club Barcelona 2026-2027",
+   "timestamp": "2026-11-10T18:29:49Z"
+  },
+  "153306818": {
+   "lang": "it",
+   "title": "Valencia Club de Fútbol 2026-2027",
+   "timestamp": "2026-11-10T18:35:52Z"
+  },
+  "153306873": {
+   "lang": "it",
+   "title": "Real Madrid Club de Fútbol 2026-2027",
+   "timestamp": "2026-11-10T18:38:25Z"
+  },
+  "153306955": {
+   "lang": "it",
+   "title": "Real Club Deportivo de A Coruña 2026-2027",
+   "timestamp": "2026-11-10T18:40:43Z"
+  },
+  "153307109": {
+   "lang": "it",
+   "title": "Málaga Club de Fútbol 2026-2027",
+   "timestamp": "2026-11-10T18:45:59Z"
+  },
+  "153331785": {
+   "lang": "it",
+   "title": "Real Sociedad de Fútbol 2026-2027",
+   "timestamp": "2026-11-12T09:57:27Z"
+  },
+  "175139224": {
+   "lang": "es",
+   "title": "Real Sociedad de Fútbol \"B\"",
+   "timestamp": "2026-09-01T07:05:47Z"
+  },
+  "175651126": {
+   "lang": "es",
+   "title": "Club Deportivo Castellón",
+   "timestamp": "2026-10-04T03:26:59Z"
+  },
+  "175977039": {
+   "lang": "es",
+   "title": "Club Deportivo Eldense",
+   "timestamp": "2026-10-24T13:59:30Z"
+  },
+  "176007238": {
+   "lang": "es",
+   "title": "Real Sporting de Gijón",
+   "timestamp": "2026-10-26T10:04:29Z"
+  },
+  "176068760": {
+   "lang": "es",
+   "title": "Albacete Balompié",
+   "timestamp": "2026-10-30T12:41:44Z"
+  },
+  "176086140": {
+   "lang": "es",
+   "title": "Sociedad Deportiva Eibar",
+   "timestamp": "2026-10-31T17:54:37Z"
+  },
+  "176086177": {
+   "lang": "es",
+   "title": "Club Deportivo Leganés",
+   "timestamp": "2026-10-31T17:57:13Z"
+  },
+  "176121453": {
+   "lang": "es",
+   "title": "Granada Club de Fútbol",
+   "timestamp": "2026-11-03T01:52:29Z"
+  },
+  "176208109": {
+   "lang": "es",
+   "title": "Real Club Deportivo Mallorca",
+   "timestamp": "2026-11-08T18:45:57Z"
+  },
+  "176208460": {
+   "lang": "es",
+   "title": "Cádiz Club de Fútbol",
+   "timestamp": "2026-11-08T19:08:19Z"
+  },
+  "176209033": {
+   "lang": "es",
+   "title": "Unión Deportiva Almería",
+   "timestamp": "2026-11-08T19:40:55Z"
+  },
+  "176211602": {
+   "lang": "es",
+   "title": "Anexo:Temporada 2026-27 del Real Madrid Club de Fútbol",
+   "timestamp": "2026-11-08T22:17:38Z"
+  },
+  "176214687": {
+   "lang": "es",
+   "title": "Agrupación Deportiva Ceuta Fútbol Club",
+   "timestamp": "2026-11-09T01:45:22Z"
+  },
+  "176220203": {
+   "lang": "es",
+   "title": "Real Club Celta de Vigo Fortuna",
+   "timestamp": "2026-11-09T12:46:54Z"
+  },
+  "176220954": {
+   "lang": "es",
+   "title": "Real Oviedo",
+   "timestamp": "2026-11-09T13:57:48Z"
+  },
+  "176220981": {
+   "lang": "es",
+   "title": "Club Deportivo Tenerife",
+   "timestamp": "2026-11-09T14:01:03Z"
+  },
+  "176224987": {
+   "lang": "es",
+   "title": "Anexo:Temporada 2026-27 del Fútbol Club Barcelona",
+   "timestamp": "2026-11-09T18:51:23Z"
+  },
+  "176235544": {
+   "lang": "es",
+   "title": "Burgos Club de Fútbol (1985)",
+   "timestamp": "2026-11-10T11:39:07Z"
+  },
+  "176236057": {
+   "lang": "es",
+   "title": "Córdoba Club de Fútbol",
+   "timestamp": "2026-11-10T12:31:04Z"
+  },
+  "176236998": {
+   "lang": "es",
+   "title": "Levante Unión Deportiva",
+   "timestamp": "2026-11-10T13:54:21Z"
+  },
+  "176244176": {
+   "lang": "es",
+   "title": "Anexo:Temporada 2026-27 del Athletic Club",
+   "timestamp": "2026-11-10T23:30:11Z"
+  },
+  "176251978": {
+   "lang": "es",
+   "title": "Anexo:Temporada 2026-27 del Girona Fútbol Club",
+   "timestamp": "2026-11-11T14:43:42Z"
+  },
+  "176257765": {
+   "lang": "es",
+   "title": "Anexo:Temporada 2026-27 del Real Betis Balompié",
+   "timestamp": "2026-11-11T22:10:05Z"
+  },
+  "176262665": {
+   "lang": "es",
+   "title": "Real Valladolid Club de Fútbol",
+   "timestamp": "2026-11-12T06:31:58Z"
+  },
+  "240761831": {
+   "lang": "fr",
+   "title": "Saison 2026-2027 du Real Madrid",
+   "timestamp": "2026-10-27T09:30:07Z"
+  },
+  "241166641": {
+   "lang": "fr",
+   "title": "Saison 2026-2027 du FC Barcelone",
+   "timestamp": "2026-11-09T03:38:18Z"
+  }
+ }
+}

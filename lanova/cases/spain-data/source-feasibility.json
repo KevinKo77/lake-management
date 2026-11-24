@@ -1,0 +1,106 @@
+{
+ "schema": "lanova-source-feasibility-v1",
+ "version": 1,
+ "reviewedOn": "2026-11-24",
+ "scope": "LaLiga and Segunda División 2026/27: clubs, squads, players, results. Budget €0.",
+ "sources": [
+  {
+   "id": "A",
+   "name": "OpenFootballBase-Data",
+   "url": "https://github.com/florentfougeres/OpenFootballBase-Data",
+   "release": "data-1.24.6 (release commit 99fcbb6, 2026-11-23; manifest generated 2026-11-23T13:49:13Z; archive SHA-256 16539db3…80f9)",
+   "inspection": "Release archive downloaded and opened (Parquet, DuckDB); archive SHA-256 and all 91 hashed manifest files verified by scripts/spain/verify_ofb_archive.py (5 used by LANOVA); 2026/27 season status 'open'. Club-season, squad, match, club and birth tables queried directly (not only the README).",
+   "licence": "Data: CC BY-SA 4.0 (derived from Wikipedia; README 'Sources, licences and limits'). Code: MIT (LICENSE file — software only, not the data). Wikidata-derived parts CC0. Club logos: not part of the data licence (often non-free).",
+   "commercialReuse": "Permitted under CC BY-SA 4.0: attribution to Wikipedia contributors and the dataset; LANOVA's derived dataset must be shared under CC BY-SA 4.0 (share-alike). Display on a commercial site is allowed with attribution. The derived squad/registry/results files are published under CC BY-SA 4.0 and kept separate from CC0 and LANOVA's own code.",
+   "coverageVerified": {
+    "laliga2026_27": "20 club-seasons, 20 with a squad (24–43 players), 543 player rows; 380 fixtures, 129 completed results of 130 due fixtures (one suspended; 57 single-source results).",
+    "segunda2026_27": "22 club-seasons, 22 with a squad (24–31 players), 597 player rows; no 2026/27 Segunda match table.",
+    "fields": "player name, Wikidata QID (1,028 of 1,140 rows; 112 without), shirt number (1,118), position GK/DF/MF/FW (1,114), sporting nationality (1,001), stint (loan_in 48, arrived_mid 6, left_mid 1), source page, section and revision for every row.",
+    "revisionDates": "All 62 cited revisions dated via the MediaWiki API: 1 before the summer window closed (Real Sociedad B, 2026-09-01T07:05Z), the rest 2026-09-12 → 2026-11-12.",
+    "players": "1,140 dated public squad listings; only 333 of 1,028 player rows with a QID have a Wikidata membership check in this snapshot."
+   },
+   "accuracy": "LaLiga 2026/27 fixtures: 380/380 identical to openfootball (CC0), dates included; results matchdays 1–7: 69/69 identical; Málaga CF line after matchday 13 identical to LANOVA's independently verified line (13 played, 0-5-8, 9–24, 5 points). Squads: 5 players listed at two clubs (flagged). Official LaLiga confirms Levante UD–Elche CF 1–1 on 2026-11-23; Rayo Vallecano–Athletic Club remains suspended and excluded from completed results. Málaga positions for Haitam, Joaquín Muñoz, Juan Cruz and Julen Lobete are separately corroborated against the official club roster; source positions are retained.",
+   "freshness": "Release of 2026-11-23; squad sources dated 2026-09-01 → 2026-11-12; weekly refresh does not touch squads (repository note), so the revision date of each squad is shown.",
+   "missing": "One LaLiga fixture suspended as of 2026-11-24; all Segunda 2026/27 results; birth dates for some players; logos/photos (rights not cleared).",
+   "decision": "CONDITIONAL",
+   "conditions": "Use under CC BY-SA 4.0 with attribution and share-alike on LANOVA's derived files; show the dated-listing status and evidence scope of every player; state that Wikidata checks cover only 333/1,028 QID players; preserve source values for corrections; squads are listings, not official registrations; results single-sourced except where cross-checked; never used to lift the current-season probability gate."
+  },
+  {
+   "id": "B",
+   "name": "Wikidata",
+   "url": "https://www.wikidata.org",
+   "release": "Live entities read 2026-11-24 (wbgetentities; lastrevid stored per item). SPARQL endpoint rate-limited to 1 request/minute during an outage; entity API rate-limited (HTTP 429), so player checks are partial and reported.",
+   "inspection": "Club items (42), the 2026–27 La Liga item Q138806502 (P1923: 20 participating clubs) and the 2026–27 Segunda División item Q139897969 (no participants recorded) read directly; player items read for P54 (with P580/P582), P569, P413, P27.",
+   "licence": "CC0 1.0 (structured data).",
+   "commercialReuse": "Unrestricted.",
+   "coverageVerified": {
+    "clubs": "42/42 clubs have a QID; LaLiga participants on Wikidata equal the 20 registry clubs exactly; Segunda participants not on Wikidata.",
+    "players": "QIDs for 1,028 player rows (unique items listed in 2026/27 squads); P54 membership checked for the players fetched before the rate limit (see coverage-2026-27.json → wikidata.checked)."
+   },
+   "accuracy": "A P54 membership without an end date is NOT treated as proof of current registration; an end date before the as-of date marks the player UNVERIFIED; a missing statement is reported, not inferred.",
+   "freshness": "Live; each item's revision id stored.",
+   "missing": "Membership statements are often missing or outdated for recent transfers; Segunda participants missing.",
+   "decision": "ACCEPT",
+   "conditions": "Identities and dates of birth (CC0) kept in a separate CC0 file; used for checks, never as the only proof of a current registration."
+  },
+  {
+   "id": "C",
+   "name": "OpenLigaDB",
+   "url": "https://api.openligadb.de",
+   "release": "API queried 2026-11-24 (getavailableleagues: 849 leagues; getmatchdata probes).",
+   "inspection": "No LaLiga or Segunda league for season 2026. getmatchdata/<shortcut>/2026 returns no match for la1, la2, laliga, laliga1, laliga2, la, PD, lali, esp1, sd, segunda. Latest Spanish leagues: 'La Liga (Spanien)' 2022 (150 fixtures) and 'LaLiga EA Sports 2023/2024' (380 fixtures, 249 finished). The reported 'la1' coverage could not be reproduced.",
+   "licence": "ODbL 1.0 (licence page, German version authoritative): commercial use allowed with attribution; share-alike applies to a publicly distributed modified database, not to displayed content.",
+   "commercialReuse": "Permitted with ODbL obligations.",
+   "coverageVerified": {
+    "laliga2026_27": "none",
+    "segunda2026_27": "none"
+   },
+   "accuracy": "Not assessable (no data).",
+   "freshness": "—",
+   "missing": "All 2026/27 Spanish data.",
+   "decision": "REJECT",
+   "conditions": "Nothing incorporated; no ODbL data in LANOVA's datasets. Re-check if a community-maintained 2026/27 Spanish league appears."
+  },
+  {
+   "id": "D",
+   "name": "openfootball/espana (existing LANOVA source)",
+   "url": "https://github.com/openfootball/espana",
+   "release": "Commit 80035a93dd (2026-10-15), pinned in lanova/cases/data/laliga.json; no newer commit on 2026-11-24.",
+   "inspection": "Reused as is (CC0 manifest, rebuild check).",
+   "licence": "CC0 1.0",
+   "commercialReuse": "Unrestricted.",
+   "coverageVerified": {
+    "laliga2026_27": "380 fixtures, 69 results (matchdays 1–7)",
+    "segunda2026_27": "none"
+   },
+   "accuracy": "Reference for the cross-checks above.",
+   "freshness": "Stops at matchday 7.",
+   "missing": "61 LaLiga results due by 2026-11-24; all Segunda.",
+   "decision": "ACCEPT",
+   "conditions": "Remains the CC0 historical base; not mixed with the CC BY-SA results."
+  }
+ ],
+ "blockers": [
+  "Current-season probabilities stay blocked: 57 recovered results remain single-sourced and the Rayo Vallecano–Athletic Club fixture remains suspended (129/130 due fixtures completed). The current-season gate is closed in results-readiness-2026-27.json.",
+  "No free, licensed source for Segunda 2026/27 results.",
+  "Squads are public listings, not official registration lists (LaLiga/RFEF registration data are not openly licensed).",
+  "Wikidata player checks are partial: 333 of 1,028 QID players were checked in the 2026-11-24 snapshot.",
+  "Share-alike: LANOVA's squad, registry and results files must stay CC BY-SA 4.0; they cannot be relicensed as proprietary data. Founder decision for any commercial packaging beyond display with attribution."
+ ],
+ "adaptations": {
+  "notice": "LANOVA modified/adapted OpenFootballBase-Data source data.",
+  "changes": [
+   "normalized club identities and aliases",
+   "added source-linked coverage and evidence metadata",
+   "corrected four Málaga squad positions against the official club roster while preserving source positions",
+   "corrected Athletic Club city from headquarters building label to Bilbao while preserving sourceCity",
+   "added official result correction for Levante UD–Elche CF and marked Rayo Vallecano–Athletic Club suspended, not completed"
+  ],
+  "licence": "Derived squad, registry and results files remain CC BY-SA 4.0 with attribution and share-alike; Wikidata CC0 facts remain separate."
+ },
+ "archiveVerification": {
+  "command": "python3 scripts/spain/verify_ofb_archive.py",
+  "log": "evidence/openfootballbase-manifest-verification.json",
+  "result": "PASS: archive SHA-256, git tag commit, manifest date and 91/91 manifest file hashes (tables 29, seasons 54, work 7, home 1). GitHub-published asset digest not readable (REST API HTTP 403): not claimed."
+ }
+}
