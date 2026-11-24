@@ -1,0 +1,1019 @@
+{
+ "schema": "lanova-player-registry-v1",
+ "synthetic": true,
+ "notice": "FICTIONAL demonstration registry: no real player or club.",
+ "season": "2025/26",
+ "clubs": [
+  {
+   "id": "demo-altamar",
+   "names": [
+    {
+     "name": "Altamar CF",
+     "source": "synthetic demo listing (fictional)"
+    },
+    {
+     "name": "Altamar Club de Fútbol",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "demo-brisa-norte",
+   "names": [
+    {
+     "name": "Brisa Norte FC",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "demo-cerro-azul",
+   "names": [
+    {
+     "name": "Cerro Azul SD",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "demo-dunas",
+   "names": [
+    {
+     "name": "Dunas CD",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ]
+  }
+ ],
+ "players": [
+  {
+   "id": "SYN-A01",
+   "displayName": "Óscar Tremalde",
+   "sourcePosition": "GK",
+   "effectivePosition": "GK",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Óscar Tremalde",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A02",
+   "displayName": "Teo Quorvaz",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Teo Quorvaz",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A03",
+   "displayName": "Íñigo Zarbaleta",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Íñigo Zarbaleta",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A04",
+   "displayName": "Bruno Calvente",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Bruno Calvente",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A05",
+   "displayName": "Luis Prandel",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Luis Prandel",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A06",
+   "displayName": "Ander Vescoli",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Ander Vescoli",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A07",
+   "displayName": "Mateo Rusquel",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Mateo Rusquel",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A08",
+   "displayName": "Pau Ledrova",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Pau Ledrova",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A09",
+   "displayName": "Hugo Tarvessa",
+   "sourcePosition": "MF",
+   "effectivePosition": "FW",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Hugo Tarvessa",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A10",
+   "displayName": "Nil Escovar",
+   "sourcePosition": "FW",
+   "effectivePosition": "FW",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Nil Escovar",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A11",
+   "displayName": "Dario Montefal",
+   "sourcePosition": "FW",
+   "effectivePosition": "FW",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Dario Montefal",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-A12",
+   "displayName": "Gael Sorbano",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Gael Sorbano",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-T01",
+   "displayName": "Raúl Veskeda",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Raúl Veskeda",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-altamar",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    },
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B01",
+   "displayName": "Iván Corbadel",
+   "sourcePosition": "GK",
+   "effectivePosition": "GK",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Iván Corbadel",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B02",
+   "displayName": "Sergi Albarón",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Sergi Albarón",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B03",
+   "displayName": "Unai Pertxel",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Unai Pertxel",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B04",
+   "displayName": "Kevin Dalmuro",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Kevin Dalmuro",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B05",
+   "displayName": "Adrià Folquet",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Adrià Folquet",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B06",
+   "displayName": "Jon Ibarzola",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Jon Ibarzola",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B07",
+   "displayName": "Marco Belvane",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Marco Belvane",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B08",
+   "displayName": "Marco Belvane Ruiz",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Marco Belvane Ruiz",
+     "source": "synthetic demo listing (fictional)"
+    },
+    {
+     "name": "Marco Belvane",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B09",
+   "displayName": "Álex Tormesa",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Álex Tormesa",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B10",
+   "displayName": "Rubén Calvisto",
+   "sourcePosition": "FW",
+   "effectivePosition": "FW",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Rubén Calvisto",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B11",
+   "displayName": "Yeray Montuno",
+   "sourcePosition": "FW",
+   "effectivePosition": "FW",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Yeray Montuno",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-B12",
+   "displayName": "Lucas Ferbano",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Lucas Ferbano",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-brisa-norte",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C01",
+   "displayName": "Pablo Ordenix",
+   "sourcePosition": "GK",
+   "effectivePosition": "GK",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Pablo Ordenix",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C02",
+   "displayName": "Javi Torrelda",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Javi Torrelda",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C03",
+   "displayName": "Martín Baselga",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Martín Baselga",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C04",
+   "displayName": "Eric Valdomar",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Eric Valdomar",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C05",
+   "displayName": "Luis Prandel",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Luis Prandel",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C06",
+   "displayName": "Diego Sarvinet",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Diego Sarvinet",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C07",
+   "displayName": "Óliver Pradanta",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Óliver Pradanta",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C08",
+   "displayName": "Samu Trescol",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Samu Trescol",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C09",
+   "displayName": "Fran Galdeira",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Fran Galdeira",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C10",
+   "displayName": "Borja Quintaval",
+   "sourcePosition": "FW",
+   "effectivePosition": "FW",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Borja Quintaval",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C11",
+   "displayName": "Aitor Lembrana",
+   "sourcePosition": "FW",
+   "effectivePosition": "FW",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Aitor Lembrana",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-C12",
+   "displayName": "Rafa Celvino",
+   "sourcePosition": "MF",
+   "effectivePosition": null,
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Rafa Celvino",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-cerro-azul",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D01",
+   "displayName": "Álvaro Pentrix",
+   "sourcePosition": "GK",
+   "effectivePosition": "GK",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Álvaro Pentrix",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D02",
+   "displayName": "Joel Marbenta",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Joel Marbenta",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D03",
+   "displayName": "Carlos Ovenda",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Carlos Ovenda",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D04",
+   "displayName": "Toni Brescal",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Toni Brescal",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D05",
+   "displayName": "Izan Folgueral",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Izan Folgueral",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D06",
+   "displayName": "Mario Ventuel",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Mario Ventuel",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D07",
+   "displayName": "Ángel Corvisa",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Ángel Corvisa",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D08",
+   "displayName": "Dani Pelvoret",
+   "sourcePosition": "MF",
+   "effectivePosition": "MF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Dani Pelvoret",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D09",
+   "displayName": "Enzo Morlaga",
+   "sourcePosition": "FW",
+   "effectivePosition": "FW",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Enzo Morlaga",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D10",
+   "displayName": "Víctor Abaneda",
+   "sourcePosition": "FW",
+   "effectivePosition": "FW",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Víctor Abaneda",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  },
+  {
+   "id": "SYN-D11",
+   "displayName": "Rober Calmesta",
+   "sourcePosition": "DF",
+   "effectivePosition": "DF",
+   "externalIds": {},
+   "aliases": [
+    {
+     "name": "Rober Calmesta",
+     "source": "synthetic demo listing (fictional)"
+    }
+   ],
+   "affiliations": [
+    {
+     "club": "demo-dunas",
+     "season": "2025/26",
+     "source": "synthetic demo squad listing (fictional)"
+    }
+   ]
+  }
+ ]
+}
