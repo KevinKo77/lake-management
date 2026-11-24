@@ -1,0 +1,6785 @@
+{
+ "schema": "lanova-spain-results-v1",
+ "licence": "CC BY-SA 4.0",
+ "attribution": [
+  "Squads, club seasons and results: OpenFootballBase-Data release data-1.24.6 (github.com/florentfougeres/OpenFootballBase-Data), derived from Wikipedia by its contributors — CC BY-SA 4.0. Each player cites its Wikipedia page and revision."
+ ],
+ "season": "2026-27",
+ "asOf": "2026-11-24",
+ "source": {
+  "openfootballbase": {
+   "repository": "https://github.com/florentfougeres/OpenFootballBase-Data",
+   "release": "data-1.24.6",
+   "releaseCommit": "99fcbb686b3c685ea43a3ad2f1e1bcb6d0c0f14d",
+   "archive": "https://github.com/florentfougeres/OpenFootballBase-Data/releases/download/data-1.24.6/openfootballbase-data.tar.gz",
+   "archiveSha256": "16539db3ce2b28ef3c0e4500ac31c24d90995a02eafab57daf4cef8b6b8680f9",
+   "manifestGeneratedAt": "2026-11-23T13:49:13+00:00",
+   "files": {
+    "squad": {
+     "path": "squad/2026-27.2ff12b07.parquet",
+     "sha256": "2ff12b07aead2862a9c1eaea04ed5f6d88f2c4d5c7a8e14dcdc4aa91161b086e",
+     "rows": 16827
+    },
+    "club_season": {
+     "path": "club_season/2026-27.f2fdf0ee.parquet",
+     "sha256": "f2fdf0ee6f7f125a2219f41fdcbf13e2965c71f3803e2637924ed2cd1cac7cc6",
+     "rows": 1216
+    },
+    "club": {
+     "path": "club/club.1441a283.parquet",
+     "sha256": "1441a2839a656a8291e1999740da3629ffca9945efec2dfce684576b465519ce",
+     "rows": 43566
+    },
+    "match": {
+     "path": "match/match.215661ea.parquet",
+     "sha256": "215661ea7813d85e1cffb33250094fd7a6a171e7f073c93c47bf077bd9e6c61e",
+     "rows": 165719
+    },
+    "birth": {
+     "path": "birth/birth.a17ad497.parquet",
+     "sha256": "a17ad49793bc04b6a7ff3d274f990a020a62ba4d9ce84c58eead299c4004b55d",
+     "rows": 63024
+    }
+   }
+  }
+ },
+ "competition": "laliga",
+ "completeness": {
+  "due": 130,
+  "completed": 128,
+  "missing": [
+   "2026-27/md08/es-rayo-vallecano-v-es-athletic-bilbao",
+   "2026-27/md13/es-levante-ud-v-es-elche-cf"
+  ],
+  "agreeWithOpenfootball": 69,
+  "conflicts": [],
+  "singleSource": 57,
+  "gate": "closed",
+  "gateReasons": [
+   "2 result(s) due by 2026-11-24 missing",
+   "57 result(s) from a single, non-authoritative source"
+  ]
+ },
+ "matches": [
+  {
+   "id": "2026-27/md01/es-deportivo-alaves-v-es-getafe-cf",
+   "matchday": 1,
+   "date": "2026-08-15",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-getafe-cf",
+   "status": "completed",
+   "score": [
+    3,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md01/es-sevilla-fc-v-es-rayo-vallecano",
+   "matchday": 1,
+   "date": "2026-08-15",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-rayo-vallecano",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md01/es-rcd-espanyol-v-es-levante-ud",
+   "matchday": 1,
+   "date": "2026-08-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-levante-ud",
+   "status": "completed",
+   "score": [
+    3,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md01/es-racing-de-santander-v-es-villarreal-cf",
+   "matchday": 1,
+   "date": "2026-08-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-villarreal-cf",
+   "status": "completed",
+   "score": [
+    2,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md01/es-deportivo-de-la-coruna-v-es-elche-cf",
+   "matchday": 1,
+   "date": "2026-08-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-elche-cf",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md01/es-atletico-madrid-v-es-malaga-cf",
+   "matchday": 1,
+   "date": "2026-08-19",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-malaga-cf",
+   "status": "completed",
+   "score": [
+    2,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-rayo-vallecano-v-es-deportivo-alaves",
+   "matchday": 2,
+   "date": "2026-08-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-deportivo-alaves",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-real-betis-v-es-real-sociedad",
+   "matchday": 2,
+   "date": "2026-08-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-real-sociedad",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-athletic-bilbao-v-es-sevilla-fc",
+   "matchday": 2,
+   "date": "2026-08-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-sevilla-fc",
+   "status": "completed",
+   "score": [
+    1,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-rcd-espanyol-v-es-real-madrid-cf",
+   "matchday": 2,
+   "date": "2026-08-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-real-madrid-cf",
+   "status": "completed",
+   "score": [
+    1,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-valencia-cf-v-es-celta-de-vigo",
+   "matchday": 2,
+   "date": "2026-08-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-celta-de-vigo",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-atletico-madrid-v-es-villarreal-cf",
+   "matchday": 2,
+   "date": "2026-08-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-villarreal-cf",
+   "status": "completed",
+   "score": [
+    2,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-elche-cf-v-es-fc-barcelona",
+   "matchday": 2,
+   "date": "2026-08-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-fc-barcelona",
+   "status": "completed",
+   "score": [
+    0,
+    5
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-getafe-cf-v-es-racing-de-santander",
+   "matchday": 2,
+   "date": "2026-08-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-racing-de-santander",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-ca-osasuna-v-es-levante-ud",
+   "matchday": 2,
+   "date": "2026-08-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-levante-ud",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md02/es-malaga-cf-v-es-deportivo-de-la-coruna",
+   "matchday": 2,
+   "date": "2026-08-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md01/es-valencia-cf-v-es-real-betis",
+   "matchday": 1,
+   "date": "2026-08-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-real-betis",
+   "status": "completed",
+   "score": [
+    0,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md01/es-real-madrid-cf-v-es-real-sociedad",
+   "matchday": 1,
+   "date": "2026-08-26",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-real-sociedad",
+   "status": "completed",
+   "score": [
+    4,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md01/es-celta-de-vigo-v-es-ca-osasuna",
+   "matchday": 1,
+   "date": "2026-08-27",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-ca-osasuna",
+   "status": "completed",
+   "score": [
+    1,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md01/es-fc-barcelona-v-es-athletic-bilbao",
+   "matchday": 1,
+   "date": "2026-08-27",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-athletic-bilbao",
+   "status": "completed",
+   "score": [
+    2,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-deportivo-alaves-v-es-villarreal-cf",
+   "matchday": 3,
+   "date": "2026-08-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-villarreal-cf",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-racing-de-santander-v-es-elche-cf",
+   "matchday": 3,
+   "date": "2026-08-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-elche-cf",
+   "status": "completed",
+   "score": [
+    3,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-levante-ud-v-es-real-betis",
+   "matchday": 3,
+   "date": "2026-08-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-real-betis",
+   "status": "completed",
+   "score": [
+    5,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-real-sociedad-v-es-rcd-espanyol",
+   "matchday": 3,
+   "date": "2026-08-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-rcd-espanyol",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-sevilla-fc-v-es-atletico-madrid",
+   "matchday": 3,
+   "date": "2026-08-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-atletico-madrid",
+   "status": "completed",
+   "score": [
+    1,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-celta-de-vigo-v-es-athletic-bilbao",
+   "matchday": 3,
+   "date": "2026-08-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-athletic-bilbao",
+   "status": "completed",
+   "score": [
+    0,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-deportivo-de-la-coruna-v-es-valencia-cf",
+   "matchday": 3,
+   "date": "2026-08-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-valencia-cf",
+   "status": "completed",
+   "score": [
+    3,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-real-madrid-cf-v-es-malaga-cf",
+   "matchday": 3,
+   "date": "2026-08-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-malaga-cf",
+   "status": "completed",
+   "score": [
+    4,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-ca-osasuna-v-es-getafe-cf",
+   "matchday": 3,
+   "date": "2026-08-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-getafe-cf",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md03/es-fc-barcelona-v-es-rayo-vallecano",
+   "matchday": 3,
+   "date": "2026-08-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-rayo-vallecano",
+   "status": "completed",
+   "score": [
+    5,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-real-sociedad-v-es-celta-de-vigo",
+   "matchday": 6,
+   "date": "2026-09-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-celta-de-vigo",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-real-betis-v-es-real-madrid-cf",
+   "matchday": 4,
+   "date": "2026-09-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-real-madrid-cf",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-athletic-bilbao-v-es-atletico-madrid",
+   "matchday": 4,
+   "date": "2026-09-05",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-atletico-madrid",
+   "status": "completed",
+   "score": [
+    3,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-rayo-vallecano-v-es-racing-de-santander",
+   "matchday": 4,
+   "date": "2026-09-05",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-racing-de-santander",
+   "status": "completed",
+   "score": [
+    3,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-villarreal-cf-v-es-deportivo-de-la-coruna",
+   "matchday": 4,
+   "date": "2026-09-05",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "completed",
+   "score": [
+    2,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-deportivo-alaves-v-es-ca-osasuna",
+   "matchday": 4,
+   "date": "2026-09-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-ca-osasuna",
+   "status": "completed",
+   "score": [
+    5,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-malaga-cf-v-es-levante-ud",
+   "matchday": 4,
+   "date": "2026-09-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-levante-ud",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-rcd-espanyol-v-es-sevilla-fc",
+   "matchday": 4,
+   "date": "2026-09-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-sevilla-fc",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-valencia-cf-v-es-fc-barcelona",
+   "matchday": 4,
+   "date": "2026-09-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-fc-barcelona",
+   "status": "completed",
+   "score": [
+    0,
+    5
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-elche-cf-v-es-real-sociedad",
+   "matchday": 4,
+   "date": "2026-09-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-real-sociedad",
+   "status": "completed",
+   "score": [
+    2,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md04/es-getafe-cf-v-es-celta-de-vigo",
+   "matchday": 4,
+   "date": "2026-09-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-celta-de-vigo",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-sevilla-fc-v-es-valencia-cf",
+   "matchday": 5,
+   "date": "2026-09-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-valencia-cf",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-athletic-bilbao-v-es-elche-cf",
+   "matchday": 5,
+   "date": "2026-09-12",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-elche-cf",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-ca-osasuna-v-es-rcd-espanyol",
+   "matchday": 5,
+   "date": "2026-09-12",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-rcd-espanyol",
+   "status": "completed",
+   "score": [
+    0,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-racing-de-santander-v-es-deportivo-alaves",
+   "matchday": 5,
+   "date": "2026-09-12",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-deportivo-alaves",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-real-madrid-cf-v-es-rayo-vallecano",
+   "matchday": 5,
+   "date": "2026-09-12",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-rayo-vallecano",
+   "status": "completed",
+   "score": [
+    4,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-celta-de-vigo-v-es-malaga-cf",
+   "matchday": 5,
+   "date": "2026-09-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-malaga-cf",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-getafe-cf-v-es-deportivo-de-la-coruna",
+   "matchday": 5,
+   "date": "2026-09-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-levante-ud-v-es-fc-barcelona",
+   "matchday": 5,
+   "date": "2026-09-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-fc-barcelona",
+   "status": "completed",
+   "score": [
+    2,
+    4
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-real-sociedad-v-es-atletico-madrid",
+   "matchday": 5,
+   "date": "2026-09-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-atletico-madrid",
+   "status": "completed",
+   "score": [
+    0,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md05/es-villarreal-cf-v-es-real-betis",
+   "matchday": 5,
+   "date": "2026-09-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-real-betis",
+   "status": "completed",
+   "score": [
+    1,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-deportivo-alaves-v-es-valencia-cf",
+   "matchday": 6,
+   "date": "2026-09-15",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-valencia-cf",
+   "status": "completed",
+   "score": [
+    0,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-elche-cf-v-es-real-madrid-cf",
+   "matchday": 6,
+   "date": "2026-09-15",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-real-madrid-cf",
+   "status": "completed",
+   "score": [
+    2,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-rayo-vallecano-v-es-rcd-espanyol",
+   "matchday": 6,
+   "date": "2026-09-15",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-rcd-espanyol",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-atletico-madrid-v-es-ca-osasuna",
+   "matchday": 6,
+   "date": "2026-09-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-ca-osasuna",
+   "status": "completed",
+   "score": [
+    4,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-deportivo-de-la-coruna-v-es-sevilla-fc",
+   "matchday": 6,
+   "date": "2026-09-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-sevilla-fc",
+   "status": "completed",
+   "score": [
+    0,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-fc-barcelona-v-es-racing-de-santander",
+   "matchday": 6,
+   "date": "2026-09-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-racing-de-santander",
+   "status": "completed",
+   "score": [
+    7,
+    2
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-malaga-cf-v-es-villarreal-cf",
+   "matchday": 6,
+   "date": "2026-09-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-villarreal-cf",
+   "status": "completed",
+   "score": [
+    1,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-real-betis-v-es-getafe-cf",
+   "matchday": 6,
+   "date": "2026-09-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-getafe-cf",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-rcd-espanyol-v-es-elche-cf",
+   "matchday": 7,
+   "date": "2026-09-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-elche-cf",
+   "status": "completed",
+   "score": [
+    1,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-athletic-bilbao-v-es-deportivo-alaves",
+   "matchday": 7,
+   "date": "2026-09-19",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-deportivo-alaves",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-ca-osasuna-v-es-rayo-vallecano",
+   "matchday": 7,
+   "date": "2026-09-19",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-rayo-vallecano",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-celta-de-vigo-v-es-racing-de-santander",
+   "matchday": 7,
+   "date": "2026-09-19",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-racing-de-santander",
+   "status": "completed",
+   "score": [
+    5,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-sevilla-fc-v-es-fc-barcelona",
+   "matchday": 7,
+   "date": "2026-09-19",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-fc-barcelona",
+   "status": "completed",
+   "score": [
+    1,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-atletico-madrid-v-es-real-madrid-cf",
+   "matchday": 7,
+   "date": "2026-09-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-real-madrid-cf",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-deportivo-de-la-coruna-v-es-real-betis",
+   "matchday": 7,
+   "date": "2026-09-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-real-betis",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-getafe-cf-v-es-malaga-cf",
+   "matchday": 7,
+   "date": "2026-09-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-malaga-cf",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-valencia-cf-v-es-real-sociedad",
+   "matchday": 7,
+   "date": "2026-09-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-real-sociedad",
+   "status": "completed",
+   "score": [
+    2,
+    3
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md07/es-villarreal-cf-v-es-levante-ud",
+   "matchday": 7,
+   "date": "2026-09-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-levante-ud",
+   "status": "completed",
+   "score": [
+    3,
+    1
+   ],
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with openfootball (CC0)"
+   ]
+  },
+  {
+   "id": "2026-27/md08/es-malaga-cf-v-es-rcd-espanyol",
+   "matchday": 8,
+   "date": "2026-10-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-rcd-espanyol",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md08/es-deportivo-alaves-v-es-atletico-madrid",
+   "matchday": 8,
+   "date": "2026-10-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-atletico-madrid",
+   "status": "completed",
+   "score": [
+    1,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md08/es-fc-barcelona-v-es-getafe-cf",
+   "matchday": 8,
+   "date": "2026-10-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-getafe-cf",
+   "status": "completed",
+   "score": [
+    3,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md08/es-rayo-vallecano-v-es-athletic-bilbao",
+   "matchday": 8,
+   "date": "2026-10-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-athletic-bilbao",
+   "status": "missing",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md08/es-real-madrid-cf-v-es-villarreal-cf",
+   "matchday": 8,
+   "date": "2026-10-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-villarreal-cf",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md08/es-elche-cf-v-es-celta-de-vigo",
+   "matchday": 8,
+   "date": "2026-10-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-celta-de-vigo",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md08/es-racing-de-santander-v-es-valencia-cf",
+   "matchday": 8,
+   "date": "2026-10-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-valencia-cf",
+   "status": "completed",
+   "score": [
+    2,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md08/es-real-betis-v-es-ca-osasuna",
+   "matchday": 8,
+   "date": "2026-10-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-ca-osasuna",
+   "status": "completed",
+   "score": [
+    5,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md08/es-real-sociedad-v-es-deportivo-de-la-coruna",
+   "matchday": 8,
+   "date": "2026-10-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "completed",
+   "score": [
+    3,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md08/es-levante-ud-v-es-sevilla-fc",
+   "matchday": 8,
+   "date": "2026-10-12",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-sevilla-fc",
+   "status": "completed",
+   "score": [
+    3,
+    3
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-deportivo-de-la-coruna-v-es-levante-ud",
+   "matchday": 9,
+   "date": "2026-10-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-levante-ud",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-rcd-espanyol-v-es-atletico-madrid",
+   "matchday": 9,
+   "date": "2026-10-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-atletico-madrid",
+   "status": "completed",
+   "score": [
+    0,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-real-betis-v-es-fc-barcelona",
+   "matchday": 9,
+   "date": "2026-10-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-fc-barcelona",
+   "status": "completed",
+   "score": [
+    2,
+    5
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-valencia-cf-v-es-athletic-bilbao",
+   "matchday": 9,
+   "date": "2026-10-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-athletic-bilbao",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-villarreal-cf-v-es-elche-cf",
+   "matchday": 9,
+   "date": "2026-10-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-elche-cf",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-ca-osasuna-v-es-racing-de-santander",
+   "matchday": 9,
+   "date": "2026-10-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-racing-de-santander",
+   "status": "completed",
+   "score": [
+    2,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-celta-de-vigo-v-es-deportivo-alaves",
+   "matchday": 9,
+   "date": "2026-10-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-deportivo-alaves",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-malaga-cf-v-es-real-sociedad",
+   "matchday": 9,
+   "date": "2026-10-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-real-sociedad",
+   "status": "completed",
+   "score": [
+    2,
+    5
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-real-madrid-cf-v-es-sevilla-fc",
+   "matchday": 9,
+   "date": "2026-10-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-sevilla-fc",
+   "status": "completed",
+   "score": [
+    4,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md09/es-getafe-cf-v-es-rayo-vallecano",
+   "matchday": 9,
+   "date": "2026-10-19",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-rayo-vallecano",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md06/es-levante-ud-v-es-athletic-bilbao",
+   "matchday": 6,
+   "date": "2026-10-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-athletic-bilbao",
+   "status": "completed",
+   "score": [
+    3,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-athletic-bilbao-v-es-getafe-cf",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-getafe-cf",
+   "status": "completed",
+   "score": [
+    4,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-atletico-madrid-v-es-deportivo-de-la-coruna",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-celta-de-vigo-v-es-real-betis",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-real-betis",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-deportivo-alaves-v-es-malaga-cf",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-malaga-cf",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-fc-barcelona-v-es-real-madrid-cf",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-real-madrid-cf",
+   "status": "completed",
+   "score": [
+    1,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-racing-de-santander-v-es-rcd-espanyol",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-rcd-espanyol",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-rayo-vallecano-v-es-elche-cf",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-elche-cf",
+   "status": "completed",
+   "score": [
+    0,
+    3
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-real-sociedad-v-es-levante-ud",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-levante-ud",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-sevilla-fc-v-es-ca-osasuna",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-ca-osasuna",
+   "status": "completed",
+   "score": [
+    2,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md10/es-valencia-cf-v-es-villarreal-cf",
+   "matchday": 10,
+   "date": "2026-10-25",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-villarreal-cf",
+   "status": "completed",
+   "score": [
+    1,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-athletic-bilbao-v-es-real-sociedad",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-real-sociedad",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-deportivo-de-la-coruna-v-es-ca-osasuna",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-ca-osasuna",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-elche-cf-v-es-valencia-cf",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-valencia-cf",
+   "status": "completed",
+   "score": [
+    0,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-fc-barcelona-v-es-deportivo-alaves",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-deportivo-alaves",
+   "status": "completed",
+   "score": [
+    6,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-getafe-cf-v-es-sevilla-fc",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-sevilla-fc",
+   "status": "completed",
+   "score": [
+    3,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-levante-ud-v-es-atletico-madrid",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-atletico-madrid",
+   "status": "completed",
+   "score": [
+    0,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-racing-de-santander-v-es-real-madrid-cf",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-real-madrid-cf",
+   "status": "completed",
+   "score": [
+    0,
+    3
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-rayo-vallecano-v-es-celta-de-vigo",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-celta-de-vigo",
+   "status": "completed",
+   "score": [
+    3,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-real-betis-v-es-malaga-cf",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-malaga-cf",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md11/es-villarreal-cf-v-es-rcd-espanyol",
+   "matchday": 11,
+   "date": "2026-11-01",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-rcd-espanyol",
+   "status": "completed",
+   "score": [
+    0,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-atletico-madrid-v-es-fc-barcelona",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-fc-barcelona",
+   "status": "completed",
+   "score": [
+    1,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-ca-osasuna-v-es-athletic-bilbao",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-athletic-bilbao",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-celta-de-vigo-v-es-levante-ud",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-levante-ud",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-elche-cf-v-es-real-betis",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-real-betis",
+   "status": "completed",
+   "score": [
+    0,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-malaga-cf-v-es-racing-de-santander",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": "LANOVA S2 sources date this match 7 November 2026; the fixture source lists 2026-11-08",
+   "home": "es-malaga-cf",
+   "away": "es-racing-de-santander",
+   "status": "completed",
+   "score": [
+    1,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with LANOVA verified Málaga line (S2)"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-rcd-espanyol-v-es-deportivo-de-la-coruna",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-real-sociedad-v-es-rayo-vallecano",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-rayo-vallecano",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-sevilla-fc-v-es-deportivo-alaves",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-deportivo-alaves",
+   "status": "completed",
+   "score": [
+    0,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-valencia-cf-v-es-real-madrid-cf",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-real-madrid-cf",
+   "status": "completed",
+   "score": [
+    0,
+    3
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md12/es-villarreal-cf-v-es-getafe-cf",
+   "matchday": 12,
+   "date": "2026-11-08",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-getafe-cf",
+   "status": "completed",
+   "score": [
+    2,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md13/es-athletic-bilbao-v-es-rcd-espanyol",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-rcd-espanyol",
+   "status": "completed",
+   "score": [
+    0,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md13/es-ca-osasuna-v-es-malaga-cf",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-malaga-cf",
+   "status": "completed",
+   "score": [
+    1,
+    0
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "agrees with LANOVA verified Málaga line (S2)"
+   ]
+  },
+  {
+   "id": "2026-27/md13/es-deportivo-alaves-v-es-deportivo-de-la-coruna",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "completed",
+   "score": [
+    3,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md13/es-fc-barcelona-v-es-villarreal-cf",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-villarreal-cf",
+   "status": "completed",
+   "score": [
+    3,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md13/es-getafe-cf-v-es-atletico-madrid",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-atletico-madrid",
+   "status": "completed",
+   "score": [
+    0,
+    3
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md13/es-levante-ud-v-es-elche-cf",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-elche-cf",
+   "status": "missing",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md13/es-racing-de-santander-v-es-real-sociedad",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-real-sociedad",
+   "status": "completed",
+   "score": [
+    3,
+    2
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md13/es-rayo-vallecano-v-es-valencia-cf",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-valencia-cf",
+   "status": "completed",
+   "score": [
+    0,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md13/es-real-madrid-cf-v-es-celta-de-vigo",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-celta-de-vigo",
+   "status": "completed",
+   "score": [
+    2,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md13/es-sevilla-fc-v-es-real-betis",
+   "matchday": 13,
+   "date": "2026-11-22",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-real-betis",
+   "status": "completed",
+   "score": [
+    1,
+    1
+   ],
+   "source": {
+    "results": "Wikipedia (via OpenFootballBase match table)",
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": [
+    "single source: not independently verified"
+   ]
+  },
+  {
+   "id": "2026-27/md14/es-celta-de-vigo-v-es-villarreal-cf",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md14/es-deportivo-de-la-coruna-v-es-fc-barcelona",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md14/es-elche-cf-v-es-atletico-madrid",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md14/es-levante-ud-v-es-racing-de-santander",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md14/es-malaga-cf-v-es-athletic-bilbao",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md14/es-rcd-espanyol-v-es-getafe-cf",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md14/es-real-betis-v-es-rayo-vallecano",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md14/es-real-madrid-cf-v-es-deportivo-alaves",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md14/es-real-sociedad-v-es-sevilla-fc",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md14/es-valencia-cf-v-es-ca-osasuna",
+   "matchday": 14,
+   "date": "2026-11-29",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-athletic-bilbao-v-es-real-madrid-cf",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-atletico-madrid-v-es-real-betis",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-ca-osasuna-v-es-elche-cf",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-deportivo-alaves-v-es-rcd-espanyol",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-fc-barcelona-v-es-celta-de-vigo",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-getafe-cf-v-es-valencia-cf",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-racing-de-santander-v-es-deportivo-de-la-coruna",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-rayo-vallecano-v-es-levante-ud",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-sevilla-fc-v-es-malaga-cf",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md15/es-villarreal-cf-v-es-real-sociedad",
+   "matchday": 15,
+   "date": "2026-12-06",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-atletico-madrid-v-es-valencia-cf",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-deportivo-de-la-coruna-v-es-athletic-bilbao",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-elche-cf-v-es-sevilla-fc",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-levante-ud-v-es-deportivo-alaves",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-malaga-cf-v-es-fc-barcelona",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-rcd-espanyol-v-es-celta-de-vigo",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-real-betis-v-es-racing-de-santander",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-real-madrid-cf-v-es-ca-osasuna",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-real-sociedad-v-es-getafe-cf",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md16/es-villarreal-cf-v-es-rayo-vallecano",
+   "matchday": 16,
+   "date": "2026-12-13",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-athletic-bilbao-v-es-real-betis",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-ca-osasuna-v-es-villarreal-cf",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-celta-de-vigo-v-es-atletico-madrid",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-deportivo-alaves-v-es-elche-cf",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-deportivo-de-la-coruna-v-es-real-madrid-cf",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-fc-barcelona-v-es-real-sociedad",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-getafe-cf-v-es-levante-ud",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-rayo-vallecano-v-es-malaga-cf",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-sevilla-fc-v-es-racing-de-santander",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md17/es-valencia-cf-v-es-rcd-espanyol",
+   "matchday": 17,
+   "date": "2026-12-20",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-celta-de-vigo-v-es-deportivo-de-la-coruna",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-levante-ud-v-es-valencia-cf",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-malaga-cf-v-es-elche-cf",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-rcd-espanyol-v-es-fc-barcelona",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-racing-de-santander-v-es-athletic-bilbao",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-rayo-vallecano-v-es-atletico-madrid",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-real-betis-v-es-deportivo-alaves",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-real-madrid-cf-v-es-getafe-cf",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-real-sociedad-v-es-ca-osasuna",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md18/es-villarreal-cf-v-es-sevilla-fc",
+   "matchday": 18,
+   "date": "2027-01-03",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-athletic-bilbao-v-es-villarreal-cf",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-atletico-madrid-v-es-racing-de-santander",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-ca-osasuna-v-es-fc-barcelona",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-deportivo-alaves-v-es-real-sociedad",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-deportivo-de-la-coruna-v-es-rayo-vallecano",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-elche-cf-v-es-getafe-cf",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-rcd-espanyol-v-es-real-betis",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-real-madrid-cf-v-es-levante-ud",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-sevilla-fc-v-es-celta-de-vigo",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md19/es-valencia-cf-v-es-malaga-cf",
+   "matchday": 19,
+   "date": "2027-01-10",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-atletico-madrid-v-es-real-sociedad",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-celta-de-vigo-v-es-valencia-cf",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-fc-barcelona-v-es-elche-cf",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-getafe-cf-v-es-athletic-bilbao",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-levante-ud-v-es-rcd-espanyol",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-malaga-cf-v-es-real-madrid-cf",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-racing-de-santander-v-es-ca-osasuna",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-rayo-vallecano-v-es-sevilla-fc",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-real-betis-v-es-deportivo-de-la-coruna",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md20/es-villarreal-cf-v-es-deportivo-alaves",
+   "matchday": 20,
+   "date": "2027-01-17",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-athletic-bilbao-v-es-levante-ud",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-deportivo-alaves-v-es-fc-barcelona",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-deportivo-de-la-coruna-v-es-atletico-madrid",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-elche-cf-v-es-rayo-vallecano",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-getafe-cf-v-es-ca-osasuna",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-rcd-espanyol-v-es-villarreal-cf",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-racing-de-santander-v-es-celta-de-vigo",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-real-madrid-cf-v-es-real-betis",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-real-sociedad-v-es-malaga-cf",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md21/es-valencia-cf-v-es-sevilla-fc",
+   "matchday": 21,
+   "date": "2027-01-24",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-atletico-madrid-v-es-rcd-espanyol",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-ca-osasuna-v-es-deportivo-de-la-coruna",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-celta-de-vigo-v-es-getafe-cf",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-fc-barcelona-v-es-valencia-cf",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-levante-ud-v-es-real-sociedad",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-malaga-cf-v-es-deportivo-alaves",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-rayo-vallecano-v-es-real-madrid-cf",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-real-betis-v-es-elche-cf",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-sevilla-fc-v-es-athletic-bilbao",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md22/es-villarreal-cf-v-es-racing-de-santander",
+   "matchday": 22,
+   "date": "2027-01-31",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-athletic-bilbao-v-es-ca-osasuna",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-deportivo-alaves-v-es-celta-de-vigo",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-deportivo-de-la-coruna-v-es-malaga-cf",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-elche-cf-v-es-levante-ud",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-fc-barcelona-v-es-atletico-madrid",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-getafe-cf-v-es-villarreal-cf",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-rcd-espanyol-v-es-rayo-vallecano",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-real-betis-v-es-sevilla-fc",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-real-sociedad-v-es-real-madrid-cf",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md23/es-valencia-cf-v-es-racing-de-santander",
+   "matchday": 23,
+   "date": "2027-02-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-ca-osasuna-v-es-atletico-madrid",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-celta-de-vigo-v-es-rayo-vallecano",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-elche-cf-v-es-deportivo-de-la-coruna",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-levante-ud-v-es-malaga-cf",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-racing-de-santander-v-es-getafe-cf",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-real-madrid-cf-v-es-athletic-bilbao",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-real-sociedad-v-es-real-betis",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-sevilla-fc-v-es-rcd-espanyol",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-valencia-cf-v-es-deportivo-alaves",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md24/es-villarreal-cf-v-es-fc-barcelona",
+   "matchday": 24,
+   "date": "2027-02-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-athletic-bilbao-v-es-celta-de-vigo",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-atletico-madrid-v-es-elche-cf",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-deportivo-alaves-v-es-racing-de-santander",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-deportivo-de-la-coruna-v-es-real-sociedad",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-fc-barcelona-v-es-levante-ud",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-malaga-cf-v-es-real-betis",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-rcd-espanyol-v-es-ca-osasuna",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-rayo-vallecano-v-es-getafe-cf",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-sevilla-fc-v-es-real-madrid-cf",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md25/es-villarreal-cf-v-es-valencia-cf",
+   "matchday": 25,
+   "date": "2027-02-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-athletic-bilbao-v-es-fc-barcelona",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-ca-osasuna-v-es-sevilla-fc",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-celta-de-vigo-v-es-rcd-espanyol",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-getafe-cf-v-es-deportivo-alaves",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-levante-ud-v-es-deportivo-de-la-coruna",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-malaga-cf-v-es-atletico-madrid",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-racing-de-santander-v-es-rayo-vallecano",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-real-betis-v-es-villarreal-cf",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-real-madrid-cf-v-es-valencia-cf",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md26/es-real-sociedad-v-es-elche-cf",
+   "matchday": 26,
+   "date": "2027-02-28",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-atletico-madrid-v-es-celta-de-vigo",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-deportivo-alaves-v-es-athletic-bilbao",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-deportivo-de-la-coruna-v-es-getafe-cf",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-elche-cf-v-es-malaga-cf",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-fc-barcelona-v-es-real-betis",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-rcd-espanyol-v-es-racing-de-santander",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-rayo-vallecano-v-es-ca-osasuna",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-sevilla-fc-v-es-real-sociedad",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-valencia-cf-v-es-levante-ud",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md27/es-villarreal-cf-v-es-real-madrid-cf",
+   "matchday": 27,
+   "date": "2027-03-07",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-athletic-bilbao-v-es-valencia-cf",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-ca-osasuna-v-es-celta-de-vigo",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-deportivo-alaves-v-es-sevilla-fc",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-elche-cf-v-es-villarreal-cf",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-fc-barcelona-v-es-deportivo-de-la-coruna",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-getafe-cf-v-es-real-sociedad",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-malaga-cf-v-es-rayo-vallecano",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-racing-de-santander-v-es-atletico-madrid",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-real-betis-v-es-levante-ud",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md28/es-real-madrid-cf-v-es-rcd-espanyol",
+   "matchday": 28,
+   "date": "2027-03-14",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-atletico-madrid-v-es-getafe-cf",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-celta-de-vigo-v-es-real-madrid-cf",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-levante-ud-v-es-ca-osasuna",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-rcd-espanyol-v-es-athletic-bilbao",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-racing-de-santander-v-es-real-betis",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-rayo-vallecano-v-es-fc-barcelona",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-real-sociedad-v-es-deportivo-alaves",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-sevilla-fc-v-es-elche-cf",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-valencia-cf-v-es-deportivo-de-la-coruna",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md29/es-villarreal-cf-v-es-malaga-cf",
+   "matchday": 29,
+   "date": "2027-03-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-athletic-bilbao-v-es-racing-de-santander",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-deportivo-de-la-coruna-v-es-villarreal-cf",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-elche-cf-v-es-deportivo-alaves",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-fc-barcelona-v-es-sevilla-fc",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-getafe-cf-v-es-rcd-espanyol",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-levante-ud-v-es-rayo-vallecano",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-malaga-cf-v-es-ca-osasuna",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-real-betis-v-es-celta-de-vigo",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-real-madrid-cf-v-es-atletico-madrid",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md30/es-real-sociedad-v-es-valencia-cf",
+   "matchday": 30,
+   "date": "2027-04-04",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-atletico-madrid-v-es-levante-ud",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-ca-osasuna-v-es-real-madrid-cf",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-celta-de-vigo-v-es-elche-cf",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-deportivo-alaves-v-es-real-betis",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-rcd-espanyol-v-es-malaga-cf",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-racing-de-santander-v-es-fc-barcelona",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-rayo-vallecano-v-es-real-sociedad",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-sevilla-fc-v-es-deportivo-de-la-coruna",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-valencia-cf-v-es-getafe-cf",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md31/es-villarreal-cf-v-es-athletic-bilbao",
+   "matchday": 31,
+   "date": "2027-04-11",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-atletico-madrid-v-es-sevilla-fc",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-deportivo-alaves-v-es-rayo-vallecano",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-deportivo-de-la-coruna-v-es-celta-de-vigo",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-elche-cf-v-es-ca-osasuna",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-fc-barcelona-v-es-rcd-espanyol",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-getafe-cf-v-es-real-madrid-cf",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-levante-ud-v-es-villarreal-cf",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-malaga-cf-v-es-valencia-cf",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-real-betis-v-es-athletic-bilbao",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md32/es-real-sociedad-v-es-racing-de-santander",
+   "matchday": 32,
+   "date": "2027-04-18",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-athletic-bilbao-v-es-deportivo-de-la-coruna",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-ca-osasuna-v-es-deportivo-alaves",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-celta-de-vigo-v-es-fc-barcelona",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-getafe-cf-v-es-real-betis",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-rcd-espanyol-v-es-real-sociedad",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-racing-de-santander-v-es-malaga-cf",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-real-madrid-cf-v-es-elche-cf",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-sevilla-fc-v-es-levante-ud",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-valencia-cf-v-es-rayo-vallecano",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md33/es-villarreal-cf-v-es-atletico-madrid",
+   "matchday": 33,
+   "date": "2027-04-21",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-atletico-madrid-v-es-deportivo-alaves",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-celta-de-vigo-v-es-sevilla-fc",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-deportivo-de-la-coruna-v-es-racing-de-santander",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-elche-cf-v-es-rcd-espanyol",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-fc-barcelona-v-es-ca-osasuna",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-levante-ud-v-es-real-madrid-cf",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-malaga-cf-v-es-getafe-cf",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-rayo-vallecano-v-es-villarreal-cf",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-real-betis-v-es-valencia-cf",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md34/es-real-sociedad-v-es-athletic-bilbao",
+   "matchday": 34,
+   "date": "2027-05-02",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-athletic-bilbao-v-es-malaga-cf",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-ca-osasuna-v-es-real-sociedad",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-deportivo-alaves-v-es-levante-ud",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-getafe-cf-v-es-elche-cf",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-racing-de-santander-v-es-sevilla-fc",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-rayo-vallecano-v-es-deportivo-de-la-coruna",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-real-betis-v-es-rcd-espanyol",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-real-madrid-cf-v-es-fc-barcelona",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-valencia-cf-v-es-atletico-madrid",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md35/es-villarreal-cf-v-es-celta-de-vigo",
+   "matchday": 35,
+   "date": "2027-05-09",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-atletico-madrid-v-es-rayo-vallecano",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-ca-osasuna-v-es-real-betis",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-deportivo-de-la-coruna-v-es-deportivo-alaves",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-elche-cf-v-es-athletic-bilbao",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-levante-ud-v-es-getafe-cf",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-malaga-cf-v-es-celta-de-vigo",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-rcd-espanyol-v-es-valencia-cf",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-real-madrid-cf-v-es-racing-de-santander",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-real-sociedad-v-es-fc-barcelona",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md36/es-sevilla-fc-v-es-villarreal-cf",
+   "matchday": 36,
+   "date": "2027-05-16",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-atletico-madrid-v-es-athletic-bilbao",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-atletico-madrid",
+   "away": "es-athletic-bilbao",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-celta-de-vigo-v-es-real-sociedad",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-celta-de-vigo",
+   "away": "es-real-sociedad",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-deportivo-alaves-v-es-real-madrid-cf",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-alaves",
+   "away": "es-real-madrid-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-deportivo-de-la-coruna-v-es-rcd-espanyol",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-deportivo-de-la-coruna",
+   "away": "es-rcd-espanyol",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-fc-barcelona-v-es-malaga-cf",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-fc-barcelona",
+   "away": "es-malaga-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-racing-de-santander-v-es-levante-ud",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-racing-de-santander",
+   "away": "es-levante-ud",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-rayo-vallecano-v-es-real-betis",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rayo-vallecano",
+   "away": "es-real-betis",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-sevilla-fc-v-es-getafe-cf",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-sevilla-fc",
+   "away": "es-getafe-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-valencia-cf-v-es-elche-cf",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-valencia-cf",
+   "away": "es-elche-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md37/es-villarreal-cf-v-es-ca-osasuna",
+   "matchday": 37,
+   "date": "2027-05-23",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-villarreal-cf",
+   "away": "es-ca-osasuna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-athletic-bilbao-v-es-rayo-vallecano",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-athletic-bilbao",
+   "away": "es-rayo-vallecano",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-ca-osasuna-v-es-valencia-cf",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-ca-osasuna",
+   "away": "es-valencia-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-elche-cf-v-es-racing-de-santander",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-elche-cf",
+   "away": "es-racing-de-santander",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-getafe-cf-v-es-fc-barcelona",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-getafe-cf",
+   "away": "es-fc-barcelona",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-levante-ud-v-es-celta-de-vigo",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-levante-ud",
+   "away": "es-celta-de-vigo",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-malaga-cf-v-es-sevilla-fc",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-malaga-cf",
+   "away": "es-sevilla-fc",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-rcd-espanyol-v-es-deportivo-alaves",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-rcd-espanyol",
+   "away": "es-deportivo-alaves",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-real-betis-v-es-atletico-madrid",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-betis",
+   "away": "es-atletico-madrid",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-real-madrid-cf-v-es-deportivo-de-la-coruna",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-madrid-cf",
+   "away": "es-deportivo-de-la-coruna",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  },
+  {
+   "id": "2026-27/md38/es-real-sociedad-v-es-villarreal-cf",
+   "matchday": 38,
+   "date": "2027-05-30",
+   "dateKind": "as listed in the source (actual playing date not independently confirmed)",
+   "dateNote": null,
+   "home": "es-real-sociedad",
+   "away": "es-villarreal-cf",
+   "status": "scheduled",
+   "score": null,
+   "source": {
+    "results": null,
+    "fixtures": "football.json/2026-27/es.1.json"
+   },
+   "validation": []
+  }
+ ]
+}

@@ -1,0 +1,815 @@
+{
+ "schema": "lanova-results-readiness-v1",
+ "asOf": "2026-11-24",
+ "season": "2026-27",
+ "candidate": {
+  "provider": "OpenFootballBase-Data (results read from Wikipedia)",
+  "licence": "CC BY-SA 4.0",
+  "retrievedAt": "2026-11-23T13:49:13+00:00",
+  "sha256": "16539db3ce2b28ef3c0e4500ac31c24d90995a02eafab57daf4cef8b6b8680f9"
+ },
+ "missingFromOpenfootball": 61,
+ "recovered": 59,
+ "recoveredAndIndependentlyVerified": 2,
+ "notRecovered": [
+  "2026-27/md08/Rayo Vallecano de Madrid v Athletic Club",
+  "2026-27/md13/Levante UD v Elche CF"
+ ],
+ "gate": {
+  "usable": false,
+  "problems": [
+   "not verified against an authoritative result (57)",
+   "does not cover 2 of 61 missing results (partial snapshots are not mixed with the open dataset) (1)"
+  ]
+ },
+ "decision": "BLOCKED: gate closed — keep the current-season probability restriction",
+ "missing": [
+  {
+   "id": "2026-27/md08/Málaga CF v RCD Espanyol de Barcelona",
+   "matchday": 8,
+   "scheduledDate": "2026-10-09",
+   "home": "Málaga CF",
+   "away": "RCD Espanyol de Barcelona",
+   "recovered": true,
+   "score": [
+    1,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md08/Deportivo Alavés v Club Atlético de Madrid",
+   "matchday": 8,
+   "scheduledDate": "2026-10-10",
+   "home": "Deportivo Alavés",
+   "away": "Club Atlético de Madrid",
+   "recovered": true,
+   "score": [
+    1,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md08/FC Barcelona v Getafe CF",
+   "matchday": 8,
+   "scheduledDate": "2026-10-10",
+   "home": "FC Barcelona",
+   "away": "Getafe CF",
+   "recovered": true,
+   "score": [
+    3,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md08/Rayo Vallecano de Madrid v Athletic Club",
+   "matchday": 8,
+   "scheduledDate": "2026-10-10",
+   "home": "Rayo Vallecano de Madrid",
+   "away": "Athletic Club",
+   "recovered": false,
+   "score": null,
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md08/Real Madrid CF v Villarreal CF",
+   "matchday": 8,
+   "scheduledDate": "2026-10-10",
+   "home": "Real Madrid CF",
+   "away": "Villarreal CF",
+   "recovered": true,
+   "score": [
+    1,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md08/Elche CF v RC Celta de Vigo",
+   "matchday": 8,
+   "scheduledDate": "2026-10-11",
+   "home": "Elche CF",
+   "away": "RC Celta de Vigo",
+   "recovered": true,
+   "score": [
+    0,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md08/Real Betis Balompié v CA Osasuna",
+   "matchday": 8,
+   "scheduledDate": "2026-10-11",
+   "home": "Real Betis Balompié",
+   "away": "CA Osasuna",
+   "recovered": true,
+   "score": [
+    5,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md08/Real Racing Club de Santander v Valencia CF",
+   "matchday": 8,
+   "scheduledDate": "2026-10-11",
+   "home": "Real Racing Club de Santander",
+   "away": "Valencia CF",
+   "recovered": true,
+   "score": [
+    2,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md08/Real Sociedad de Fútbol v RC Deportivo La Coruña",
+   "matchday": 8,
+   "scheduledDate": "2026-10-11",
+   "home": "Real Sociedad de Fútbol",
+   "away": "RC Deportivo La Coruña",
+   "recovered": true,
+   "score": [
+    3,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md08/Levante UD v Sevilla FC",
+   "matchday": 8,
+   "scheduledDate": "2026-10-12",
+   "home": "Levante UD",
+   "away": "Sevilla FC",
+   "recovered": true,
+   "score": [
+    3,
+    3
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/RC Deportivo La Coruña v Levante UD",
+   "matchday": 9,
+   "scheduledDate": "2026-10-16",
+   "home": "RC Deportivo La Coruña",
+   "away": "Levante UD",
+   "recovered": true,
+   "score": [
+    1,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/RCD Espanyol de Barcelona v Club Atlético de Madrid",
+   "matchday": 9,
+   "scheduledDate": "2026-10-17",
+   "home": "RCD Espanyol de Barcelona",
+   "away": "Club Atlético de Madrid",
+   "recovered": true,
+   "score": [
+    0,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/Real Betis Balompié v FC Barcelona",
+   "matchday": 9,
+   "scheduledDate": "2026-10-17",
+   "home": "Real Betis Balompié",
+   "away": "FC Barcelona",
+   "recovered": true,
+   "score": [
+    2,
+    5
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/Valencia CF v Athletic Club",
+   "matchday": 9,
+   "scheduledDate": "2026-10-17",
+   "home": "Valencia CF",
+   "away": "Athletic Club",
+   "recovered": true,
+   "score": [
+    0,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/Villarreal CF v Elche CF",
+   "matchday": 9,
+   "scheduledDate": "2026-10-17",
+   "home": "Villarreal CF",
+   "away": "Elche CF",
+   "recovered": true,
+   "score": [
+    0,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/CA Osasuna v Real Racing Club de Santander",
+   "matchday": 9,
+   "scheduledDate": "2026-10-18",
+   "home": "CA Osasuna",
+   "away": "Real Racing Club de Santander",
+   "recovered": true,
+   "score": [
+    2,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/Málaga CF v Real Sociedad de Fútbol",
+   "matchday": 9,
+   "scheduledDate": "2026-10-18",
+   "home": "Málaga CF",
+   "away": "Real Sociedad de Fútbol",
+   "recovered": true,
+   "score": [
+    2,
+    5
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/RC Celta de Vigo v Deportivo Alavés",
+   "matchday": 9,
+   "scheduledDate": "2026-10-18",
+   "home": "RC Celta de Vigo",
+   "away": "Deportivo Alavés",
+   "recovered": true,
+   "score": [
+    2,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/Real Madrid CF v Sevilla FC",
+   "matchday": 9,
+   "scheduledDate": "2026-10-18",
+   "home": "Real Madrid CF",
+   "away": "Sevilla FC",
+   "recovered": true,
+   "score": [
+    4,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md09/Getafe CF v Rayo Vallecano de Madrid",
+   "matchday": 9,
+   "scheduledDate": "2026-10-19",
+   "home": "Getafe CF",
+   "away": "Rayo Vallecano de Madrid",
+   "recovered": true,
+   "score": [
+    1,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md06/Levante UD v Athletic Club",
+   "matchday": 6,
+   "scheduledDate": "2026-10-21",
+   "home": "Levante UD",
+   "away": "Athletic Club",
+   "recovered": true,
+   "score": [
+    3,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/Athletic Club v Getafe CF",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Athletic Club",
+   "away": "Getafe CF",
+   "recovered": true,
+   "score": [
+    4,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/Club Atlético de Madrid v RC Deportivo La Coruña",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Club Atlético de Madrid",
+   "away": "RC Deportivo La Coruña",
+   "recovered": true,
+   "score": [
+    1,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/Deportivo Alavés v Málaga CF",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Deportivo Alavés",
+   "away": "Málaga CF",
+   "recovered": true,
+   "score": [
+    1,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/FC Barcelona v Real Madrid CF",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "FC Barcelona",
+   "away": "Real Madrid CF",
+   "recovered": true,
+   "score": [
+    1,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/Rayo Vallecano de Madrid v Elche CF",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Rayo Vallecano de Madrid",
+   "away": "Elche CF",
+   "recovered": true,
+   "score": [
+    0,
+    3
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/RC Celta de Vigo v Real Betis Balompié",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "RC Celta de Vigo",
+   "away": "Real Betis Balompié",
+   "recovered": true,
+   "score": [
+    0,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/Real Racing Club de Santander v RCD Espanyol de Barcelona",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Real Racing Club de Santander",
+   "away": "RCD Espanyol de Barcelona",
+   "recovered": true,
+   "score": [
+    2,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/Real Sociedad de Fútbol v Levante UD",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Real Sociedad de Fútbol",
+   "away": "Levante UD",
+   "recovered": true,
+   "score": [
+    2,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/Sevilla FC v CA Osasuna",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Sevilla FC",
+   "away": "CA Osasuna",
+   "recovered": true,
+   "score": [
+    2,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md10/Valencia CF v Villarreal CF",
+   "matchday": 10,
+   "scheduledDate": "2026-10-25",
+   "home": "Valencia CF",
+   "away": "Villarreal CF",
+   "recovered": true,
+   "score": [
+    1,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/Athletic Club v Real Sociedad de Fútbol",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Athletic Club",
+   "away": "Real Sociedad de Fútbol",
+   "recovered": true,
+   "score": [
+    2,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/Elche CF v Valencia CF",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Elche CF",
+   "away": "Valencia CF",
+   "recovered": true,
+   "score": [
+    0,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/FC Barcelona v Deportivo Alavés",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "FC Barcelona",
+   "away": "Deportivo Alavés",
+   "recovered": true,
+   "score": [
+    6,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/Getafe CF v Sevilla FC",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Getafe CF",
+   "away": "Sevilla FC",
+   "recovered": true,
+   "score": [
+    3,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/Levante UD v Club Atlético de Madrid",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Levante UD",
+   "away": "Club Atlético de Madrid",
+   "recovered": true,
+   "score": [
+    0,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/Rayo Vallecano de Madrid v RC Celta de Vigo",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Rayo Vallecano de Madrid",
+   "away": "RC Celta de Vigo",
+   "recovered": true,
+   "score": [
+    3,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/RC Deportivo La Coruña v CA Osasuna",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "RC Deportivo La Coruña",
+   "away": "CA Osasuna",
+   "recovered": true,
+   "score": [
+    2,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/Real Betis Balompié v Málaga CF",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Real Betis Balompié",
+   "away": "Málaga CF",
+   "recovered": true,
+   "score": [
+    2,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/Real Racing Club de Santander v Real Madrid CF",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Real Racing Club de Santander",
+   "away": "Real Madrid CF",
+   "recovered": true,
+   "score": [
+    0,
+    3
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md11/Villarreal CF v RCD Espanyol de Barcelona",
+   "matchday": 11,
+   "scheduledDate": "2026-11-01",
+   "home": "Villarreal CF",
+   "away": "RCD Espanyol de Barcelona",
+   "recovered": true,
+   "score": [
+    0,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md12/CA Osasuna v Athletic Club",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "CA Osasuna",
+   "away": "Athletic Club",
+   "recovered": true,
+   "score": [
+    1,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md12/Club Atlético de Madrid v FC Barcelona",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Club Atlético de Madrid",
+   "away": "FC Barcelona",
+   "recovered": true,
+   "score": [
+    1,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md12/Elche CF v Real Betis Balompié",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Elche CF",
+   "away": "Real Betis Balompié",
+   "recovered": true,
+   "score": [
+    0,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md12/Málaga CF v Real Racing Club de Santander",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Málaga CF",
+   "away": "Real Racing Club de Santander",
+   "recovered": true,
+   "score": [
+    1,
+    2
+   ],
+   "independentlyVerified": true
+  },
+  {
+   "id": "2026-27/md12/RC Celta de Vigo v Levante UD",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "RC Celta de Vigo",
+   "away": "Levante UD",
+   "recovered": true,
+   "score": [
+    0,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md12/RCD Espanyol de Barcelona v RC Deportivo La Coruña",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "RCD Espanyol de Barcelona",
+   "away": "RC Deportivo La Coruña",
+   "recovered": true,
+   "score": [
+    0,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md12/Real Sociedad de Fútbol v Rayo Vallecano de Madrid",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Real Sociedad de Fútbol",
+   "away": "Rayo Vallecano de Madrid",
+   "recovered": true,
+   "score": [
+    1,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md12/Sevilla FC v Deportivo Alavés",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Sevilla FC",
+   "away": "Deportivo Alavés",
+   "recovered": true,
+   "score": [
+    0,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md12/Valencia CF v Real Madrid CF",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Valencia CF",
+   "away": "Real Madrid CF",
+   "recovered": true,
+   "score": [
+    0,
+    3
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md12/Villarreal CF v Getafe CF",
+   "matchday": 12,
+   "scheduledDate": "2026-11-08",
+   "home": "Villarreal CF",
+   "away": "Getafe CF",
+   "recovered": true,
+   "score": [
+    2,
+    0
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md13/Athletic Club v RCD Espanyol de Barcelona",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Athletic Club",
+   "away": "RCD Espanyol de Barcelona",
+   "recovered": true,
+   "score": [
+    0,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md13/CA Osasuna v Málaga CF",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "CA Osasuna",
+   "away": "Málaga CF",
+   "recovered": true,
+   "score": [
+    1,
+    0
+   ],
+   "independentlyVerified": true
+  },
+  {
+   "id": "2026-27/md13/Deportivo Alavés v RC Deportivo La Coruña",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Deportivo Alavés",
+   "away": "RC Deportivo La Coruña",
+   "recovered": true,
+   "score": [
+    3,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md13/FC Barcelona v Villarreal CF",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "FC Barcelona",
+   "away": "Villarreal CF",
+   "recovered": true,
+   "score": [
+    3,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md13/Getafe CF v Club Atlético de Madrid",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Getafe CF",
+   "away": "Club Atlético de Madrid",
+   "recovered": true,
+   "score": [
+    0,
+    3
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md13/Levante UD v Elche CF",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Levante UD",
+   "away": "Elche CF",
+   "recovered": false,
+   "score": null,
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md13/Rayo Vallecano de Madrid v Valencia CF",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Rayo Vallecano de Madrid",
+   "away": "Valencia CF",
+   "recovered": true,
+   "score": [
+    0,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md13/Real Madrid CF v RC Celta de Vigo",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Real Madrid CF",
+   "away": "RC Celta de Vigo",
+   "recovered": true,
+   "score": [
+    2,
+    1
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md13/Real Racing Club de Santander v Real Sociedad de Fútbol",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Real Racing Club de Santander",
+   "away": "Real Sociedad de Fútbol",
+   "recovered": true,
+   "score": [
+    3,
+    2
+   ],
+   "independentlyVerified": false
+  },
+  {
+   "id": "2026-27/md13/Sevilla FC v Real Betis Balompié",
+   "matchday": 13,
+   "scheduledDate": "2026-11-22",
+   "home": "Sevilla FC",
+   "away": "Real Betis Balompié",
+   "recovered": true,
+   "score": [
+    1,
+    1
+   ],
+   "independentlyVerified": false
+  }
+ ]
+}

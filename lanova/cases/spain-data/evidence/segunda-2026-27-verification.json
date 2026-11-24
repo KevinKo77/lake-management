@@ -1,0 +1,44 @@
+{
+ "checkedOn": "2026-11-24",
+ "rule": "22 clubs = 15 remaining from 2025/26 + 3 relegated from LaLiga + 4 promoted from Primera Federación; the 4 relegated to Primera Federación (Real Zaragoza, Cultural Leonesa, SD Huesca, CD Mirandés) and 3 promoted to LaLiga (Racing de Santander, Deportivo de La Coruña, Málaga CF) are excluded.",
+ "relegatedFromSegunda2025_26": [
+  "Real Zaragoza",
+  "Cultural y Deportiva Leonesa",
+  "SD Huesca",
+  "CD Mirandés"
+ ],
+ "promotedToLaLiga": [
+  "Racing de Santander",
+  "Deportivo de La Coruña",
+  "Málaga CF"
+ ],
+ "clubs": {
+  "AD Ceuta FC": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "Albacete Balompié": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "Burgos CF": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "CD Castellón": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "CD Leganés": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "Cádiz CF": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "Córdoba CF": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "FC Andorra": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "Granada CF": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "Real Sociedad B": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "Real Valladolid": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "SD Eibar": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "Sporting de Gijón": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "UD Almería": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "UD Las Palmas": "stayed in Segunda from 2025/26 (OpenFootballBase club_season 2025/26 and 2026/27)",
+  "Girona FC": "relegated from LaLiga 2025/26 (LANOVA RFEF-ranked table, lanova/cases/data/official-outcomes.json)",
+  "RCD Mallorca": "relegated from LaLiga 2025/26 (LANOVA RFEF-ranked table, lanova/cases/data/official-outcomes.json)",
+  "Real Oviedo": "relegated from LaLiga 2025/26 (LANOVA RFEF-ranked table, lanova/cases/data/official-outcomes.json)",
+  "CD Tenerife": "promoted from Primera Federación, 1 May 2026 (search-indexed reports of the 2025–26 Primera Federación / 2026–27 Segunda División pages)",
+  "CD Eldense": "promoted from Primera Federación, 16 May 2026 (same sources)",
+  "CE Sabadell FC": "promoted via the Primera Federación play-off final v Zamora (same sources)",
+  "RC Celta Fortuna": "promoted via the play-off final v SD Ponferradina, 20 June 2026 (RFEF news \"Histórico ascenso del RC Celta Fortuna\", rfef.es/es/noticias/historico-ascenso-del-rc-celta-fortuna)"
+ },
+ "sources": [
+  "https://rfef.es/es/noticias/historico-ascenso-del-rc-celta-fortuna",
+  "https://en.wikipedia.org/wiki/Draft:2026%E2%80%9327_Segunda_Divisi%C3%B3n",
+  "https://en.wikipedia.org/wiki/2026_Primera_Federaci%C3%B3n_play-offs"
+ ]
+}

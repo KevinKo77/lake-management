@@ -1,0 +1,28 @@
+{
+ "source": "LANOVA S2: Málaga CF line after matchday 13, verified from dated public match reports (lanova/cases/malaga-winter-2027/case.js SNAPSHOT)",
+ "aggregateAfterMatchday13": {
+  "played": 13,
+  "won": 0,
+  "drawn": 5,
+  "lost": 8,
+  "goalsFor": 9,
+  "goalsAgainst": 24,
+  "points": 5
+ },
+ "matches": {
+  "12:Málaga CF:Racing de Santander": {
+   "score": [
+    1,
+    2
+   ],
+   "dateNote": "LANOVA S2 sources date this match 7 November 2026; the fixture source lists 2026-11-08"
+  },
+  "13:CA Osasuna:Málaga CF": {
+   "score": [
+    1,
+    0
+   ],
+   "dateNote": null
+  }
+ }
+}
