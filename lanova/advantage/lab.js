@@ -204,6 +204,19 @@ export function scenarioText(m, k) {
  */
 export const gainStatus = o => (o.monthlyGain !== null && o.monthlyGain !== undefined ? 'known' : o.gainRange ? 'range' : 'unknown');
 /**
+ * One classification of an option's financial gain, shared by the interface, the Decision Brief and the HTML, JSON and
+ * CSV exports: a known single figure, a documented range (with its source), or truly unknown (not estimable).
+ * `missing` is the wording used in the lists of missing data: nothing for a known gain; for a documented range, the
+ * range itself (only the single figure is unknown); "not estimable" only when there is neither a figure nor a range.
+ */
+export function gainClassification(o) {
+  const status = gainStatus(o);
+  if (status === 'known') return {status, label: 'Known financial gain', perMonth: o.monthlyGain, range: null, basis: null, missing: null};
+  if (status === 'range') return {status, label: 'Documented financial gain range', perMonth: null, range: [o.gainRange.low, o.gainRange.high], basis: o.gainRange.basis ?? null,
+    missing: `financial gain: documented range ${fmt(o.gainRange.low)} to ${fmt(o.gainRange.high)} per month (source: ${o.gainRange.basis}); single figure not known`};
+  return {status, label: 'Financial gain not estimable', perMonth: null, range: null, basis: null, missing: 'financial gain (not estimable)'};
+}
+/**
  * Finance decisions for one option (prepared model). The gain used is the known figure; for a documented range, its low
  * end ('low', the prudent view) or its high end ('high'); an unknown gain is left out (prudent: it is never assumed).
  * - signing → a Finance "player" decision (fee capitalised and amortised, wages and employer charges in payroll, signing
@@ -353,7 +366,7 @@ export function evaluate(m0, {weights, stress = null, only = null} = {}) {
     if (o.exclusiveGroup.trim()) warnings.push(`Mutually exclusive group "${o.exclusiveGroup.trim()}": at most one option of the group in a combination.`);
     const missing = [];
     if (o.shortTermScore === null) missing.push('immediate contribution'); if (o.longTermScore === null) missing.push('long-term contribution');
-    if (o.monthlyGain === null) missing.push('financial gain (not estimable)'); if (o.risk === null) missing.push('risk level');
+    const gainMissing = gainClassification(o).missing; if (gainMissing) missing.push(gainMissing); if (o.risk === null) missing.push('risk level');
     return {id: o.id, name: o.name, category: o.category ?? '', input: o, totals: t, cash, delta, deltaHigh, unknownGain, minCashUpper, couldBecomeFeasible, budgetOk, minCashBase: minBase, minCashDownside: minDown,
       minCashUpside: Math.min(...cash.upside), cashImpactLowest: minBase - Math.min(...base.base), closingCashDelta: delta.base[H - 1], feasible: reasons.length === 0, reasons, warnings, missing,
       horizonMonths: o.startMonth + o.effectMonths, contribution: contribution(m, o, t), risk: o.risk, confidence: o.confidence ?? null, decisions: optionDecisions(m, o).length};
@@ -578,7 +591,7 @@ export function brief(m0, r, {sensitivity = null, origin = null} = {}) {
     baseline: {lowestCash: round2(r.baseMinCash), lowestCashDownside: round2(r.baseMinCashDownside), cashAtEnd: round2(r.base.base.at(-1))},
     financialComparison: {status: notice?.incomplete ? 'incomplete' : 'complete', title: notice?.title ?? null, warning: notice?.full ?? null, optionsWithUnknownGain: r.financial.optionsWithUnknownGain, optionsWithGainRange: r.financial.optionsWithGainRange,
       strategiesAffected: notice?.strategies ?? [], prudentCash: PRUDENT_CASH},
-    options: r.options.map(o => ({name: o.name, status: o.status, financialStatus: o.totals.financialStatus, immediateCost: o.totals.upfront, runningCostInHorizon: o.totals.runningInHorizon, commitmentsAfterHorizon: o.totals.commitmentsAfterHorizon,
+    options: r.options.map(o => ({name: o.name, status: o.status, financialStatus: o.totals.financialStatus, financialGain: (({missing, ...g}) => g)(gainClassification(o.input)), immediateCost: o.totals.upfront, runningCostInHorizon: o.totals.runningInHorizon, commitmentsAfterHorizon: o.totals.commitmentsAfterHorizon,
       totalCost: o.totals.totalCost, financialGainInHorizon: o.totals.gainInHorizon, netFinancialInHorizon: o.totals.netFinancialInHorizon,
       gainRangePerMonth: o.input.gainRange && gainStatus(o.input) === 'range' ? [o.input.gainRange.low, o.input.gainRange.high] : null, gainRangeBasis: gainStatus(o.input) === 'range' ? o.input.gainRange.basis : null,
       netFinancialRangeInHorizon: o.totals.financialStatus === 'range' ? o.totals.netFinancialRange : null, prudentNetFinancialInHorizon: o.totals.prudentNetInHorizon, lowestCashWithOption: round2(o.minCashBase), lowestCashDownside: round2(o.minCashDownside),
@@ -615,9 +628,9 @@ export function brief(m0, r, {sensitivity = null, origin = null} = {}) {
 }
 export function briefCsv(m, r) {
   const notice = financialNotice(r);
-  const head = ['Option', 'Status', 'Immediate cost', 'Running cost in horizon', 'Commitments after horizon', 'Total cost', 'Financial gain in horizon', 'Net financial in horizon', 'Lowest cash (base, prudent)', 'Lowest cash (downside, prudent)', 'Immediate contribution (estimate)', 'Long-term contribution (estimate)', 'Risk', 'Months to effect', 'Reasons / dominated by', 'Financial status'];
+  const head = ['Option', 'Status', 'Immediate cost', 'Running cost in horizon', 'Commitments after horizon', 'Total cost', 'Financial gain in horizon', 'Net financial in horizon', 'Lowest cash (base, prudent)', 'Lowest cash (downside, prudent)', 'Immediate contribution (estimate)', 'Long-term contribution (estimate)', 'Risk', 'Months to effect', 'Reasons / dominated by', 'Missing data', 'Financial status'];
   const cell = v => (v === null || v === undefined ? '' : typeof v === 'number' ? String(round2(v)) : `"${String(v).replace(/"/g, '""')}"`);
-  const rows = r.options.map(o => [o.name, o.status, o.totals.upfront, o.totals.runningInHorizon, o.totals.commitmentsAfterHorizon, o.totals.totalCost, o.totals.gainInHorizon, o.totals.netFinancialInHorizon, o.minCashBase, o.minCashDownside, o.input.shortTermScore, o.input.longTermScore, o.risk, o.horizonMonths, [...o.reasons, ...o.dominatedBy.map(x => `dominated by ${x}`)].join(' | '),
+  const rows = r.options.map(o => [o.name, o.status, o.totals.upfront, o.totals.runningInHorizon, o.totals.commitmentsAfterHorizon, o.totals.totalCost, o.totals.gainInHorizon, o.totals.netFinancialInHorizon, o.minCashBase, o.minCashDownside, o.input.shortTermScore, o.input.longTermScore, o.risk, o.horizonMonths, [...o.reasons, ...o.dominatedBy.map(x => `dominated by ${x}`)].join(' | '), o.missing.join(' | '),
     o.totals.financialStatus === 'complete' ? 'complete' : o.totals.financialStatus === 'range' ? `documented range: ${netFinancialText(o)}` : 'gain not estimable: excluded from cash (prudent)']);
   const strat = Object.entries(r.strategies).map(([k, s]) => [STRATEGIES[k].label, READINGS[s.status], s.status === 'no-feasible' ? 'none' : s.best.options.join(' + ') || 'Do nothing',
     s.financial.optionsWithUnknownGain.map(x => `${x.name} (${x.role})`).join(' | ')]);
