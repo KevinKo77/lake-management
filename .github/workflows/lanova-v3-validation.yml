@@ -33,6 +33,7 @@ jobs:
           - {id: mobile, name: 'Browser · mobile, touch (iPhone 13)', cmd: 'node tests/mobile-e2e.mjs ci-out/mobile', browser: true}
           - {id: advantage-v1, name: 'Browser · Advantage Lab V1 (desktop + iPhone 13)', cmd: 'node tests/advantage-v1-e2e.mjs ci-out/advantage-v1', browser: true}
           - {id: case-malaga, name: 'Browser · Málaga winter case (desktop + iPhone 13)', cmd: 'node tests/case-malaga-e2e.mjs ci-out/case-malaga', browser: true}
+          - {id: forecast-lab, name: 'Browser · Football Forecast Lab (desktop + iPhone 13)', cmd: 'node tests/forecast-lab-e2e.mjs ci-out/forecast-lab', browser: true}
           - {id: baseline, name: 'Regression · Advantage Lab vs validated V3 (faa7695)', cmd: 'node scripts/compare-advantage-baseline.mjs', browser: false, history: true}
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

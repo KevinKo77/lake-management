@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Football Forecast Lab — validation · LANOVA Winter Transfer Intelligence</title>
+<meta name="description" content="How LANOVA's football forecasting engine is tested: walk-forward back-testing on twelve LaLiga seasons, Brier score, log loss, calibration, and a live historical replay. No current-season probability is published before independent validation.">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://lake-intelligence-production.up.railway.app; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="theme-color" content="#f3f4ef">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230c1a2a'/%3E%3Crect x='10' y='15' width='4' height='10' rx='1' fill='%2352d3a4'/%3E%3Crect x='18' y='9' width='4' height='16' rx='1' fill='%2352d3a4'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;650;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../assets/v3.css?v=20261123-v4">
+<link rel="stylesheet" href="../malaga-winter-2027/case.css">
+<link rel="stylesheet" href="lab.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../../index.html" aria-label="LANOVA Sports home"><span class="brand-mark" aria-hidden="true"></span>LANOVA <small>SPORTS</small></a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav class="nav" id="nav" aria-label="Main"><a href="../../../platform.html">Platform</a><a href="../../advantage/">Advantage Lab</a><a href="../../../financial-intelligence.html">Financial Intelligence</a><a href="../../../how-it-works.html">How It Works</a><a href="../../../pricing.html">Pricing</a><a class="nav-cta" href="../../../demo.html">Request a Demo</a><a class="nav-login" data-app-path="/login" href="../../../login.html">Login</a></nav>
+  </div>
+</header>
+<main id="main">
+<section class="page-hero case-hero">
+  <div class="wrap">
+    <p class="eyebrow">Winter Transfer Intelligence · forecasting engine · prototype</p>
+    <h1>Football Forecast Lab<br><em>How the forecasts are tested before anyone relies on them</em></h1>
+    <p class="lead">A forecast is only worth showing if it has been tested on matches it had not seen. This page reports how LANOVA's engine performs on twelve past LaLiga seasons, replayed one matchday at a time, and lets you re-run any past season yourself.</p>
+    <p class="independence">Status: the engine passes its pre-registered internal criteria. <b>No probability for the current season is published</b> until an independent review has validated the method and the current-season data are complete. LANOVA is independent of LaLiga and of every club named here.</p>
+    <div class="legend-kinds"><span class="kind obs">Observed</span> historical results <span class="kind est">Model estimate</span> out-of-sample forecasts</div>
+  </div>
+</section>
+<div class="wrap case" id="lab"><noscript><p class="notice">This page is interactive and needs JavaScript.</p></noscript><p class="muted">Loading the validation report and the dataset…</p></div>
+<section class="cta-band case-cta" id="contact">
+  <div class="wrap">
+    <div><p class="eyebrow">From the engine to your decision</p><h2>See it applied to a real January decision.</h2><p>The Málaga CF case study compares an attacking and a defensive reinforcement, with their costs, on the same data.</p></div>
+    <div class="btn-row"><a class="btn btn-primary" href="../malaga-winter-2027/">Open the Málaga CF case study</a><a class="btn btn-ghost" href="../../../platform.html" data-cta="software">Explore LANOVA Sports Software</a>
+      <a class="btn btn-ghost" data-cta="review" href="mailto:kevin@lake-am.com?subject=LANOVA%20%E2%80%94%20Winter%20Transfer%20Strategy%20Review&amp;body=Hello%2C%0A%0AI%20would%20like%20to%20discuss%20a%20Winter%20Transfer%20Strategy%20Review.%0A%0AClub%20or%20organisation%3A%0AMy%20role%3A%0ACompetition%3A%0AThe%20decision%20we%20face%20this%20window%3A%0A%0AThank%20you%2C%0A">Request a Winter Transfer Strategy Review</a></div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="legal-line"><span>© 2026 Lake Management · Mijas Costa, Málaga, Spain</span><span>Decision-support analysis. Not betting, financial, investment or sporting advice. Data: openfootball/espana (CC0 1.0).</span></div>
+  </div>
+</footer>
+<script src="../../../assets/site.js?v=20261115-private-login-990"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
