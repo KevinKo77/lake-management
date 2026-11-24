@@ -5,11 +5,12 @@
  */
 import {SNAPSHOT, KINDS, TEAM, context, compare, breakEven, explain, historyBand, affordability, emptyFinance, HYPOTHETICAL, FIN_FIELDS, COST_FIELDS, report, reportHtml} from './case.js';
 import {fmt} from '../../advantage/lab.js';
+import {ROLES, LIMITS, LEVELS, emptyProfile, ILLUSTRATION, profileImpact, compareProfiles, checkProfile} from './player.js';
 
 const root = document.getElementById('case');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const r1 = v => (Math.round(v * 10) / 10).toFixed(1), sign = v => `${v >= 0 ? '+' : '−'}${r1(Math.abs(v))}`;
-const S = {ctx: null, h: null, f: emptyFinance(), timer: 0};
+const S = {ctx: null, h: null, f: emptyFinance(), p: [emptyProfile(), emptyProfile()], timer: 0};
 const kind = k => `<span class="kind ${k}">${esc({obs: 'Observed', est: 'Model estimate', hyp: 'Your hypothesis'}[k])}</span>`;
 const dateLabel = d => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'});
 const PRESETS = [['equal', 'Same size: +20% scored / −20% conceded', {attackPct: 20, defencePct: 20}], ['striker', 'Strong attacking signing: +40% / −10%', {attackPct: 40, defencePct: 10}], ['rebuild', 'Defensive rebuild: +10% / −40%', {attackPct: 10, defencePct: 40}]];
@@ -50,7 +51,13 @@ function page() {
 
   <section class="case-section" aria-labelledby="h-why"><header class="sec-head"><div>${kind('est')}<h2 id="h-why">3 · Why — and what would change the answer</h2></div></header><div id="explain" aria-live="polite"></div></section>
 
-  <section class="case-section" aria-labelledby="h-fin"><header class="sec-head"><div>${kind('hyp')} ${kind('est')}<h2 id="h-fin">4 · What it would cost — and can it be afforded?</h2><p class="muted">Málaga CF's finances and the price of real candidates are not public in verified form, so nothing is pre-filled. Enter your own figures, or load a clearly labelled hypothetical illustration. The LANOVA Finance engine (through the Advantage Lab) computes the cash month by month in a base case and a downside (relegation) case.</p></div>
+  <section class="case-section" aria-labelledby="h-prof"><header class="sec-head"><div>${kind('hyp')} ${kind('est')}<h2 id="h-prof">4 · From a role to a hypothesis: player profiles</h2><p class="muted">Describe up to two candidate profiles by role, not by name. For each, enter how Málaga's goals would change <b>while he is on the pitch, compared with the player he would replace</b> (a low, a central and a high value), his share of minutes, his availability and how many matches he needs to reach his full effect. Nothing is pre-filled: LANOVA holds no verified player data.</p></div>
+      <div class="btn-row"><button type="button" class="btn small" data-prof="illustration">Load two illustrative profiles</button><button type="button" class="btn btn-ghost small" data-prof="clear">Clear the profiles</button></div></header>
+    <div class="prof-grid">${[0, 1].map(i => profileForm(i, opts)).join('')}</div>
+    <div id="profiles" aria-live="polite"></div>
+  </section>
+
+  <section class="case-section" aria-labelledby="h-fin"><header class="sec-head"><div>${kind('hyp')} ${kind('est')}<h2 id="h-fin">5 · What it would cost — and can it be afforded?</h2><p class="muted">Málaga CF's finances and the price of real candidates are not public in verified form, so nothing is pre-filled. Enter your own figures, or load a clearly labelled hypothetical illustration. The LANOVA Finance engine (through the Advantage Lab) computes the cash month by month in a base case and a downside (relegation) case.</p></div>
       <div class="btn-row"><button type="button" class="btn small" data-fin="hypothetical">Load the hypothetical illustration</button><button type="button" class="btn btn-ghost small" data-fin="clear">Clear all figures</button></div></header>
     <div class="fin-grid"><fieldset><legend>Organisation (hypothesis)</legend>${FIN_FIELDS.map(k => num(`f.${k}`, FIN_LABELS[k])).join('')}
         ${num('f.downsideRevenuePct', 'Downside: revenue change if relegated (%)')}<label>Downside applies from<select data-f="f.downsideFromMonth">${[[5, 'June 2027'], [6, 'July 2027'], [7, 'August 2027']].map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select></label>
@@ -59,7 +66,7 @@ function page() {
     <div id="afford" aria-live="polite"></div>
   </section>
 
-  <section class="case-section" aria-labelledby="h-export"><header class="sec-head"><div><h2 id="h-export">5 · Export the analysis</h2><p class="muted">The report keeps observed facts, model estimates and your hypotheses in separate, labelled parts.</p></div>
+  <section class="case-section" aria-labelledby="h-export"><header class="sec-head"><div><h2 id="h-export">6 · Export the analysis</h2><p class="muted">The report keeps observed facts, model estimates and your hypotheses in separate, labelled parts.</p></div>
     <div class="btn-row"><button type="button" class="btn btn-primary" data-export="html">Download the report (HTML, printable)</button><button type="button" class="btn" data-export="json">JSON</button></div></header></section>
 
   <section class="case-section method" aria-labelledby="h-method"><header class="sec-head"><div><h2 id="h-method">Method, data and limits</h2></div></header>${methodHtml(ctx)}</section>`;
@@ -81,7 +88,31 @@ function methodHtml(ctx) {
     <li>Málaga's line after matchday 13: public match facts from the dated sources above, entered by hand. The open dataset's own Málaga results (${ctx.datasetMalaga.played} matches, ${ctx.datasetMalaga.points} points, ${ctx.datasetMalaga.gf}–${ctx.datasetMalaga.ga}) are consistent with it: ${ctx.consistent ? 'checked' : 'NOT consistent'}.</li>
     <li>Fixture dates after matchday 14 are those in the open dataset; the league may still move them.</li>
     <li>No league table, logo, photograph, player data or media text is reproduced. No website is scraped.</li></ul></div>
-  <div><h3>Not in this release</h3><ul><li><b>No probability</b> of survival or relegation. The forecasting engine (season simulation and back-testing) is reported in the <a href="../forecast-lab/">Football Forecast Lab</a>; it passes its internal criteria but awaits independent validation, and the current-season data stop at matchday 7.</li><li><b>No named player</b> and no player-specific impact. A percentage is a hypothesis about a player or a change of system, not a measured effect.</li><li>Opponent strengths do not yet include matchdays 8–13 (not in the open dataset at its current commit).</li></ul></div></div>`;
+  <div><h3>Not in this release</h3><ul><li><b>No probability</b> of survival or relegation. The forecasting engine (season simulation and back-testing) is reported in the <a href="../forecast-lab/">Football Forecast Lab</a>; it passes its internal criteria but awaits independent validation, and the current-season data stop at matchday 7.</li><li><b>No named player data</b> and no measured player impact. Section 4 translates role-based hypotheses into expected points; a label you type is never looked up or verified. Named-player figures need verified player data and a validated player-impact model, neither available here.</li><li>Opponent strengths do not yet include matchdays 8–13 (not in the open dataset at its current commit).</li></ul></div></div>`;
+}
+function profileForm(i, opts) {
+  const n3 = (k, l, [lo, hi]) => `<div class="lvl"><span>${l}</span>${LEVELS.map(lv => `<label>${lv}<input type="number" step="1" min="${lo}" max="${hi}" inputmode="numeric" data-p="${i}.${k}.${lv}"></label>`).join('')}</div>`;
+  return `<fieldset class="prof" data-profile="${i}"><legend>Profile ${String.fromCharCode(65 + i)}</legend>
+    <label>Label (optional, yours — exploratory, never verified)<input type="text" maxlength="60" data-p="${i}.label" placeholder="e.g. Target ${String.fromCharCode(65 + i)}"></label>
+    <label>Role<select data-p="${i}.role"><option value="">Choose a role</option>${Object.entries(ROLES).map(([k, r]) => `<option value="${k}">${esc(r.label)} — acts mainly on ${r.channel === 'both' ? 'both' : r.channel}</option>`).join('')}</select></label>
+    <label>First match<select data-p="${i}.from"><option value="">Choose</option>${opts}</select></label>
+    <div class="row3"><label>Share of minutes (%)<input type="number" min="0" max="100" step="1" inputmode="numeric" data-p="${i}.minutesPct"></label><label>Availability (%)<input type="number" min="0" max="100" step="1" inputmode="numeric" data-p="${i}.availabilityPct"></label><label>Matches to full effect<input type="number" min="0" max="15" step="1" inputmode="numeric" data-p="${i}.rampMatches"></label></div>
+    ${n3('attack', 'Goals scored, on the pitch: % change', LIMITS.attack)}${n3('defence', 'Goals conceded, on the pitch: % reduction', LIMITS.defence)}</fieldset>`;
+}
+function syncProfiles() {
+  for (const el of root.querySelectorAll('[data-p]')) { const v = el.dataset.p.split('.').reduce((o, k) => o?.[k], S.p); el.value = v ?? ''; }
+}
+const pctEq = (v, sg) => (Math.abs(v) < 0.05 ? '0%' : `${v < 0 ? (sg === '+' ? '−' : '+') : sg}${r1(Math.abs(v))}%`);
+function profilesView() {
+  const box = document.getElementById('profiles'); if (!box) return;
+  const res = S.p.map(p => profileImpact(S.ctx, p)), cmp = compareProfiles(res), name = i => S.p[i].label || `Profile ${String.fromCharCode(65 + i)}`;
+  const row = (r, i) => r.computed
+    ? `<tr data-prof-row="${i}"><td data-l="Profile">${esc(name(i))}${r.label ? '<br><span class="small muted">your label · unverified</span>' : ''}</td><td data-l="Role">${esc(ROLES[r.role].label)}</td><td class="n" data-l="Points gained, low">${sign(r.low.gain)}</td><td class="n" data-l="central"><b>${sign(r.central.gain)}</b></td><td class="n" data-l="high">${sign(r.high.gain)}</td><td class="n" data-l="Final points (central)">${r1(r.central.finalPoints)}</td><td class="n" data-l="Experiment equivalent">${pctEq(r.equivalentAtFullEffect.attackPct, '+')} / ${pctEq(r.equivalentAtFullEffect.defencePct, '−')}</td></tr>`
+    : `<tr data-prof-row="${i}" class="muted"><td>${esc(name(i))}</td><td colspan="6">Not computed. ${r.missing.length ? `Missing: ${esc(r.missing.slice(0, 6).join(', '))}${r.missing.length > 6 ? '…' : ''}.` : ''} ${r.problems.length ? `Invalid: ${esc(r.problems.join('; '))}.` : ''}</td></tr>`;
+  box.innerHTML = `<div class="table-wrap"><table class="profiles"><thead><tr><th>Profile</th><th>Role</th><th class="n">Expected points gained: low</th><th class="n">central</th><th class="n">high</th><th class="n">Expected final points (central)</th><th class="n">Same as the experiment at full effect</th></tr></thead><tbody>${res.map(row).join('')}</tbody></table></div>
+    <p class="prof-verdict" data-separated="${cmp.comparable ? cmp.separated : ''}">${kind('est')} ${cmp.comparable ? `<b>${esc(name(cmp.best))}</b> adds more expected points at the central values (${sign(cmp.margin)}). Ranking ${esc(cmp.verdict)}.` : esc(cmp.reason)}</p>
+    <p class="small muted">Expected points over the remaining matches with the same goal model as the experiment. The on-pitch change is scaled by minutes × availability and builds up linearly over the adaptation matches. This translates your hypotheses; it does not measure or prove a player's effect. A label is never looked up and never changes a figure.</p>`;
+  return res;
 }
 function historyChart(band) {
   const W = 560, H = 170, L = 34, B = 26, T = 10, max = 46, min = 26, x = i => L + i * (W - L - 8) / band.safe.length, y = v => T + (max - v) * (H - T - B) / (max - min), bw = (W - L - 8) / band.safe.length - 6;
@@ -106,6 +137,7 @@ function update() {
   document.getElementById('explain').innerHTML = `<p class="headline">${esc(ex.headline)}</p><div class="explain-grid"><div><h3>What drives the difference</h3><ul>${ex.drivers.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div><div><h3>What would change the recommendation</h3><ul>${ex.change.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
     <div><h3>Uncertainty</h3><ul>${ex.uncertainty.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div><div><h3>Information needed before deciding</h3><ul>${ex.needed.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div></div>`;
   affordView(c);
+  profilesView();
 }
 function outcomeChart(c, band) {
   const W = 720, H = 210, L = 150, R = 20, rows = [['baseline', 'Baseline'], ['attack', 'Attack'], ['defence', 'Defence'], ['both', 'Both']], max = Math.max(50, Math.ceil(Math.max(...rows.map(([k]) => c[k].finalPoints)) / 5) * 5 + 5);
@@ -141,6 +173,19 @@ function setF(path, raw, el) {
   if (target[key] !== null && typeof target[key] === 'number' && !Number.isFinite(target[key])) target[key] = null;
   schedule();
 }
+function setP(path, raw, el) {
+  const [i, k, lv] = path.split('.'), p = S.p[Number(i)];
+  if (k === 'role') {
+    // Choosing a role sets the channel it does not mainly act on to an explicit, visible 0 — only where still empty.
+    p.role = raw || null; const e = emptyProfile(p.role);
+    for (const ch of ['attack', 'defence']) if (LEVELS.every(l => p[ch][l] === null)) p[ch] = e[ch];
+    if (!p.from && p.role) p.from = S.h.attackFrom;
+    syncProfiles();
+  } else if (k === 'label') p.label = String(raw).slice(0, 60);
+  else if (k === 'from') p.from = raw || null;
+  else { const v = raw === '' ? null : Number(raw), val = v === null || Number.isFinite(v) ? v : null; if (lv) p[k][lv] = val; else p[k] = val; }
+  void el; schedule();
+}
 const schedule = () => { clearTimeout(S.timer); S.timer = setTimeout(update, 90); };
 root.addEventListener('input', e => {
   const el = e.target;
@@ -149,15 +194,18 @@ root.addEventListener('input', e => {
     if (typeof v === 'number') { const max = k === 'attackPct' ? 300 : 90; if (!Number.isFinite(v) || v < 0) v = 0; if (v > max) v = max; }
     S.h[k] = v; syncControls(); schedule();
   } else if (el.dataset.f && el.type !== 'checkbox' && el.tagName !== 'SELECT') setF(el.dataset.f, el.value, el);
+  else if (el.dataset.p && el.tagName !== 'SELECT') setP(el.dataset.p, el.value, el);
 });
-root.addEventListener('change', e => { const el = e.target; if (el.dataset.f && (el.type === 'checkbox' || el.tagName === 'SELECT')) setF(el.dataset.f, el.value, el); else if (el.dataset.h && el.tagName === 'SELECT') { S.h[el.dataset.h] = el.value; schedule(); } });
+root.addEventListener('change', e => { const el = e.target; if (el.dataset.p && el.tagName === 'SELECT') { setP(el.dataset.p, el.value, el); return; } if (el.dataset.f && (el.type === 'checkbox' || el.tagName === 'SELECT')) setF(el.dataset.f, el.value, el); else if (el.dataset.h && el.tagName === 'SELECT') { S.h[el.dataset.h] = el.value; schedule(); } });
 root.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.preset) { Object.assign(S.h, PRESETS.find(p => p[0] === b.dataset.preset)[2]); syncControls(); update(); }
   if (b.dataset.fin === 'hypothetical') { S.f = structuredClone({...HYPOTHETICAL}); syncFinance(); update(); }
+  if (b.dataset.prof === 'illustration') { S.p = ILLUSTRATION.map(x => ({...structuredClone(x), from: S.h.attackFrom})); syncProfiles(); update(); }
+  if (b.dataset.prof === 'clear') { S.p = [emptyProfile(), emptyProfile()]; syncProfiles(); update(); }
   if (b.dataset.fin === 'clear') { S.f = emptyFinance(); syncFinance(); update(); }
   if (b.dataset.export) {
-    const rep = report(S.ctx, S.h, S.f), name = `lanova-malaga-winter-2027-${b.dataset.export === 'html' ? 'report.html' : 'analysis.json'}`;
+    const rep = report(S.ctx, S.h, S.f, undefined, S.p.map(p => ({input: structuredClone(p), result: profileImpact(S.ctx, p)}))), name = `lanova-malaga-winter-2027-${b.dataset.export === 'html' ? 'report.html' : 'analysis.json'}`;
     const text = b.dataset.export === 'html' ? reportHtml(rep) : JSON.stringify(rep, null, 2), a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([text], {type: b.dataset.export === 'html' ? 'text/html;charset=utf-8' : 'application/json'})); a.download = name; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
   }
@@ -166,5 +214,5 @@ root.addEventListener('click', e => {
 // ------------------------------------------------------------------ start
 document.getElementById('independence').textContent = SNAPSHOT.independence;
 fetch('../data/laliga.json').then(r => { if (!r.ok) throw new Error(`dataset: HTTP ${r.status}`); return r.json(); })
-  .then(d => { S.ctx = context(d); page(); void KINDS; })
+  .then(d => { S.ctx = context(d); page(); void KINDS; void checkProfile; })
   .catch(err => { root.innerHTML = `<div class="notice" role="alert"><b>The verified dataset could not be loaded</b> (${esc(err.message)}). Nothing is calculated without it.</div>`; });

@@ -9,6 +9,7 @@ Static pages under `/lanova/cases/`. They run in the browser: no server, no acco
 | `malaga-winter-2027/` | Release 1 case study: **Málaga CF — Attack or Defence? The January 2027 Survival Decision.** |
 | `forecast.js` | Release 2 forecasting engine: team ratings, match probabilities, seeded season simulation, walk-forward evaluation. |
 | `data/forecast-validation.json` | Release 2 validation report, produced by `scripts/forecast-validation.mjs` (deterministic; reproduced by the tests). |
+| `malaga-winter-2027/player.js` | Release 3 role-based player profiles: hypotheses → per-match factors → expected points (same goal model). |
 | `forecast-lab/` | Release 2 page: **Football Forecast Lab** — the validation report and a live historical replay. No current-season probability. |
 
 ## Source and data-rights register
@@ -160,3 +161,53 @@ All three pass. **Passing them does not authorise publication.** No survival pro
   - the live replay equals Node;
   - links and calls to action work;
   - no page error and no off-site request.
+
+## Release 3 — role-based player profiles (`malaga-winter-2027/player.js`)
+**Purpose.** Turn hypotheses about a signing, described by **role** rather than by name, into expected points with the same goal model as the attack-versus-defence experiment.
+
+**Inputs** (all the user's hypotheses; nothing pre-filled):
+- **Role**, one of 8. It sets the channel the player mainly acts on:
+  - attack: striker, winger, attacking midfielder;
+  - defence: goalkeeper, centre-back, defensive midfielder;
+  - both: full-back, central midfielder.
+  - Choosing a role sets the *other* channel to an explicit, editable 0.
+- **On-pitch change** in Málaga's goals scored (−50 to +300%) and conceded (−50 to 90% reduction), **relative to the player he would replace**, as low, central and high values. A negative value means worse than the current option.
+- Share of minutes; availability; first match; matches needed to reach full effect (0–15).
+
+**Model.** At the k-th match from the first one:
+- factor = 1 ± effect × minutes × availability × ramp(k);
+- ramp(k) = min(1, (k + 1)/(R + 1)).
+
+This linear expected-value approximation does not simulate line-ups. With 100% minutes, 100% availability and no ramp, a profile equals the experiment exactly (tested).
+
+**Comparison.**
+- Profiles are ranked by central expected points.
+- The ranking is called **separated** only if the best profile's *low* value beats the next profile's *high* value. Otherwise the page says the ranges overlap.
+
+**Names: blocked.**
+- No verified player data is available at €0, so no player is named, looked up or scored.
+- A user may type a label (for example a name) for their own use. It is marked "your label · unverified", never fetched and never changes a number (tested).
+- Publishing a named player's survival-probability uplift would need both:
+  - verified player data under a licence that permits the use;
+  - a validated player-impact model and a validated season model.
+  Neither exists here.
+- No causal claim: the figures translate hypotheses, they do not measure a player.
+
+**Tests.**
+- `tests/player-impact.test.mjs` (9 tests):
+  - equivalence with the experiment;
+  - scaling by minutes and availability;
+  - ramp;
+  - ranges, including negative lows;
+  - label invariance and no lookup;
+  - role defaults;
+  - missing and invalid inputs;
+  - ranking reversal and overlap;
+  - exports with escaping.
+- `tests/case-malaga-e2e.mjs`, check 9a:
+  - nothing pre-filled;
+  - illustration figures equal Node;
+  - a label changes no figure;
+  - an invalid range is refused;
+  - JSON export;
+  - phone layout.

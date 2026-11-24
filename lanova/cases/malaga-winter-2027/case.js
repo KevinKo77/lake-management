@@ -71,9 +71,16 @@ export function context(dataset, {k = 5} = {}) {
 export function scenario(ctx, {attackPct = 0, attackFrom = null, defencePct = 0, defenceFrom = null} = {}) {
   if (!(attackPct >= 0 && attackPct <= 300)) throw new RangeError('Attack improvement: 0 to 300%');
   if (!(defencePct >= 0 && defencePct <= 90)) throw new RangeError('Defence improvement: 0 to 90%');
-  const per = ctx.remaining.map(m => {
-    const home = m.home === TEAM, opp = home ? m.away : m.home;
-    const a = attackPct && (!attackFrom || m.date >= attackFrom) ? 1 + attackPct / 100 : 1, d = defencePct && (!defenceFrom || m.date >= defenceFrom) ? 1 - defencePct / 100 : 1;
+  return scenarioBy(ctx, m => ({attack: attackPct && (!attackFrom || m.date >= attackFrom) ? 1 + attackPct / 100 : 1, defence: defencePct && (!defenceFrom || m.date >= defenceFrom) ? 1 - defencePct / 100 : 1}));
+}
+/**
+ * Same calculation with a multiplier per remaining match: `fn(match, index)` returns {attack, defence}, the factors on
+ * Málaga's scoring rate and conceding rate for that match (used by the role-based player profiles).
+ */
+export function scenarioBy(ctx, fn) {
+  const per = ctx.remaining.map((m, i) => {
+    const home = m.home === TEAM, opp = home ? m.away : m.home, {attack: a = 1, defence: d = 1} = fn(m, i);
+    if (!(a > 0 && d > 0 && Number.isFinite(a) && Number.isFinite(d))) throw new RangeError(`Invalid multipliers for ${m.date}`);
     const mm = matchMeans(m.home, m.away, ctx.strengths, ctx.rates, {[TEAM]: {attack: a, defence: d}});
     const o = outcome(mm.home, mm.away), mine = home ? o : {win: o.loss, draw: o.draw, loss: o.win};
     return {date: m.date, matchday: m.matchday, opponent: opp, venue: home ? 'home' : 'away', goalsFor: home ? mm.home : mm.away, goalsAgainst: home ? mm.away : mm.home,
@@ -198,19 +205,22 @@ export function affordability(f, sport) {
 }
 
 // ------------------------------------------------------------------ report (JSON and HTML)
-export function report(ctx, h, f, when = new Date().toISOString().slice(0, 10)) {
+export function report(ctx, h, f, when = new Date().toISOString().slice(0, 10), profiles = []) {
   const c = compare(ctx, h), be = breakEven(ctx, h), ex = explain(ctx, h, c, be), af = affordability(f, c), band = historyBand(ctx);
   const sc = x => ({expectedPointsGained: +x.gain.toFixed(3), expectedFinalPoints: +x.finalPoints.toFixed(2), expectedGoalsFor: +x.goalsFor.toFixed(2), expectedGoalsAgainst: +x.goalsAgainst.toFixed(2)});
   return {schema: 'lanova-case-malaga-winter-2027-v1', generated: when, title: 'Málaga CF — Attack or Defence? The January 2027 Survival Decision', independence: SNAPSHOT.independence,
     observed: {kind: KINDS.observed, snapshot: {asOf: SNAPSHOT.asOf, checkedOn: SNAPSHOT.checkedOn, position: SNAPSHOT.position, played: SNAPSHOT.played, won: SNAPSHOT.won, drawn: SNAPSHOT.drawn, lost: SNAPSHOT.lost,
       goalsFor: SNAPSHOT.goalsFor, goalsAgainst: SNAPSHOT.goalsAgainst, points: SNAPSHOT.points}, derivation: SNAPSHOT.derivation, sources: SNAPSHOT.sources,
       history17th: {seasons: band.seasons, min: band.min, median: band.median, max: band.max, bySeason: band.safe}, dataset: {...ctx.source, files: undefined, matchesUsed: ctx.datasetMatches, through: ctx.datasetThrough}},
-    hypotheses: {kind: KINDS.hypothesis, interventions: h, finance: f},
+    hypotheses: {kind: KINDS.hypothesis, interventions: h, finance: f, profiles: profiles.map(x => x.input)},
     estimates: {kind: KINDS.estimate, model: `Independent Poisson goals; strengths from goals with shrinkage k = ${ctx.k}; league rates home ${ctx.rates.home.toFixed(3)}, away ${ctx.rates.away.toFixed(3)} per match`,
       remainingMatches: ctx.remaining.length, baseline: sc(c.baseline), attack: sc(c.attack), defence: sc(c.defence), both: sc(c.both), best: c.best, breakEven: be,
       affordability: af.computed ? Object.fromEntries(Object.entries(af.items).map(([k, v]) => [k, v.known ? {immediateCost: v.upfront, costIn2027: v.costInYear, totalCommitted: v.totalCost, withinBudget: v.withinBudget,
         lowestCashBase: Math.round(v.base.lowest), lowestCashDownside: Math.round(v.downside.lowest), reserveMetBase: v.base.meetsReserve, reserveMetDownside: v.downside.meetsReserve, costPerExpectedPoint: v.costPerExpectedPoint && Math.round(v.costPerExpectedPoint)} : {costs: 'unknown'}])) : {notComputed: af.reason, missing: af.missing}},
-    explanation: ex, notShown: ['No probability of survival or relegation: the forecasting engine is not yet validated.', 'No named player and no player-specific impact: no verified player data is used in this release.']};
+    profiles: {kind: KINDS.estimate, note: 'Role-based profiles: expected points from your hypotheses with the same goal model; not a measured or causal player effect.',
+      items: profiles.map(x => (x.result.computed ? {label: x.result.label, labelNote: x.result.labelNote, role: x.result.role, ...Object.fromEntries(['low', 'central', 'high'].map(l => [l, {expectedPointsGained: +x.result[l].gain.toFixed(3), expectedFinalPoints: +x.result[l].finalPoints.toFixed(2)}])),
+        equivalentAtFullEffect: {attackPct: +x.result.equivalentAtFullEffect.attackPct.toFixed(2), defencePct: +x.result.equivalentAtFullEffect.defencePct.toFixed(2)}} : {label: x.input.label || null, notComputed: true, missing: x.result.missing, problems: x.result.problems}))},
+    explanation: ex, notShown: ['No probability of survival or relegation: the forecasting engine is not yet independently validated (see the Football Forecast Lab).', 'No named player data and no measured player impact: no verified player data is used; profiles are role-based hypotheses and any name is your own unverified label.']};
 }
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 export function reportHtml(rep) {
@@ -227,6 +237,7 @@ export function reportHtml(rep) {
 <p>17th place (last safe place) in ${rep.observed.history17th.seasons} complete seasons: ${rep.observed.history17th.min}–${rep.observed.history17th.max} points (median ${rep.observed.history17th.median}). Open dataset: ${esc(rep.observed.dataset.name)} @ ${esc(String(rep.observed.dataset.commit).slice(0, 10))}, ${esc(rep.observed.dataset.licence)}.</p></div>
 <h2><span class="k hyp">Your hypothesis</span>Interventions</h2><div class="box hyp"><p>Attack: +${rep.hypotheses.interventions.attackPct}% goals scored from ${esc(rep.hypotheses.interventions.attackFrom ?? 'the next match')}. Defence: −${rep.hypotheses.interventions.defencePct}% goals conceded from ${esc(rep.hypotheses.interventions.defenceFrom ?? 'the next match')}.</p></div>
 <h2><span class="k est">Model estimate</span>Expected outcomes over ${e.remainingMatches} remaining matches</h2><div class="box est"><table><tr><th>Scenario</th><th>Expected points gained vs baseline</th><th>Expected final points</th><th>Expected goals scored</th><th>Expected goals conceded</th></tr>${rowsHtml}</table><p><small>${esc(e.model)}</small></p></div>
+${rep.profiles.items.length ? `<h2><span class="k hyp">Your hypothesis</span><span class="k est">Model estimate</span>Role-based player profiles</h2><div class="box hyp"><table><tr><th>Profile</th><th>Role</th><th>Expected points gained: low</th><th>central</th><th>high</th><th>Expected final points (central)</th></tr>${rep.profiles.items.map((x, i) => x.notComputed ? `<tr><td>${esc(x.label ?? `Profile ${i + 1}`)}</td><td colspan="5">Not computed — missing: ${esc(x.missing.join(', '))}${x.problems.length ? `; invalid: ${esc(x.problems.join(', '))}` : ''}</td></tr>` : `<tr><td>${esc(x.label ?? `Profile ${i + 1}`)}</td><td>${esc(x.role)}</td><td>${n(x.low.expectedPointsGained)}</td><td>${n(x.central.expectedPointsGained)}</td><td>${n(x.high.expectedPointsGained)}</td><td>${n(x.central.expectedFinalPoints)}</td></tr>`).join('')}</table><p><small>${esc(rep.profiles.note)} Labels are yours, exploratory and unverified.</small></p></div>` : ''}
 <h2>Decision explanation</h2><p><b>${esc(rep.explanation.headline)}</b></p><h3>What drives the difference</h3>${li(rep.explanation.drivers)}<h3>What would change the recommendation</h3>${li(rep.explanation.change)}
 <h2><span class="k est">Finance engine</span><span class="k hyp">on your hypotheses</span>Financial impact</h2><div class="box hyp">${aff}<p><small>Computed by the LANOVA Advantage Lab V1 and the LANOVA Finance engine on hypothetical figures; not Málaga CF data, not market prices.</small></p></div>
 <h2>Uncertainties</h2>${li(rep.explanation.uncertainty)}<h2>Information needed for a decision</h2>${li(rep.explanation.needed)}<h2>Not shown in this release</h2>${li(rep.notShown)}

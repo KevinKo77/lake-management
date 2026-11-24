@@ -72,3 +72,18 @@
   .tiles b { font-size: 24px; } .out b { font-size: 24px; } .outchart text { font-size: 16px; } .outchart .vl { font-size: 16px; } .outchart .bandl { font-size: 13px; } .hist text { font-size: 14px; }
 }
 @media print { .site-header, .presets, .controls, .case-cta, .site-footer, .btn-row { display: none !important; } .case-section { break-inside: avoid; } }
+
+/* Release 3 — role-based player profiles */
+.prof-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.prof { border: 1px solid var(--line); border-radius: var(--r-sm); padding: 12px 14px; display: grid; gap: 10px; min-width: 0; }
+.prof legend { font-family: var(--display); font-weight: 700; padding: 0 6px; }
+.prof label { display: grid; gap: 4px; font-size: 13px; }
+.prof input, .prof select { font: inherit; padding: 7px 9px; border: 1px solid var(--line-2); border-radius: 8px; background: #fff; min-width: 0; width: 100%; box-sizing: border-box; }
+.prof .row3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.prof .lvl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.prof .lvl > span { grid-column: 1 / -1; font-size: 13px; font-weight: 600; }
+.prof-verdict { margin: 10px 0 4px; }
+@media (max-width: 720px) {
+  table.profiles thead { display: none; } table.profiles, table.profiles tbody { display: block; } table.profiles tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  table.profiles td, table.profiles td.n { border: 0; padding: 0; text-align: left; } table.profiles td[data-l]::before { content: attr(data-l); display: block; font-size: 11px; color: var(--muted); } table.profiles td:first-child, table.profiles td:nth-child(2), table.profiles td[colspan] { grid-column: span 3; } table.profiles td:nth-child(6), table.profiles td:nth-child(7) { grid-column: span 3; }
+  .prof-grid { grid-template-columns: minmax(0, 1fr); } .prof .row3 { grid-template-columns: minmax(0, 1fr); } }

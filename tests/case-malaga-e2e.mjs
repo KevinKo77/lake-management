@@ -10,6 +10,7 @@ import {join, resolve, extname, normalize} from 'node:path';
 import assert from 'node:assert/strict';
 import {context, compare, affordability, HYPOTHETICAL, report, SNAPSHOT} from '../lanova/cases/malaga-winter-2027/case.js';
 import {fmt} from '../lanova/advantage/lab.js';
+import {ILLUSTRATION, profileImpact, compareProfiles} from '../lanova/cases/malaga-winter-2027/player.js';
 
 const {chromium, devices} = createRequire(import.meta.url)('playwright');
 const out = resolve(process.argv[2] ?? 'outputs/case-malaga'); mkdirSync(out, {recursive: true});
@@ -110,6 +111,26 @@ await t('8 · calls to action: software page opens; the review request is a work
   for (const u of [...new Set(internal.map(h => h.split('#')[0]))]) assert.equal((await page.request.get(u)).status(), 200, u);
 });
 
+await t('9a · player profiles: nothing pre-filled; the illustration figures equal Node; a label never changes a figure; overlap reported', async () => {
+  assert.match(await page.innerText('#profiles'), /Not computed[\s\S]*Not computed/);
+  assert.equal(await page.inputValue('[data-p="0.minutesPct"]'), '');
+  await page.click('[data-prof="illustration"]'); await page.waitForTimeout(200);
+  const want = ILLUSTRATION.map(x => profileImpact(ctx, {...x, from: JAN}));
+  const cells = async () => page.locator('#profiles tbody tr').evaluateAll(trs => trs.map(tr => [...tr.cells].map(td => td.textContent.trim())));
+  const sg = v => `${v >= 0 ? '+' : '−'}${r1(Math.abs(v))}`, rows = await cells();
+  want.forEach((w, i) => { assert.equal(rows[i][2], sg(w.low.gain)); assert.equal(rows[i][3], sg(w.central.gain)); assert.equal(rows[i][4], sg(w.high.gain)); assert.equal(rows[i][5], r1(w.central.finalPoints)); });
+  assert.equal(await page.getAttribute('.prof-verdict', 'data-separated'), String(compareProfiles(want).separated));
+  const lab = page.locator('[data-p="0.label"]'); await lab.fill('Any Name'); await page.waitForTimeout(200);
+  const after = await cells(); assert.deepEqual(after.map(r => r.slice(2)), rows.map(r => r.slice(2))); assert.match(after[0][0], /your label · unverified/);
+  // A range in the wrong order is refused, not computed.
+  const hi = page.locator('[data-p="0.attack.high"]'); await hi.fill('5'); await page.waitForTimeout(200); assert.match(await page.innerText('[data-prof-row="0"]'), /low ≤ central ≤ high/);
+  await hi.fill('40'); await page.waitForTimeout(200);
+  const [d] = await Promise.all([page.waitForEvent('download'), page.click('[data-export="json"]')]); const f = join(out, 'profiles.json'); await d.saveAs(f);
+  const j = JSON.parse(readFileSync(f, 'utf8')); assert.equal(j.profiles.items.length, 2); assert.equal(j.profiles.items[0].label, 'Any Name'); assert.equal(j.profiles.items[1].central.expectedPointsGained, +want[1].central.gain.toFixed(3));
+  await page.locator('#h-prof').evaluate(e => e.closest('section').scrollIntoView()); await page.screenshot({path: join(out, 'case_profiles_desktop.png')});
+  await page.click('[data-prof="clear"]'); await page.waitForTimeout(150);
+});
+
 await t('9 · phone (iPhone 13, touch): readable, no horizontal overflow, presets and finance usable by tap', async () => {
   const {page: ph, c} = await open({...devices['iPhone 13']});
   const over = () => ph.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -118,6 +139,8 @@ await t('9 · phone (iPhone 13, touch): readable, no horizontal overflow, preset
   await ph.locator('#verdict').scrollIntoViewIfNeeded(); await ph.screenshot({path: join(out, 'case_experiment_phone.png')});
   await ph.locator('[data-fin="hypothetical"]').tap(); await ph.waitForTimeout(250); assert.match(await ph.innerText('#afford'), /Attack/);
   assert.ok(await over() <= 1); await ph.locator('#afford').scrollIntoViewIfNeeded(); await ph.screenshot({path: join(out, 'case_finance_phone.png')});
+  await ph.locator('[data-prof="illustration"]').tap(); await ph.waitForTimeout(250); assert.ok(await over() <= 1, 'profiles fit');
+  assert.match(await ph.innerText('#profiles'), /Profile B \(illustration\)/); await ph.locator('#profiles').scrollIntoViewIfNeeded(); await ph.screenshot({path: join(out, 'case_profiles_phone.png')});
   await ph.locator('.menu-btn').tap(); assert.equal(await ph.getAttribute('.menu-btn', 'aria-expanded'), 'true');
   await c.close();
 });
