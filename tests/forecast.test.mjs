@@ -187,7 +187,7 @@ test('Forecast Lab page: no current-season probability, links and CTAs, status s
   assert.match(html, /No probability for the current season is published/);
   assert.match(app, /Independent validation: pending/); assert.match(app, /Current season: blocked/);
   // The current season is read only to list its missing results; the replay offers the validated seasons only.
-  assert.equal((app.match(/2026-27/g) ?? []).length, 1); assert.match(app, /function missingCurrent\(\) \{\n  const s = D\.seasons\['2026-27'\]/);
+  assert.equal((app.match(/2026-27/g) ?? []).length, 0, 'the page never names the current season in code'); assert.match(app, /function missingCurrent\(\) \{ return RD\.missing/);
   assert.match(app, /seasons\.slice\(\)\.reverse\(\)/); assert.match(app, /seasons = r\.seasons/);
   assert.match(app, /forecast-validation-v2\.json/);
   assert.match(html, /data-cta="software"[^>]*>Explore LANOVA Sports Software|href="..\/..\/..\/platform.html" data-cta="software">Explore LANOVA Sports Software/);

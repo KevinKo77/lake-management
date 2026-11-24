@@ -60,7 +60,9 @@ test('financial assumptions: exported unchanged; every financial figure equals t
   assert.deepEqual(rep.hypotheses.finance, f);
   for (const k of ['attack', 'defence', 'both']) {
     const x = rep.estimates.affordability[k], v = a.items[k];
-    assert.deepEqual([x.immediateCost, x.costIn2027, x.totalCommitted, x.withinBudget, x.lowestCashBase, x.lowestCashDownside], [v.upfront, v.costInYear, v.totalCost, v.withinBudget, Math.round(v.base.lowest), Math.round(v.downside.lowest)], k);
+    assert.deepEqual([x.budgetCommitment, x.cashAtSigning, x.cashPaid2027, x.futurePayments, x.totalContractualCommitment, x.withinBudget, x.lowestCashBase, x.lowestCashDownside],
+      [v.budgetCommitment, v.payments.cashAtSigning, v.payments.cashPaid2027, v.payments.futurePayments, v.payments.totalCommitment, v.withinBudget, Math.round(v.base.lowest), Math.round(v.downside.lowest)], k);
+    assert.equal(x.costIn2027, undefined, 'the mixed "cost in 2027" measure is gone');
     assert.ok(v.reconciled < 1e-6, `${k}: reconciled with a direct engine run (${v.reconciled})`);
   }
   assert.deepEqual(rep.estimates.affordability.missingFinancialInputs, []);

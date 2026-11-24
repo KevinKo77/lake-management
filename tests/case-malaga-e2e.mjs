@@ -87,7 +87,16 @@ await t('6 · finance: nothing computed until figures exist; the hypothetical il
   assert.match(await page.innerText('#afford'), /Not computed\. Enter the organisation figures/);
   await page.click('[data-fin="hypothetical"]'); await page.waitForTimeout(250);
   const want = affordability(structuredClone(HYPOTHETICAL), compare(ctx, {attackPct: 20, attackFrom: JAN, defencePct: 20, defenceFrom: JAN})), text = await page.innerText('#afford');
-  for (const k of ['attack', 'defence', 'both']) for (const v of [want.items[k].upfront, want.items[k].base.lowest, want.items[k].downside.lowest, want.items[k].costPerExpectedPoint]) assert.ok(text.includes(fmt(v)), `${k} ${fmt(v)}`);
+  for (const k of ['attack', 'defence', 'both']) for (const v of [want.items[k].budgetCommitment, want.items[k].base.lowest, want.items[k].downside.lowest, want.items[k].costPerExpectedPoint]) assert.ok(text.includes(fmt(v)), `${k} ${fmt(v)}`);
+  // Independent review fixture, read from the cells of the dashboard (hand-computed values, not the code under test).
+  const cellOf = async (measure, item) => (await page.locator(`#afford tr[data-measure="${measure}"] td[data-item="${item}"]`).innerText()).split('\n')[0].trim();
+  const fixture = {cashAtSigning: {attack: '880,000', defence: '1,170,000', both: '2,050,000'}, cashPaid2027: {attack: '1,738,000', defence: '2,340,000', both: '4,078,000'},
+    futurePayments: {attack: '0', defence: '1,485,000', both: '1,485,000'}, totalCommitment: {attack: '1,738,000', defence: '3,825,000', both: '5,563,000'}, budgetCommitment: {attack: '880,000', defence: '2,070,000', both: '2,950,000'}};
+  for (const [m, byItem] of Object.entries(fixture)) for (const [k, v] of Object.entries(byItem)) assert.equal(await cellOf(m, k), v, `${m} ${k}`);
+  assert.match(await page.locator('#afford tr[data-measure="futurePayments"] td[data-item="defence"]').innerText(), /fee instalment 900,000 due 2028-01/);
+  assert.doesNotMatch(text, /3,240,000|Cost in 2027|Immediate cost/);
+  await page.click('.schedule summary'); const sched = await page.locator('.schedule tbody tr').allInnerTexts();
+  assert.match(sched[0], /2027-01\s+1,023,000\s+1,267,500\s+2,290,500/); assert.match(sched.at(-1), /After 2027 \(not yet paid\)\s+0\s+1,485,000\s+1,485,000/);
   assert.match(text, /Hypothetical financial assumptions — not Málaga CF data/);
   // A missing cost stays missing: clearing one wage makes that intervention "costs unknown".
   const wage = page.locator('[data-f="defence.monthlyWage"]'); await wage.fill(''); await wage.dispatchEvent('input'); await page.waitForTimeout(200);
@@ -118,7 +127,8 @@ await t('7b · report integrity from the interface: changed magnitudes and dates
   assert.equal(e.defence.matchesAffected.defence, d.length - 3); assert.ok(html.includes(`goals scored +37% from ${d[10]} (${d.length - 10} matches)`));
   assert.equal(json.hypotheses.finance.defence.monthlyWage, null); assert.deepEqual(e.affordability.missingFinancialInputs, ['defence intervention: monthlyWage']);
   assert.equal(e.affordability.defence.costs, 'unknown'); assert.match(html, /Costs unknown — not computed\. Costs unknown for defence/);
-  assert.equal(e.affordability.attack.immediateCost, report(ctx, json.hypotheses.interventions, json.hypotheses.finance).estimates.affordability.attack.immediateCost);
+  const re = report(ctx, json.hypotheses.interventions, json.hypotheses.finance).estimates.affordability;
+  assert.equal(e.affordability.attack.cashPaid2027, 1_738_000); assert.equal(e.affordability.attack.cashPaid2027, re.attack.cashPaid2027); assert.equal(e.affordability.attack.budgetCommitment, 880_000);
   await wage.fill('75000'); await wage.dispatchEvent('input'); await page.click('[data-preset="equal"]'); await set('#attackFrom', JAN); await set('#defenceFrom', JAN);
 });
 

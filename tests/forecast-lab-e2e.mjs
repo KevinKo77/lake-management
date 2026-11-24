@@ -89,11 +89,16 @@ await t('4 · live replay (2025-26 after matchday 13) equals Node; actual relega
   await page.locator('#h-replay').scrollIntoViewIfNeeded(); await page.screenshot({path: join(out, 'lab_replay_desktop.png')});
 });
 
-await t('4b · the exact missing 2026/27 observations are listed (61, by matchday) with the data-rights requirement', async () => {
+await t('4b · data readiness: BLOCKED DATA from the report; the 61 missing results listed (by matchday); every source examined with licence and verdict', async () => {
+  const R = JSON.parse(readFileSync('lanova/cases/data/current-season-readiness.json', 'utf8'));
   const sec = page.locator('#h-gap').locator('xpath=ancestor::section[1]'); const text = await sec.innerText();
-  assert.match(text, /61 results missing/); assert.match(text, /matchday 8: 10, matchday 9: 10, matchday 10: 10, matchday 11: 10, matchday 12: 10, matchday 13: 10/); assert.match(text, /matchday 6: 1/);
+  assert.equal(await sec.locator('[data-verdict]').getAttribute('data-verdict'), 'BLOCKED DATA'); assert.match(text, /Data readiness: BLOCKED DATA\. 61 of 130 results/);
+  assert.match(text, /matchday 6: 1, matchday 8: 10, matchday 9: 10, matchday 10: 10, matchday 11: 10, matchday 12: 10, matchday 13: 10/);
   await sec.locator('summary').click(); assert.equal(await sec.locator('details tbody tr').count(), 61);
-  assert.match(text, /terms allow this reuse/);
+  assert.deepEqual(await sec.locator('details tbody tr td:last-child').evaluateAll(t => [...new Set(t.map(x => x.textContent))]), ['missing'], 'no result filled in');
+  assert.equal(await sec.locator('table.sources-reg tbody tr').count(), R.sources.length);
+  for (const x of R.sources) assert.ok(text.includes(x.name) && text.includes(x.verdict), x.name);
+  assert.match(text, /partial data are never mixed and no result is filled in/);
 });
 
 await t('5 · calls to action and links: Málaga case, software page and every internal link answer 200; review is a pre-filled e-mail', async () => {

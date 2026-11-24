@@ -369,3 +369,82 @@ Fixtures (`tests/ranking.test.mjs`, 9 tests):
 2. `node scripts/build-football-dataset.mjs espana --check`
 3. `node scripts/forecast-validation-v2.mjs --check` (about 2–3 minutes)
 4. `node --test tests/ranking.test.mjs tests/forecast.test.mjs tests/case-report-integrity.test.mjs`
+
+## Financial integrity correction (Málaga case)
+### The defect
+Found by the independent review, defensive reinforcement fixture. Inputs:
+- transfer fee €1,800,000 in two yearly instalments;
+- agent fee €150,000 and signing bonus €120,000;
+- wages €75,000 a month plus 30% charges, for 18 months.
+
+The former "Cost in 2027" showed **€3,240,000**. That is the committed one-off amounts (fee, agent, bonus) plus 2027 wages. It counted the January 2028 fee instalment as a 2027 cost.
+
+### What the schedules give
+From the LANOVA Finance engine payment schedules, reconciled with its month-end cash to the cent:
+
+| Defence | Hand calculation | Shown |
+|---|---|---|
+| Paid at signing (January 2027) | 900,000 + 150,000 + 120,000 | **1,170,000** |
+| Cash paid in 2027 | 1,170,000 + 12 × 97,500 | **2,340,000** |
+| Future payments (after 2027) | fee instalment **900,000 due 2028-01** + 6 × 97,500 wages | **1,485,000** |
+| Total contractual commitment | 2,340,000 + 1,485,000 | **3,825,000** |
+| Budget commitment (Advantage Lab V1 definition: fee + agent + bonus in full) | 1,800,000 + 150,000 + 120,000 | 2,070,000 |
+| Accounting cost 2027 (engine, not cash) | 1,170,000 + 120,000 × 12/18 + 1,950,000/18 × 11 | 2,441,667 |
+
+**Attack:** 880,000 at signing; 1,738,000 cash in 2027; no future payments; 1,738,000 committed.
+
+**Both:** 2,050,000 at signing; 4,078,000 cash in 2027; 1,485,000 future; 5,563,000 committed.
+
+### How the definitions are applied
+- **One definition per measure.** Each measure has one definition, period and unit (EUR). They are listed in `FIN_DEFINITIONS` and used by the dashboard, the HTML and JSON exports, and the payment schedule.
+- **Engine-derived.** `paymentProfile()` reads the engine's own payment schedules (`decisionComponents`: fee instalments, agent fee, signing bonus, wages and charges) and checks four things:
+  - cash paid equals the engine's change in month-end cash, in the base and downside cases;
+  - the future fee equals the engine's transfer payments after the horizon;
+  - the total equals the Advantage Lab total cost;
+  - every month matches.
+- **No engine change.** The Finance engine and the Advantage Lab are unchanged.
+- **Timing.** Signing and first payments are in January 2027 (winter window). The sporting activation date moves the sporting effect, not the payments.
+
+### Tests
+`tests/case-finance-presentation.test.mjs` (9 tests) checks values computed by hand from the inputs, not by the code under test:
+- the review fixture;
+- attack and combined;
+- engine reconciliation;
+- accounting;
+- reserve in the base and downside cases;
+- one, two or three instalments and a 30-month contract;
+- activation dates;
+- missing costs;
+- exports.
+
+The browser check reads the dashboard cells against the same fixture.
+
+## Current-season data readiness (2026/27) — BLOCKED DATA
+Produced by `scripts/current-season-readiness.mjs` → `data/current-season-readiness.json` (deterministic; `--check`).
+
+**Missing results:**
+- 61 of the 130 results scheduled before 24 November 2026 are missing: matchdays 8–13 (10 each) and one postponed matchday-6 match.
+- Each is listed with its identity (season, matchday, home, away), its scheduled date and the source it requires.
+
+**Sources examined** (`data/current-season-sources.json`):
+- **openfootball/espana and football.json (CC0):** no commit beyond matchday 7.
+- **football-data.co.uk:** licence for commercial reuse not established.
+- **OpenLigaDB (ODbL):** LaLiga coverage not confirmed.
+- **laliga.com:** personal, non-commercial use only. Usable as a verification reference, not as a data source.
+- **Wikipedia (CC BY-SA):**
+  - not authoritative;
+  - not reachable from the build environment;
+  - share-alike would apply to the snapshot.
+  This is a possible path, but it needs a founder decision.
+- **Commercial feeds:** not available at €0.
+
+**Result:** no source is usable today.
+
+**The completeness gate** (`checkSnapshot`) accepts a snapshot only if it has:
+- provider, licence and licence URL, with commercial reuse permitted;
+- retrieval timestamp and SHA-256 checksum;
+- match identities, actual playing dates and scores;
+- per-result verification against the official result;
+- **full** coverage of the missing results.
+
+Partial data are never mixed with the open dataset, and no result is filled in. The current-season probability restriction stays in place.

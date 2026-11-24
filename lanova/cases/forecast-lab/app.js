@@ -6,13 +6,13 @@
  */
 import {replay, allMatches} from '../forecast.js';
 
-const root = document.getElementById('lab'), DATA_AS_OF = '2026-11-24';
+const root = document.getElementById('lab');
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const kind = k => `<span class="kind ${k}">${esc({obs: 'Observed', est: 'Model estimate'}[k])}</span>`;
 const f3 = v => (v === null || v === undefined ? '—' : Number(v).toFixed(3)), f4 = v => (v === null || v === undefined ? '—' : Number(v).toFixed(4)), pc = v => `${Math.round(v * 100)}%`;
 const pc2 = v => `${(v * 100).toFixed(v * 100 < 0.1 ? 3 : 2)}%`, ci = a => `[${f3(a[0])} to ${f3(a[1])}]`, better = (a, b) => ((b - a) / b * 100).toFixed(1), hl = h => (h === 'none' ? 'no decay' : `${h} days`);
 const dateLabel = d => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'});
-let D = null, V = null;
+let D = null, V = null, RD = null;
 
 /** Reliability diagram from calibration bands (circle size = count; vertical bar = Wilson 95% interval). */
 function reliability(bands, title) {
@@ -26,10 +26,8 @@ function reliability(bands, title) {
 const bandTable = bands => `<div class="table-wrap"><table class="bands"><thead><tr><th>Predicted band</th><th class="n">Forecasts</th><th class="n">Events</th><th class="n">Mean predicted</th><th class="n">Observed</th><th class="n">95% interval of observed</th><th>Prediction inside?</th></tr></thead><tbody>
   ${bands.filter(b => b.n).map(b => `<tr><td>${b.lo.toFixed(2)}–${b.hi.toFixed(2)}</td><td class="n">${b.n}</td><td class="n">${b.events}</td><td class="n">${f3(b.predicted)}</td><td class="n">${f3(b.observed)}</td><td class="n">${f3(b.wilson95[0])}–${f3(b.wilson95[1])}</td><td>${b.predictedInsideInterval ? 'yes' : '<b>no</b>'}${b.n < 20 ? ' · few cases' : ''}</td></tr>`).join('')}</tbody></table></div>`;
 
-function missingCurrent() {
-  const s = D.seasons['2026-27']; if (!s) return [];
-  return s.matches.filter(r => r[4] === null && r[0] < DATA_AS_OF).map(([date, matchday, home, away]) => ({date, matchday, home, away}));
-}
+/** Missing current-season results, from the data-readiness report (scripts/current-season-readiness.mjs). */
+function missingCurrent() { return RD.missing.map(m => ({date: m.scheduledDate, matchday: m.matchday, home: m.home, away: m.away, id: m.id})); }
 
 function page() {
   const h = V.holdout, r = V.relegation, c = V.tuning.chosen, b = V.before, rk = V.rankingSummary, seasons = r.seasons, miss = missingCurrent();
@@ -41,7 +39,7 @@ function page() {
       ${Object.values(V.criteria).map(x => `<div class="crit ${x.passed ? 'ok' : 'no'}"><b>${x.passed ? 'Internal criterion passed' : 'Internal criterion not passed'}</b><span>${esc(x.text)}</span></div>`).join('')}
       <div class="crit ${holdSig ? 'ok' : 'no'}" data-holdout-significant="${holdSig}"><b>${holdSig ? 'Relegation advantage confirmed on unseen seasons' : 'Relegation advantage not established on unseen seasons'}</b><span>Brier gain over the position baseline on ${r.holdout.n} unseen team-seasons: ${f3(r.holdout.position.brier - r.holdout.model.brier)}, 95% interval ${ci(holdGain)}${holdSig ? '' : ' — it includes zero'}.</span></div>
       <div class="crit hold"><b>Independent validation: pending</b><span>${esc(V.publication)}</span></div>
-      <div class="crit hold"><b>Current season: blocked</b><span>${miss.length} results of 2026/27 played before ${esc(dateLabel(DATA_AS_OF))} are missing from the open dataset (listed below). No 2026/27 probability is computed.</span></div>
+      <div class="crit hold"><b>Current season: blocked</b><span>${esc(RD.verdict)} — ${miss.length} results of 2026/27 played before ${esc(dateLabel(RD.asOf))} are missing from the open dataset and no permitted source covers them (listed below). No 2026/27 probability is computed.</span></div>
     </div></section>
 
   <section class="case-section" aria-labelledby="h-rules"><header class="sec-head"><div>${kind('obs')}<h2 id="h-rules">Correction: the Spanish league ranking rules</h2><p class="muted">Version 1 ordered clubs level on points by overall goal difference. LaLiga orders them first by their results against each other (RFEF rules). Every table is now ranked that way: the simulated final tables, the historical final tables, the relegation labels used for testing and the table at the forecast date.</p></div></header>
@@ -89,9 +87,11 @@ function page() {
     <div id="replay" aria-live="polite"><p class="muted small">Not run yet.</p></div></section>
 
   <section class="case-section" aria-labelledby="h-gap"><header class="sec-head"><div>${kind('obs')}<h2 id="h-gap">Why there is no 2026/27 probability</h2><p class="muted">Three conditions must all hold: complete current-season data, a validated model, and independent approval. None is met yet.</p></div></header>
-    <p><b>${miss.length} results missing</b> from the open dataset (openfootball, commit <span class="mono">${esc(D.source.commit.slice(0, 10))}</span>) for matches played before ${esc(dateLabel(DATA_AS_OF))}: ${esc(byMd.map(([m, n]) => `matchday ${m}: ${n}`).join(', '))}.</p>
-    <details class="missing"><summary>The ${miss.length} missing matches</summary><div class="table-wrap"><table><thead><tr><th>Date</th><th class="n">Matchday</th><th>Home</th><th>Away</th></tr></thead><tbody>${miss.map(m => `<tr><td>${esc(m.date)}</td><td class="n">${m.matchday}</td><td>${esc(m.home)}</td><td>${esc(m.away)}</td></tr>`).join('')}</tbody></table></div></details>
-    <p><b>Data rights needed:</b> the results must come from a source whose terms allow this reuse — a newer commit of the CC0 openfootball data, or a licensed results feed. Results reported in the press are facts, but copying a league table or a feed from a website against its terms is not allowed. LANOVA does not scrape.</p></section>
+    <p class="verdict-data" data-verdict="${esc(RD.verdict)}"><b>Data readiness: ${esc(RD.verdict)}.</b> ${RD.resultsMissing} of ${RD.resultsDue} results scheduled before ${esc(dateLabel(RD.asOf))} are missing from the open dataset (${esc(RD.dataset.provider)}, commit <span class="mono">${esc(RD.dataset.commit.slice(0, 10))}</span>): ${esc(byMd.map(([m, n]) => `matchday ${m}: ${n}`).join(', '))}. ${esc(RD.gate.rule)}</p>
+    <details class="missing"><summary>The ${miss.length} missing matches</summary><div class="table-wrap"><table><thead><tr><th>Scheduled</th><th class="n">Matchday</th><th>Home</th><th>Away</th><th>Result</th></tr></thead><tbody>${miss.map(m => `<tr><td>${esc(m.date)}</td><td class="n">${m.matchday}</td><td>${esc(m.home)}</td><td>${esc(m.away)}</td><td class="muted">missing</td></tr>`).join('')}</tbody></table></div></details>
+    <h3>Sources examined (${esc(RD.sourcesCheckedOn)})</h3>
+    <div class="table-wrap"><table class="sources-reg"><thead><tr><th>Source</th><th>Licence</th><th>Coverage</th><th>Verdict</th></tr></thead><tbody>${RD.sources.map(x => `<tr><td>${esc(x.name)}</td><td>${esc(x.licence)}</td><td>${esc(x.coverage)}</td><td>${esc(x.verdict)}</td></tr>`).join('')}</tbody></table></div>
+    <p><b>Required:</b> ${esc(RD.requiredSource)} A snapshot would be used only with its provider, licence, timestamp, checksum, match identities, actual playing dates and verification, and only if it covers every missing result: partial data are never mixed and no result is filled in. LANOVA does not scrape.</p></section>
 
   <section class="case-section method"><header class="sec-head"><div><h2>Method, reproduction and limits</h2></div></header>
     <div class="method-grid"><div><h3>Model</h3><ul><li>${esc(V.model)}</li><li>${esc(V.rankingRules)}</li><li>Strict chronology: settings chosen on 2015/16–2018/19; tested on later seasons; each forecast uses results dated before its cut-off; a match postponed beyond a cut-off counts as unplayed.</li></ul></div>
@@ -115,6 +115,6 @@ function run() {
     box.dataset.season = season; box.dataset.matchday = String(md);
   }, 30);
 }
-Promise.all([fetch('../data/forecast-validation-v2.json').then(r => r.json()), fetch('../data/laliga.json').then(r => r.json())])
-  .then(([v, d]) => { V = v; D = d; page(); void allMatches; })
+Promise.all([fetch('../data/forecast-validation-v2.json').then(r => r.json()), fetch('../data/laliga.json').then(r => r.json()), fetch('../data/current-season-readiness.json').then(r => r.json())])
+  .then(([v, d, rd]) => { V = v; D = d; RD = rd; page(); void allMatches; })
   .catch(e => { root.innerHTML = `<div class="notice" role="alert">The validation report could not be loaded (${esc(e.message)}).</div>`; });

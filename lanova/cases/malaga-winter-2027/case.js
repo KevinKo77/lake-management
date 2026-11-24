@@ -13,7 +13,8 @@
  * LANOVA is independent and is not affiliated with, endorsed by or working for Málaga CF.
  */
 import {outcome, expectedPoints, leagueRates, strengths, matchMeans, positionPoints, rows} from '../football.js';
-import {evaluate, scenarioResults, directCombination, SCHEMA, fmt} from '../../advantage/lab.js';
+import {evaluate, scenarioResults, directCombination, SCHEMA, fmt, prepare, optionDecisions, basePlan} from '../../advantage/lab.js';
+import {forecast, decisionComponents, monthLabel} from '../../finance/engine/model.js';
 
 export const TEAM = 'Málaga CF';
 export const SEASON = '2026-27';
@@ -153,6 +154,17 @@ export function explain(ctx, h, c = compare(ctx, h), be = breakEven(ctx, h)) {
 // ------------------------------------------------------------------ financial impact (Advantage Lab V1 / Finance engine)
 export const FIN_FIELDS = ['openingCash', 'annualRevenue', 'annualOperatingCosts', 'staffCosts', 'minimumCash', 'decisionBudget'];
 export const COST_FIELDS = ['transferFee', 'feeInstalments', 'agentFee', 'signingBonus', 'monthlyWage', 'employerChargeRate', 'contractMonths'];
+/** The financial measures shown for each intervention: one definition, period and unit each (EUR). */
+export const FIN_DEFINITIONS = Object.freeze({
+  cashAtSigning: 'Paid at signing (January 2027): transfer-fee instalment due at signing + agent fee + signing bonus. Cash.',
+  cashPaid2027: 'Cash paid January–December 2027 under the payment schedules: fee instalments due in 2027, agent fee, bonus, wages and employer charges.',
+  futurePayments: 'Contractual payments after December 2027 (later fee instalments, wages for the rest of the contract). Not yet paid.',
+  totalContractualCommitment: 'All payments under the contract, 2027 and later = cash paid in 2027 + future payments.',
+  budgetCommitment: 'Commitment counted against the January budget (Advantage Lab V1 definition): transfer fee + agent fee + signing bonus, in full at signing, whatever the payment dates.',
+  accountingExpense2027: 'Accounting cost in 2027 from the Finance engine (not cash): wages, charges and the bonus spread over the contract, plus amortisation of fee + agent fee over the contract.',
+  lowestCash: 'Lowest month-end cash in 2027 with the intervention (Finance engine), base and downside cases; compared with the minimum reserve.',
+  totalCommitmentPerExpectedPoint: 'Total contractual commitment ÷ expected points gained (model estimate).',
+});
 /** Empty financial inputs: everything unknown until the user enters it. */
 export const emptyFinance = () => ({...Object.fromEntries(FIN_FIELDS.map(k => [k, null])), downsideRevenuePct: null, downsideFromMonth: 6, downsideMustHold: false,
   attack: Object.fromEntries(COST_FIELDS.map(k => [k, null])), defence: Object.fromEntries(COST_FIELDS.map(k => [k, null]))});
@@ -182,6 +194,54 @@ export function financeModel(f) {
     options: [...(ready('attack') ? [opt('attack', 'Attacking reinforcement (hypothetical)', f.attack)] : []), ...(ready('defence') ? [opt('defence', 'Defensive reinforcement (hypothetical)', f.defence)] : [])]};
 }
 /**
+ * Payment profile of a set of signings, from the LANOVA Finance engine (not inferred from total costs).
+ * Definitions (all in EUR, from the signing month, January 2027 = month 1 of the 12-month horizon):
+ *   cashAtSigning          payments due in the signing month other than that month's wages: the transfer-fee instalment
+ *                          due at signing, the agent fee and the signing bonus (engine payment schedules).
+ *   cashPaid2027           every payment dated January–December 2027: fee instalments due in 2027, agent fee, bonus,
+ *                          wages and employer charges. Reconciled with the engine's month-end cash (base and downside).
+ *   futurePayments         contractual payments dated after December 2027: later fee instalments (engine schedule;
+ *                          equals the engine's transfer payments after the horizon) and wages for the remaining contract.
+ *   totalCommitment        cashPaid2027 + futurePayments; equals the Advantage Lab total cost.
+ *   budgetCommitment       the Advantage Lab V1 "immediate cost" tested against the January budget: transfer fee + agent
+ *                          fee + signing bonus, committed at signing whatever the payment dates (documented definition).
+ *   accounting2027         the engine's accounting for 2027 (not cash): operating expense (wages, charges, bonus
+ *                          expensed over the contract) and amortisation of the registration (fee + agent fee).
+ */
+export function paymentProfile(m0, ids) {
+  const m = prepare(m0), H = m.horizonMonths, opts = m.options.filter(o => ids.includes(o.id)), decisions = opts.flatMap(o => optionDecisions(m, o));
+  const plan = basePlan(m, decisions), items = [];
+  for (const d of decisions.filter(x => x.type === 'player')) {
+    const c = decisionComponents(d, plan, {}), who = d.label.replace(/ — signing$/, '');
+    // The engine's registration payments are the fee instalments, then the agent fee (decisionComponents order).
+    for (const cap of c.capex) cap.payments.forEach((pmt, i) => items.push({month: pmt.month, kind: i < d.feePayments.length ? 'transfer fee instalment' : 'agent fee', amount: pmt.amount, who}));
+    for (const pp of c.prepaid) items.push({month: pp.paidMonth, kind: 'signing bonus', amount: pp.amount, who});
+    const monthly = d.monthlyWage * (1 + d.employerChargeRate);
+    for (let t = d.startMonth; t < d.startMonth + d.contractMonths; t++) items.push({month: t, kind: 'wages and employer charges', amount: monthly, who});
+  }
+  const within = items.filter(x => x.month < H), after = items.filter(x => x.month >= H), sumOf = a => a.reduce((s, x) => s + x.amount, 0);
+  const cashByMonth = Array.from({length: H}, (_, t) => sumOf(within.filter(x => x.month === t)));
+  const start = Math.min(...decisions.map(d => d.startMonth)), atSigning = within.filter(x => x.month === start && x.kind !== 'wages and employer charges');
+  const feeAfter = after.filter(x => x.kind === 'transfer fee instalment'), wagesAfter = sumOf(after.filter(x => x.kind === 'wages and employer charges'));
+  // Engine reconciliation: month-end cash with and without the signings (no revenue effect is modelled here).
+  const run = (scen, ds) => forecast(basePlan(m, ds), {scenario: scen, decisions: ds.map(d => d.id)});
+  const eng = Object.fromEntries(['base', 'downside'].map(sc => { const a = run(sc, decisions), b = run(sc, []); return [sc, {a, b}]; }));
+  const engineCashPaid = Object.fromEntries(Object.entries(eng).map(([sc, {a, b}]) => [sc, b.months[H - 1].closingCash - a.months[H - 1].closingCash]));
+  const engineByMonth = eng.base.a.months.map((x, t) => eng.base.b.months[t].closingCash - eng.base.b.months[t].openingCash - (x.closingCash - x.openingCash));
+  const opex = eng.base.a.months.reduce((s, x, t) => s + (eng.base.b.months[t].ebitda - x.ebitda), 0), amort = eng.base.a.months.reduce((s, x, t) => s + (x.depreciation - eng.base.b.months[t].depreciation), 0);
+  const total = sumOf(within) + sumOf(after), labTotal = opts.reduce((s, o) => s + o.transferFee + o.agentFee + o.signingBonus + o.monthlyWage * (1 + o.employerChargeRate) * o.contractMonths, 0);
+  return {signingMonth: monthLabel(m.startMonth, start),
+    cashAtSigning: sumOf(atSigning), cashAtSigningItems: atSigning.map(x => ({kind: x.kind, who: x.who, amount: x.amount})), cashInSigningMonth: cashByMonth[start],
+    cashPaid2027: sumOf(within), cashPaid2027ByKind: Object.fromEntries(['transfer fee instalment', 'agent fee', 'signing bonus', 'wages and employer charges'].map(k => [k, sumOf(within.filter(x => x.kind === k))])),
+    cashByMonth: cashByMonth.map((v, t) => ({month: monthLabel(m.startMonth, t), amount: v})),
+    futurePayments: {total: sumOf(after), transferInstalments: feeAfter.map(x => ({month: monthLabel(m.startMonth, x.month), amount: x.amount, who: x.who})), wagesAfter2027: wagesAfter},
+    totalCommitment: total, budgetCommitment: opts.reduce((s, o) => s + o.transferFee + o.agentFee + o.signingBonus, 0),
+    accounting2027: {operatingExpense: opex, amortisation: amort, total: opex + amort, note: 'Finance engine accounting (not cash): wages, charges and the signing bonus spread over the contract; registration (fee + agent fee) amortised over the contract.'},
+    reconciliation: {engineCashPaid2027: engineCashPaid, engineTransferPaymentsAfterHorizon: eng.base.a.capitalPaymentsAfterHorizon - eng.base.b.capitalPaymentsAfterHorizon,
+      maxMonthlyDifference: Math.max(...cashByMonth.map((v, t) => Math.abs(v - engineByMonth[t]))), cashDifference: Math.max(...Object.values(engineCashPaid).map(v => Math.abs(v - sumOf(within)))),
+      futureFeeDifference: Math.abs(sumOf(feeAfter) - (eng.base.a.capitalPaymentsAfterHorizon - eng.base.b.capitalPaymentsAfterHorizon)), totalVsAdvantageLab: Math.abs(total - labTotal)}};
+}
+/**
  * Affordability of each intervention and of both, in the base and downside cases, from the Finance engine. Returns
  * {computed: false, missing} until every organisation figure is entered; an intervention without its costs is
  * reported as "costs unknown", never priced.
@@ -195,9 +255,10 @@ export function affordability(f, sport) {
   const out = {computed: true, model: m, missing: miss, months: r.months, reserve: m.finance.minimumCash, budget: m.finance.decisionBudget, baseline: scenarioResults(r, []), items: {}};
   for (const [k, set] of sets) {
     if (!set.every(id => ids.includes(id))) { out.items[k] = {known: false, reason: `Costs unknown for ${set.filter(id => !ids.includes(id)).join(' and ')}: enter them to test affordability.`}; continue; }
-    const x = scenarioResults(r, set), opts = r.options.filter(o => set.includes(o.id)), totalCost = opts.reduce((s, o) => s + o.totals.totalCost, 0), inHorizon = opts.reduce((s, o) => s + o.totals.upfront + o.totals.runningInHorizon, 0);
+    const x = scenarioResults(r, set), opts = r.options.filter(o => set.includes(o.id)), totalCost = opts.reduce((s, o) => s + o.totals.totalCost, 0), pay = paymentProfile(m, set);
     const gain = sport ? sport[k].gain : null, direct = directCombination(m, set);
-    out.items[k] = {known: true, upfront: x.upfront, withinBudget: x.withinBudget, totalCost, costInYear: inHorizon, base: x.scenarios.base, downside: x.scenarios.downside,
+    // upfront = budget commitment (Advantage Lab definition); cash figures come from the engine payment schedules.
+    out.items[k] = {known: true, upfront: x.upfront, budgetCommitment: x.upfront, withinBudget: x.withinBudget, totalCost, payments: pay, base: x.scenarios.base, downside: x.scenarios.downside,
       affordable: x.withinBudget && x.scenarios.base.meetsReserve && (!m.constraints.downsideMustHold || x.scenarios.downside.meetsReserve),
       costPerExpectedPoint: gain && gain > 0.01 ? totalCost / gain : null, reconciled: direct ? Math.max(...['base', 'downside'].flatMap(s => direct[s].map((v, t) => Math.abs(v - x.scenarios[s].cash[t])))) : null};
   }
@@ -220,8 +281,10 @@ export function report(ctx, h, f, when = new Date().toISOString().slice(0, 10), 
     hypotheses: {kind: KINDS.hypothesis, interventions: h, finance: f, profiles: profiles.map(x => x.input)},
     estimates: {kind: KINDS.estimate, model: `Independent Poisson goals; strengths from goals with shrinkage k = ${ctx.k}; league rates home ${ctx.rates.home.toFixed(3)}, away ${ctx.rates.away.toFixed(3)} per match`,
       remainingMatches: ctx.remaining.length, baseline: sc(c.baseline, 'baseline'), attack: sc(c.attack, 'attack'), defence: sc(c.defence, 'defence'), both: sc(c.both, 'both'), best: c.best, breakEven: be,
-      affordability: {...(af.computed ? Object.fromEntries(Object.entries(af.items).map(([k, v]) => [k, v.known ? {immediateCost: v.upfront, costIn2027: v.costInYear, totalCommitted: v.totalCost, withinBudget: v.withinBudget,
-        lowestCashBase: Math.round(v.base.lowest), lowestCashDownside: Math.round(v.downside.lowest), reserveMetBase: v.base.meetsReserve, reserveMetDownside: v.downside.meetsReserve, costPerExpectedPoint: v.costPerExpectedPoint && Math.round(v.costPerExpectedPoint)} : {costs: 'unknown', reason: v.reason}])) : {notComputed: af.reason, missing: af.missing}), missingFinancialInputs: af.missing}},
+      affordability: {...(af.computed ? Object.fromEntries(Object.entries(af.items).map(([k, v]) => [k, v.known ? {definitions: FIN_DEFINITIONS, budgetCommitment: v.budgetCommitment, withinBudget: v.withinBudget, cashAtSigning: v.payments.cashAtSigning, cashPaid2027: v.payments.cashPaid2027, cashPaid2027ByKind: v.payments.cashPaid2027ByKind,
+        cashByMonth2027: v.payments.cashByMonth, futurePayments: v.payments.futurePayments, totalContractualCommitment: v.payments.totalCommitment, accountingExpense2027: {operatingExpense: Math.round(v.payments.accounting2027.operatingExpense), amortisation: Math.round(v.payments.accounting2027.amortisation), total: Math.round(v.payments.accounting2027.total)},
+        engineReconciliation: {cashPaid2027Base: v.payments.reconciliation.engineCashPaid2027.base, cashPaid2027Downside: v.payments.reconciliation.engineCashPaid2027.downside, maxDifference: v.payments.reconciliation.cashDifference},
+        lowestCashBase: Math.round(v.base.lowest), lowestCashDownside: Math.round(v.downside.lowest), reserveMetBase: v.base.meetsReserve, reserveMetDownside: v.downside.meetsReserve, totalCommitmentPerExpectedPoint: v.costPerExpectedPoint && Math.round(v.costPerExpectedPoint)} : {costs: 'unknown', reason: v.reason}])) : {notComputed: af.reason, missing: af.missing}), missingFinancialInputs: af.missing}},
     profiles: {kind: KINDS.estimate, note: 'Role-based profiles: expected points from your hypotheses with the same goal model; not a measured or causal player effect.',
       items: profiles.map(x => (x.result.computed ? {label: x.result.label, labelNote: x.result.labelNote, role: x.result.role, ...Object.fromEntries(['low', 'central', 'high'].map(l => [l, {expectedPointsGained: +x.result[l].gain.toFixed(3), expectedFinalPoints: +x.result[l].finalPoints.toFixed(2)}])),
         equivalentAtFullEffect: {attackPct: +x.result.equivalentAtFullEffect.attackPct.toFixed(2), defencePct: +x.result.equivalentAtFullEffect.defencePct.toFixed(2)}} : {label: x.input.label || null, notComputed: true, missing: x.result.missing, problems: x.result.problems}))},
@@ -232,7 +295,15 @@ export function reportHtml(rep) {
   const li = a => `<ul>${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`, e = rep.estimates, o = rep.observed.snapshot, n = v => (v === null || v === undefined ? '—' : Number(v).toFixed(1));
   const ident = x => { const i = x.intervention, p = []; if (i.attackPct) p.push(`goals scored +${i.attackPct}% from ${i.attackFrom ?? 'the next match'} (${x.matchesAffected.attack} matches)`); if (i.defencePct) p.push(`goals conceded −${i.defencePct}% from ${i.defenceFrom ?? 'the next match'} (${x.matchesAffected.defence} matches)`); return p.length ? p.join('; ') : 'no change'; };
   const rowsHtml = ['baseline', 'attack', 'defence', 'both'].map(k => `<tr data-scenario="${k}"><td>${esc({baseline: 'Baseline (no change)', attack: 'Attack improvement', defence: 'Defence improvement', both: 'Both'}[k])}<br><small>${esc(ident(e[k]))}</small></td><td>${esc(e[k].shown.expectedPointsGained)}</td><td>${esc(e[k].shown.expectedFinalPoints)}</td><td>${esc(e[k].shown.expectedGoalsFor)}</td><td>${esc(e[k].shown.expectedGoalsAgainst)}</td></tr>`).join('');
-  const aff = e.affordability.notComputed ? `<p>${esc(e.affordability.notComputed)}</p>` : `<table><tr><th>Intervention</th><th>Immediate cost</th><th>Cost in 2027</th><th>Total committed</th><th>Within budget</th><th>Lowest cash, base</th><th>Lowest cash, downside</th><th>Cost per expected point</th></tr>${['attack', 'defence', 'both'].filter(k => e.affordability[k]).map(k => [k, e.affordability[k]]).map(([k, v]) => v.costs ? `<tr><td>${esc(k)}</td><td colspan="7">Costs unknown — not computed. ${esc(v.reason ?? '')}</td></tr>` : `<tr><td>${esc(k)}</td><td>${fmt(v.immediateCost)}</td><td>${fmt(v.costIn2027)}</td><td>${fmt(v.totalCommitted)}</td><td>${v.withinBudget ? 'yes' : 'no'}</td><td>${fmt(v.lowestCashBase)}${v.reserveMetBase ? '' : ' (below reserve)'}</td><td>${fmt(v.lowestCashDownside)}${v.reserveMetDownside ? '' : ' (below reserve)'}</td><td>${fmt(v.costPerExpectedPoint)}</td></tr>`).join('')}</table>`;
+  const A = e.affordability, cols = ['attack', 'defence', 'both'].filter(k => A[k]), cell = (k, f) => (A[k].costs ? 'costs unknown' : f(A[k]));
+  const frow = (label, def, f) => `<tr><td><b>${esc(label)}</b><br><small>${esc(def)}</small></td>${cols.map(k => `<td>${cell(k, f)}</td>`).join('')}</tr>`, D = FIN_DEFINITIONS;
+  const fut = v => `${fmt(v.futurePayments.total)}${v.futurePayments.transferInstalments.length ? `<br><small>incl. fee instalment${v.futurePayments.transferInstalments.length > 1 ? 's' : ''} ${v.futurePayments.transferInstalments.map(x => `${fmt(x.amount)} due ${esc(x.month)}`).join(', ')}</small>` : ''}${v.futurePayments.wagesAfter2027 ? `<br><small>wages after 2027: ${fmt(v.futurePayments.wagesAfter2027)}</small>` : ''}`;
+  const aff = A.notComputed ? `<p>${esc(A.notComputed)}</p>` : `<table class="fin"><tr><th>Measure (EUR)</th>${cols.map(k => `<th>${esc({attack: 'Attack', defence: 'Defence', both: 'Both'}[k])}</th>`).join('')}</tr>
+    ${frow('Paid at signing', D.cashAtSigning, v => fmt(v.cashAtSigning))}${frow('Cash paid in 2027', D.cashPaid2027, v => fmt(v.cashPaid2027))}${frow('Future payments (after 2027)', D.futurePayments, fut)}
+    ${frow('Total contractual commitment', D.totalContractualCommitment, v => fmt(v.totalContractualCommitment))}${frow('Budget commitment', D.budgetCommitment, v => `${fmt(v.budgetCommitment)} · ${v.withinBudget ? 'within budget' : '<b>over budget</b>'}`)}
+    ${frow('Accounting cost 2027 (engine)', D.accountingExpense2027, v => fmt(v.accountingExpense2027.total))}${frow('Lowest cash 2027, base', D.lowestCash, v => `${fmt(v.lowestCashBase)}${v.reserveMetBase ? '' : ' (below reserve)'}`)}
+    ${frow('Lowest cash 2027, downside', D.lowestCash, v => `${fmt(v.lowestCashDownside)}${v.reserveMetDownside ? '' : ' (below reserve)'}`)}${frow('Commitment per expected point', D.totalCommitmentPerExpectedPoint, v => fmt(v.totalCommitmentPerExpectedPoint))}</table>
+    ${cols.filter(k => A[k].costs).map(k => `<p><small>${esc(k)}: Costs unknown — not computed. ${esc(A[k].reason ?? '')}</small></p>`).join('')}`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(rep.title)} — LANOVA case report</title>
 <style>body{font:14px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#141821;max-width:1000px;margin:24px auto;padding:0 16px}h1{font-size:23px;margin:0 0 6px}h2{font-size:17px;margin:24px 0 8px}table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}th,td{border:1px solid #d6d9e0;padding:5px 7px;text-align:left;vertical-align:top}th{background:#f1f2f5}
 .k{display:inline-block;font:600 11px/1 system-ui;padding:3px 7px;border-radius:999px;margin-right:6px}.obs{background:#e2f0e9;color:#0b6b4e}.est{background:#e6ecfb;color:#2346a3}.hyp{background:#fbefdc;color:#9a4a06}.box{border-left:4px solid;padding:8px 12px;margin:10px 0}.box.obs{border-color:#0b6b4e}.box.est{border-color:#2346a3}.box.hyp{border-color:#9a4a06}small{color:#555}@media print{body{margin:0;max-width:none}}</style></head><body>

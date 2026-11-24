@@ -3,7 +3,7 @@
  * goal model on the verified line and the CC0 dataset), every financial figure from the Advantage Lab V1 and the
  * LANOVA Finance engine. Nothing is sent or stored; the only request is the dataset file of this site.
  */
-import {SNAPSHOT, KINDS, TEAM, context, compare, breakEven, explain, historyBand, affordability, emptyFinance, HYPOTHETICAL, FIN_FIELDS, COST_FIELDS, report, reportHtml} from './case.js';
+import {SNAPSHOT, KINDS, TEAM, context, compare, breakEven, explain, historyBand, affordability, emptyFinance, HYPOTHETICAL, FIN_FIELDS, COST_FIELDS, FIN_DEFINITIONS, report, reportHtml} from './case.js';
 import {fmt} from '../../advantage/lab.js';
 import {ROLES, LIMITS, LEVELS, emptyProfile, ILLUSTRATION, profileImpact, compareProfiles, checkProfile} from './player.js';
 
@@ -151,10 +151,27 @@ function outcomeChart(c, band) {
 function affordView(c) {
   const box = document.getElementById('afford'), a = affordability(S.f, c);
   if (!a.computed) { box.innerHTML = `<div class="notice" role="status"><b>Not computed.</b> ${esc(a.reason ?? '')}${a.problems ? ` ${esc(a.problems.join('; '))}` : ''}<br><span class="small muted">Missing: ${esc(a.missing.slice(0, 8).join(', '))}${a.missing.length > 8 ? '…' : ''}</span></div>`; return; }
-  const row = (k, l) => { const v = a.items[k]; if (!v.known) return `<tr><td>${esc(l)}</td><td colspan="7" class="muted">${esc(v.reason)}</td></tr>`;
-    return `<tr class="${v.affordable ? '' : 'breach'}"><td>${esc(l)}</td><td class="n">${fmt(v.upfront)}</td><td class="n">${fmt(v.costInYear)}</td><td class="n">${fmt(v.totalCost)}</td><td>${v.withinBudget ? 'yes' : '<b>no</b>'}</td><td class="n ${v.base.meetsReserve ? '' : 'neg'}">${fmt(v.base.lowest)}</td><td class="n ${v.downside.meetsReserve ? '' : 'neg'}">${fmt(v.downside.lowest)}</td><td class="n">${v.costPerExpectedPoint === null ? '—' : fmt(v.costPerExpectedPoint)}</td></tr>`; };
-  box.innerHTML = `<div class="table-wrap"><table class="afford"><thead><tr><th>Intervention</th><th class="n">Immediate cost</th><th class="n">Cost in 2027</th><th class="n">Total committed</th><th>Within budget</th><th class="n">Lowest cash, base</th><th class="n">Lowest cash, downside</th><th class="n">Cost per expected point</th></tr></thead><tbody>${row('attack', 'Attack')}${row('defence', 'Defence')}${row('both', 'Both')}</tbody></table></div>
-    <p class="small muted">${kind('hyp')} ${esc(S.f === null ? '' : a.model.label)}. Reserve ${fmt(a.reserve)}; budget ${fmt(a.budget)}. Without any signing, lowest cash is ${fmt(a.baseline.scenarios.base.lowest)} (base) and ${fmt(a.baseline.scenarios.downside.lowest)} (downside). Immediate cost = fee + agent fee + bonus; wages and employer charges are payroll; the bonus is paid at signing and expensed over the contract (Finance engine). Cost per expected point = total committed ÷ expected points gained (model estimate).</p>`;
+  // One row per measure, one column per intervention: every amount has one definition, one period and one unit (EUR).
+  const cols = [['attack', 'Attack'], ['defence', 'Defence'], ['both', 'Both']], D = FIN_DEFINITIONS;
+  const cell = (k, f) => { const v = a.items[k]; return v.known ? f(v) : '<span class="muted">costs unknown</span>'; };
+  const row = (id, label, def, f) => `<tr data-measure="${id}"><th scope="row">${esc(label)}<small>${esc(def)}</small></th>${cols.map(([k, l]) => `<td class="n" data-item="${k}"><span class="lbl">${l}</span>${cell(k, f)}</td>`).join('')}</tr>`;
+  const fut = v => `${fmt(v.payments.futurePayments.total)}${v.payments.futurePayments.transferInstalments.map(x => `<small>fee instalment ${fmt(x.amount)} due ${esc(x.month)}</small>`).join('')}${v.payments.futurePayments.wagesAfter2027 ? `<small>wages after 2027 ${fmt(v.payments.futurePayments.wagesAfter2027)}</small>` : ''}`;
+  box.innerHTML = `<div class="table-wrap"><table class="afford fin"><thead><tr><th>Measure (EUR)</th>${cols.map(([k, l]) => `<th class="n${a.items[k].known && !a.items[k].affordable ? ' breach' : ''}" data-col="${k}">${esc(l)}${a.items[k].known && !a.items[k].affordable ? '<small>not affordable</small>' : ''}</th>`).join('')}</tr></thead><tbody>
+    ${row('cashAtSigning', 'Paid at signing', D.cashAtSigning, v => fmt(v.payments.cashAtSigning))}
+    ${row('cashPaid2027', 'Cash paid in 2027', D.cashPaid2027, v => fmt(v.payments.cashPaid2027))}
+    ${row('futurePayments', 'Future payments (after 2027)', D.futurePayments, fut)}
+    ${row('totalCommitment', 'Total contractual commitment', D.totalContractualCommitment, v => fmt(v.payments.totalCommitment))}
+    ${row('budgetCommitment', 'Budget commitment', D.budgetCommitment, v => `${fmt(v.budgetCommitment)}<small>${v.withinBudget ? 'within budget' : '<b>over budget</b>'}</small>`)}
+    ${row('accounting2027', 'Accounting cost 2027 (engine)', D.accountingExpense2027, v => fmt(v.payments.accounting2027.total))}
+    ${row('lowestBase', 'Lowest cash 2027, base', D.lowestCash, v => `<span class="${v.base.meetsReserve ? '' : 'neg'}">${fmt(v.base.lowest)}</span>`)}
+    ${row('lowestDownside', 'Lowest cash 2027, downside', D.lowestCash, v => `<span class="${v.downside.meetsReserve ? '' : 'neg'}">${fmt(v.downside.lowest)}</span>`)}
+    ${row('perPoint', 'Commitment per expected point', D.totalCommitmentPerExpectedPoint, v => (v.costPerExpectedPoint === null ? '—' : fmt(v.costPerExpectedPoint)))}
+    </tbody></table></div>
+    ${cols.filter(([k]) => !a.items[k].known).map(([k]) => `<p class="small neg" data-unknown="${k}">${esc(a.items[k].reason)}</p>`).join('')}
+    <details class="schedule"><summary>Payment schedule (Finance engine)</summary><div class="table-wrap"><table><thead><tr><th>Month</th>${cols.map(([, l]) => `<th class="n">${l}</th>`).join('')}</tr></thead><tbody>
+      ${a.months.map((mo, t) => `<tr><td>${esc(mo)}</td>${cols.map(([k]) => `<td class="n">${a.items[k].known ? fmt(a.items[k].payments.cashByMonth[t].amount) : '—'}</td>`).join('')}</tr>`).join('')}
+      <tr class="future"><td>After 2027 (not yet paid)</td>${cols.map(([k]) => `<td class="n">${a.items[k].known ? fmt(a.items[k].payments.futurePayments.total) : '—'}</td>`).join('')}</tr></tbody></table></div></details>
+    <p class="small muted">${kind('hyp')} ${esc(a.model.label)}. Signing and first payments in January 2027 (winter window); the sporting activation date does not move the payments. Reserve ${fmt(a.reserve)}; budget ${fmt(a.budget)}. Without any signing, lowest cash is ${fmt(a.baseline.scenarios.base.lowest)} (base) and ${fmt(a.baseline.scenarios.downside.lowest)} (downside). Cash figures are the engine's payment schedules and reconcile with its month-end cash to the cent.</p>`;
 }
 
 // ------------------------------------------------------------------ inputs

@@ -87,3 +87,17 @@
   table.profiles thead { display: none; } table.profiles, table.profiles tbody { display: block; } table.profiles tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
   table.profiles td, table.profiles td.n { border: 0; padding: 0; text-align: left; } table.profiles td[data-l]::before { content: attr(data-l); display: block; font-size: 11px; color: var(--muted); } table.profiles td:first-child, table.profiles td:nth-child(2), table.profiles td[colspan] { grid-column: span 3; } table.profiles td:nth-child(6), table.profiles td:nth-child(7) { grid-column: span 3; }
   .prof-grid { grid-template-columns: minmax(0, 1fr); } .prof .row3 { grid-template-columns: minmax(0, 1fr); } }
+/* Financial measures: one definition per row */
+table.fin td .lbl { display: none; }
+table.fin th[scope="row"] { text-align: left; font-weight: 600; max-width: 360px; }
+table.fin th[scope="row"] small, table.fin td small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; line-height: 1.35; margin-top: 2px; }
+table.fin td { vertical-align: top; }
+.schedule summary { cursor: pointer; font-weight: 600; margin: 10px 0 6px; }
+.schedule tr.future td { font-style: italic; border-top: 2px solid var(--line-2); }
+@media (max-width: 720px) {
+  table.fin.afford thead { display: none; } table.fin.afford, table.fin.afford tbody { display: block; }
+  table.fin.afford tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  table.fin.afford th[scope="row"] { grid-column: 1 / -1; max-width: none; border: 0; padding: 0; }
+  table.fin.afford td, table.fin.afford td.n { border: 0; padding: 0; text-align: left; font-size: 14px; }
+  table.fin.afford td .lbl { display: block; font-size: 11px; color: var(--muted); }
+}
