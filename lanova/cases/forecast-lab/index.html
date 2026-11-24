@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Football Forecast Lab — validation · LANOVA Winter Transfer Intelligence</title>
-<meta name="description" content="How LANOVA's football forecasting engine is tested: walk-forward back-testing on twelve LaLiga seasons, Brier score, log loss, calibration, and a live historical replay. No current-season probability is published before independent validation.">
+<title>Football Forecast Lab — validation v2 · LANOVA Winter Transfer Intelligence</title>
+<meta name="description" content="How LANOVA's football forecasting engine is tested: walk-forward back-testing on LaLiga seasons with the RFEF ranking rules, Brier score, log loss, calibration with uncertainty intervals, and a live historical replay. No current-season probability is published before independent validation.">
 <meta name="robots" content="noindex">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://lake-intelligence-production.up.railway.app; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#f3f4ef">
@@ -30,8 +30,8 @@
   <div class="wrap">
     <p class="eyebrow">Winter Transfer Intelligence · forecasting engine · prototype</p>
     <h1>Football Forecast Lab<br><em>How the forecasts are tested before anyone relies on them</em></h1>
-    <p class="lead">A forecast is only worth showing if it has been tested on matches it had not seen. This page reports how LANOVA's engine performs on twelve past LaLiga seasons, replayed one matchday at a time, and lets you re-run any past season yourself.</p>
-    <p class="independence">Status: the engine passes its pre-registered internal criteria. <b>No probability for the current season is published</b> until an independent review has validated the method and the current-season data are complete. LANOVA is independent of LaLiga and of every club named here.</p>
+    <p class="lead">A forecast is only worth showing if it has been tested on matches it had not seen. This page reports how LANOVA's engine performs on past LaLiga seasons, replayed one matchday at a time — match results and relegation risks separately, with their uncertainty — and lets you re-run any past season yourself.</p>
+    <p class="independence">Status: validation version 2, after correcting the league ranking rules (head-to-head first). <b>No probability for the current season is published</b>: the current-season data are incomplete, the relegation advantage is not established on unseen seasons, and independent review is pending. LANOVA is independent of LaLiga and of every club named here.</p>
     <div class="legend-kinds"><span class="kind obs">Observed</span> historical results <span class="kind est">Model estimate</span> out-of-sample forecasts</div>
   </div>
 </section>

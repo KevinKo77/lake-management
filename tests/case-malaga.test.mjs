@@ -123,7 +123,8 @@ test('exports: JSON and HTML carry the same figures, keep observed / estimate / 
   const h = H(20, 20), f = structuredClone(HYPOTHETICAL), rep = report(ctx, h, f, '2026-11-24'), c = compare(ctx, h), html = reportHtml(rep);
   assert.equal(rep.observed.snapshot.points, 5); assert.equal(rep.hypotheses.interventions.attackPct, 20); assert.equal(rep.estimates.best, c.best);
   close(rep.estimates.attack.expectedPointsGained, +c.attack.gain.toFixed(3), 'JSON attack gain', 0);
-  for (const k of ['baseline', 'attack', 'defence', 'both']) assert.ok(html.includes(rep.estimates[k].expectedFinalPoints.toFixed(1)), k);
+  // One decimal, rounded once from the model value as on screen (the earlier check re-rounded the 2-decimal JSON figure).
+  for (const k of ['baseline', 'attack', 'defence', 'both']) assert.ok(html.includes(`<td>${(Math.round(c[k].finalPoints * 10) / 10).toFixed(1)}</td>`), k);
   assert.ok(html.includes('class="box obs"') && html.includes('class="box est"') && html.includes('class="box hyp"'));
   for (const s of rep.observed.sources) assert.ok(html.includes(s.url.replace(/&/g, '&amp;')));
   assert.doesNotMatch(html + JSON.stringify(rep), /\d+(\.\d+)?\s?% (?:chance|probability|likely)|probability of (?:survival|staying up) (?:is|of) \d/i);

@@ -6,10 +6,11 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {canonical, allMatches, fit, means, scoreMatrix, probabilities, brier, logLoss, rps, calibration, walkForward, score, rng, simulateSeason, replay} from '../lanova/cases/forecast.js';
 import {poisson} from '../lanova/cases/football.js';
-import {CRITERIA} from '../scripts/forecast-validation.mjs';
+import {CRITERIA, TUNE, TEST, wilson, bands, bootstrap} from '../scripts/forecast-validation-v2.mjs';
+import {standings} from '../lanova/cases/ranking.js';
 
-const D = JSON.parse(readFileSync('lanova/cases/data/laliga.json', 'utf8')), V = JSON.parse(readFileSync('lanova/cases/data/forecast-validation.json', 'utf8'));
-const ALL = allMatches(D), CHOSEN = V.tuning.chosen;
+const D = JSON.parse(readFileSync('lanova/cases/data/laliga.json', 'utf8')), V = JSON.parse(readFileSync('lanova/cases/data/forecast-validation-v2.json', 'utf8')), V1 = JSON.parse(readFileSync('lanova/cases/data/forecast-validation-v1.json', 'utf8'));
+const ALL = allMatches(D), CHOSEN = {...V.tuning.chosen, halfLife: V.tuning.chosen.halfLife === 'none' ? Infinity : V.tuning.chosen.halfLife};
 const close = (a, b, msg, tol = 1e-9) => assert.ok(Math.abs(a - b) <= tol, `${msg}: ${a} vs ${b}`);
 /** A copy of the dataset in which every result of `season` dated on or after `from` is replaced (0–5 / 5–0 swaps). */
 function tamper(season, from) {
@@ -117,30 +118,66 @@ test('replay: reads no result after the cut-off (tampering later results changes
   if (cur) assert.equal(replay(D, cur, 5, {...CHOSEN, n: 10, seed: 1}).actual, null);
 });
 
-test('validation report: settings chosen on the tuning seasons only; hold-out and relegation figures reproduced from the code', () => {
-  assert.equal(V.schema, 'lanova-forecast-validation-v1'); assert.equal(V.source.commit, D.source.commit);
-  assert.ok(V.tuning.seasons.every(s => !V.holdout.seasons.includes(s)), 'tuning and hold-out seasons are disjoint');
-  const best = V.tuning.grid.reduce((a, b) => (b.logLoss < a.logLoss ? b : a)); assert.deepEqual(V.tuning.chosen, {halfLife: best.halfLife, k: best.k, dixonColes: best.dixonColes});
+test('validation v2: settings chosen on the tuning seasons only (grid beyond 730 days and two windows); hold-out and relegation figures reproduced from the code', () => {
+  assert.equal(V.schema, 'lanova-forecast-validation-v2'); assert.equal(V.source.commit, D.source.commit);
+  assert.deepEqual(V.tuning.seasons, TUNE); assert.deepEqual(V.holdout.seasons, TEST); assert.ok(TUNE.every(s => TEST.every(t => s < t)), 'every tuning season precedes every test season');
+  assert.ok(V.tuning.grid.some(g => g.halfLife === 'none') && V.tuning.grid.some(g => g.halfLife === 1460) && V.tuning.grid.some(g => g.halfLife === 1095) && new Set(V.tuning.grid.map(g => g.window)).size === 2, 'grid extended beyond 730 days');
+  const best = V.tuning.grid.reduce((a, b) => (b.logLoss < a.logLoss ? b : a)); assert.deepEqual(V.tuning.chosen, {halfLife: best.halfLife, k: best.k, dixonColes: best.dixonColes, window: best.window});
   // One hold-out season recomputed now.
   const s = '2024-25', x = score(walkForward(D, [s], CHOSEN)), rep = V.holdout.perSeason.find(p => p.season === s);
   close(x.model.logLoss, rep.model.logLoss, 'log loss', 1e-6); close(x.baseRates.logLoss, rep.baseRates.logLoss, 'base rates', 1e-6); assert.equal(x.n, rep.n);
-  // Hold-out totals are the match-weighted mean of the seasons.
   close(V.holdout.perSeason.reduce((t, p) => t + p.n * p.model.logLoss, 0) / V.holdout.n, V.holdout.model.logLoss, 'weighted mean', 1e-5);
-  // One relegation season recomputed now.
-  const rp = replay(D, '2022-23', V.matchdayForRelegation, {...CHOSEN, n: V.simulations, seed: V.seed});
-  for (const t of V.relegation.teams.filter(t => t.season === '2022-23')) { const id = canonical(t.team); close(rp.sim[id].relegated, t.p, t.team, 1e-4); assert.equal(rp.actual[id].relegated, t.relegated); }
+  // One relegation season recomputed now, with the RFEF labels.
+  const rp = replay(D, '2025-26', V.matchdayForRelegation, {...CHOSEN, n: V.simulations, seed: V.seed});
+  for (const t of V.relegation.teams.filter(t => t.season === '2025-26')) { const id = canonical(t.team); close(rp.sim[id].relegated, t.p, t.team, 1e-4); assert.equal(rp.actual[id].relegated, t.relegated, t.team); }
   assert.equal(V.relegation.teams.length, 20 * V.relegation.seasons.length);
+  // Intervals contain their point estimates.
+  const ci = V.relegation.all.ci95; assert.ok(ci.modelBrier[0] <= V.relegation.all.model.brier && V.relegation.all.model.brier <= ci.modelBrier[1]);
+  assert.ok(V.holdout.ci95.logLoss[0] <= V.holdout.model.logLoss && V.holdout.model.logLoss <= V.holdout.ci95.logLoss[1]);
 });
 
-test('criteria: pre-registered texts; flags agree with the figures; publication not authorised whatever the flags', () => {
+test('relegation labels: from the RFEF final tables; the corrected labels since v1 are exactly the 2025/26 head-to-head case', () => {
+  assert.deepEqual(V.relegation.labelsCorrected.map(x => [x.season, x.team, x.before, x.after]), [['2025-26', 'RCD Mallorca', false, true], ['2025-26', 'Levante UD', true, false]]);
+  for (const s of V.relegation.seasons) {
+    const ms = ALL.filter(m => m.season === s), teams = [...new Set(ms.flatMap(m => [m.h, m.a]))], t = standings(teams, ms), name = Object.fromEntries(ms.flatMap(m => [[m.h, m.home], [m.a, m.away]]));
+    const rel = new Set(t.rows.slice(17).map(r => name[r.team])); for (const x of V.relegation.teams.filter(x => x.season === s)) assert.equal(x.relegated, rel.has(x.team), `${s} ${x.team}`);
+  }
+  assert.equal(V.rankingSummary.relegationMatchesOfficial, 14); assert.equal(V.rankingSummary.previousRuleMatchesOfficial, 12); assert.equal(V.rankingSummary.unresolvedBlocks, 0);
+  // Before/after: the v1 figures are carried unchanged from the archived v1 report.
+  assert.equal(V.before.relegationAll.model.brier, V1.relegation.all.model.brier); assert.equal(V.before.holdout.logLoss, V1.holdout.model.logLoss);
+});
+
+test('postponed fixtures: a match played after the cut-off is unplayed in the table and unseen by the ratings (replay and walk-forward)', () => {
+  // Move one matchday-10 result of 2021-22 to after the matchday-14 start: the replay at matchday 13 must ignore it.
+  const season = '2021-22', d = structuredClone(D), rows = d.seasons[season].matches, md14 = rows.filter(r => r[1] === 14).map(r => r[0]).sort()[0];
+  const i = rows.findIndex(r => r[1] === 10), moved = [...rows[i]]; rows[i] = [md14.replace(/\d\d$/, x => String(Math.min(28, +x + 2)).padStart(2, '0')), ...moved.slice(1)];
+  const rp = replay(d, season, 13, {...CHOSEN, n: 50, seed: 1}), home = canonical(moved[2]);
+  assert.ok(rp.latestResultUsed < rp.cutOff);
+  const played = rp.table.find(r => r.team === home), direct = ALL.filter(m => m.season === season && m.matchday <= 13 && (m.h === home || m.a === home)).length;
+  assert.ok(rp.sim[home].currentPoints <= played.points + 3);
+  const before = replay(d, season, 13, {...CHOSEN, n: 50, seed: 1}); rows[i][4] = 9; rows[i][5] = 0; const after = replay(d, season, 13, {...CHOSEN, n: 50, seed: 1});
+  assert.deepEqual(after.table, before.table, 'the postponed result does not enter the matchday-13 table'); assert.equal(after.latestResultUsed, before.latestResultUsed);
+  assert.ok(direct >= 13);
+  // Walk-forward: the forecast of the postponed match is made at its own (later) date and never sees its result.
+  const wf = walkForward(d, [season], CHOSEN), f = wf.find(x => x.home === moved[2] && x.away === moved[3] && x.matchday === 10);
+  assert.ok(f.latestUsed < f.date && f.cutOff <= f.date);
+});
+
+test('statistics helpers: Wilson interval, calibration bands with counts, seeded bootstrap', () => {
+  const [lo, hi] = wilson(3, 10); close(lo, 0.1078, 'wilson low', 1e-3); close(hi, 0.6032, 'wilson high', 1e-3); assert.deepEqual(wilson(0, 0), [null, null]);
+  const b = bands([[0.01, 0], [0.02, 1], [0.5, 1], [0.55, 0], [0.95, 1]]); assert.equal(b.reduce((n, x) => n + x.n, 0), 5); assert.equal(b[0].n, 2); assert.equal(b[0].events, 1);
+  const x = bootstrap([1, 2, 3, 4], a => a.reduce((s, y) => s + y, 0) / a.length, {b: 500, seed: 9}); assert.deepEqual(x, bootstrap([1, 2, 3, 4], a => a.reduce((s, y) => s + y, 0) / a.length, {b: 500, seed: 9})); assert.ok(x[0] >= 1 && x[1] <= 4);
+});
+
+test('criteria: pre-registered texts unchanged; flags agree with the figures; publication not authorised whatever the flags', () => {
   assert.deepEqual(Object.fromEntries(Object.entries(V.criteria).map(([k, x]) => [k, x.text])), {...CRITERIA});
+  assert.deepEqual(Object.fromEntries(Object.entries(V1.criteria).map(([k, x]) => [k, x.text])), {...CRITERIA}, 'same criteria as v1');
   const h = V.holdout, r = V.relegation.all;
   assert.equal(V.criteria.logLossBelowBaseRates.passed, h.model.logLoss <= 0.98 * h.baseRates.logLoss);
-  assert.equal(V.criteria.calibrationEce.passed, ['home', 'draw', 'away'].every(k => h.calibration[k].ece <= 0.05));
+  assert.equal(V.criteria.calibrationEce.passed, ['home', 'draw', 'away'].every(k => h.ece[k] <= 0.05));
   assert.equal(V.criteria.relegationBrierBelowPosition.passed, r.model.brier < r.position.brier);
   assert.equal(V.internalCriteriaPassed, Object.values(V.criteria).every(x => x.passed));
   assert.match(V.publication, /^Not authorised/);
-  // The position baseline uses earlier seasons only: the first evaluated season relies on 2012/13–2014/15.
   assert.ok(V.relegation.teams.every(t => t.positionBaseline > 0 && t.positionBaseline < 1));
 });
 
@@ -149,7 +186,10 @@ test('Forecast Lab page: no current-season probability, links and CTAs, status s
   assert.match(html, /<meta name="robots" content="noindex">/);
   assert.match(html, /No probability for the current season is published/);
   assert.match(app, /Independent validation: pending/); assert.match(app, /Current season: blocked/);
-  assert.doesNotMatch(app, /2026-27|2026\/27['"]/, 'the page never selects the current season');
+  // The current season is read only to list its missing results; the replay offers the validated seasons only.
+  assert.equal((app.match(/2026-27/g) ?? []).length, 1); assert.match(app, /function missingCurrent\(\) \{\n  const s = D\.seasons\['2026-27'\]/);
+  assert.match(app, /seasons\.slice\(\)\.reverse\(\)/); assert.match(app, /seasons = r\.seasons/);
+  assert.match(app, /forecast-validation-v2\.json/);
   assert.match(html, /data-cta="software"[^>]*>Explore LANOVA Sports Software|href="..\/..\/..\/platform.html" data-cta="software">Explore LANOVA Sports Software/);
   assert.match(html, /data-cta="review" href="mailto:kevin@lake-am\.com\?subject=LANOVA%20%E2%80%94%20Winter%20Transfer%20Strategy%20Review/);
   assert.match(app, /Not a betting tool/); assert.doesNotMatch(html + app, /betting tip|place a bet/i);

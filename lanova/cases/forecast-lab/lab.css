@@ -10,3 +10,13 @@
 .replay-ctl label { display: grid; gap: 4px; font-size: 13px; } .replay-ctl select { font: inherit; padding: 8px 10px; border: 1px solid var(--line-2); border-radius: 8px; background: #fff; }
 .replay td .bar { display: inline-block; width: 60px; height: 8px; margin-right: 8px; border-radius: 4px; background: linear-gradient(90deg, #b42318 var(--w), var(--line) var(--w)); vertical-align: middle; }
 @media (max-width: 720px) { .rels, .rels.one { grid-template-columns: minmax(0, 1fr); } .replay td .bar { width: 36px; } }
+/* Validation v2 */
+.rel .ci { stroke: #2346a3; stroke-width: 1.5; opacity: .55; }
+.rules { margin: 6px 0 12px 18px; display: grid; gap: 4px; }
+.tiles.rk { margin: 8px 0 12px; }
+.notice.warn { border-left: 4px solid #9a4a06; }
+.sens tr.chosen td { font-weight: 600; }
+.unc { display: grid; gap: 6px; padding-left: 18px; }
+.missing summary { cursor: pointer; font-weight: 600; margin: 6px 0; }
+.bands td:last-child { white-space: nowrap; }
+.method .mono { overflow-wrap: anywhere; word-break: break-word; }

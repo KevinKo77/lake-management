@@ -7,8 +7,11 @@ Static pages under `/lanova/cases/`. They run in the browser: no server, no acco
 | `data/laliga.json` | Versioned LaLiga dataset (results and fixtures), built from a pinned CC0 source by `scripts/build-football-dataset.mjs`. |
 | `football.js` | The goal model: Poisson probabilities, match outcomes, league rates, team strengths, final points tables. |
 | `malaga-winter-2027/` | Release 1 case study: **Málaga CF — Attack or Defence? The January 2027 Survival Decision.** |
+| `ranking.js` | LaLiga table with the RFEF tie-breakers (head-to-head first, partial resolution, no random tie-break). |
+| `data/official-outcomes.json` | Verified official outcomes used to check the rebuilt tables (S4). |
 | `forecast.js` | Release 2 forecasting engine: team ratings, match probabilities, seeded season simulation, walk-forward evaluation. |
-| `data/forecast-validation.json` | Release 2 validation report, produced by `scripts/forecast-validation.mjs` (deterministic; reproduced by the tests). |
+| `data/forecast-validation-v2.json` | Current validation report (v2), produced by `scripts/forecast-validation-v2.mjs` (deterministic; reproduced by the tests). |
+| `data/forecast-validation-v1.json` | Archived v1 report (commit 2a05287), kept as the "before" reference. Superseded. |
 | `malaga-winter-2027/player.js` | Release 3 role-based player profiles: hypotheses → per-match factors → expected points (same goal model). |
 | `forecast-lab/` | Release 2 page: **Football Forecast Lab** — the validation report and a live historical replay. No current-season probability. |
 
@@ -18,6 +21,8 @@ Static pages under `/lanova/cases/`. They run in the browser: no server, no acco
 |---|---|---|---|---|---|---|
 | S1 | [openfootball/espana](https://github.com/openfootball/espana), commit `80035a93dd4920985af52aa097a54a6fb888563b` | LaLiga results and fixtures, 2012/13–2026/27 (`<season>/1-liga.txt`) | [CC0 1.0 Universal](https://github.com/openfootball/espana/blob/master/LICENSE.md): public-domain dedication | Any use, including commercial; no attribution required (attributed anyway) | Source commit dated 2026-10-15; 2026/27 results to 20 September 2026 (matchdays 1–7, 69 matches) | Results only, no expected goals or player data. Matchdays 8–13 of 2026/27 are not in the source at this commit. Later fixture dates may still be moved by the league. |
 | S2 | Public match reports and a standings page, dated 2 to 24 November 2026: Zonadepor, La Nación (two reports), Futeros, El Desmarque, Málaga CF fixture page | Málaga CF's own line after matchday 13: 13 played, 0 won, 5 drawn, 8 lost, 9 scored, 24 conceded, 5 points, 20th | Facts (results, goals, points) are not copyrighted. Only these facts are used, typed by hand and cited. | Citation of facts. No text, table, logo, photograph or feed is reproduced. | Checked 24 November 2026 | One club's aggregate line, not a dataset of the league. The other teams' matchdays 8–13 are not taken from these pages. |
+| S3 | RFEF Reglamento General art. 201 (art. 224 of the new edition) and Normas Reguladoras y Bases de Competición Primera y Segunda División 2025/26 (Circular 34; rfef.es) | The tie-breaking rules for clubs level on points (`ranking.js`) | Official regulation; rules are applied, not reproduced | Application of the rules | Checked 24 November 2026 | **Verbatim text not opened:** the PDFs could not be downloaded from the build environment. The rules were taken from the excerpts the search index shows from these documents, cross-checked with official outcomes (S4). Exact wording to be confirmed by the reviewer. |
+| S4 | Verified official outcomes, 2012/13–2025/26 (`data/official-outcomes.json`): relegated clubs of every season, 35 positions with points, one point deduction, one administrative relegation, with cited pages (Wikipedia, Sky Sports, Sportsmole, NBC Sports, 90min, Football España, UEFA and others) | Check of the rebuilt final tables | Facts, entered by hand with their sources | Citation of facts; no table reproduced | Checked 24 November 2026 | Pages read through search results only; positions not listed there were not checked against an official source. |
 | — | Expected goals (xG), player statistics, market values, wages | **Not used** | No source was found that allows this use at €0 under its terms. Commercial providers (Opta/Stats Perform, StatsBomb and others) are licensed. FBref and Transfermarkt terms do not permit this reuse or scraping. | — | — | **Blocked:** no xG-based model, no named player, no player-specific impact, no real price. |
 
 **Rebuilding the dataset:**
@@ -88,6 +93,7 @@ The open dataset's own Málaga results (7 matches, 3 points, 3–12) are checked
 - phone layout, page errors and network requests.
 
 ## Release 2 — forecasting engine (`forecast.js`)
+> **Superseded figures.** The validation figures in this section are version 1. They were produced with an incorrect tie-break rule (overall goal difference). See **Correction sprint: ranking rules and validation v2** below for the corrected figures; the v1 relegation advantage claim is withdrawn.
 **Model.** λ_home = c · H · att_home · def_away and λ_away = c · att_away · def_home, fitted by weighted Poisson maximum likelihood (iterative scaling) on matches played **strictly before** the forecast date.
 - Weights halve every `halfLife` days; matches older than 1,095 days are ignored.
 - Each team is pulled towards a prior centre by `k` pseudo-matches: the league average, or, for a team new to the division, the average first-season strength of earlier promoted teams (learnt only from seasons completed before the forecast date).
@@ -101,7 +107,7 @@ The open dataset's own Málaga results (7 matches, 3 points, 3–12) are checked
   - The relegation Brier score moved from 0.0746 to 0.0840 as a result. The figures below use the corrected rule.
 - Tests change every later result and check that no earlier forecast moves.
 
-**Validation protocol** (`scripts/forecast-validation.mjs`, seed 20261124, no clock):
+**Validation protocol** (`scripts/forecast-validation-v1.mjs`, archived, seed 20261124, no clock):
 1. Tuning on 2015-16, 2016-17, 2017-18, 2018-19: grid halfLife {120, 240, 365, 730} × k {2, 4, 8} × Dixon–Coles {off, on}, chosen by log loss. Chosen: halfLife 730, k 8, Dixon–Coles off.
 2. Hold-out 2019-20 to 2025-26 (2660 matches), chosen settings only.
 3. Relegation after matchday 13 for 2015-16 to 2025-26 (220 team-seasons), 4,000 simulations each.
@@ -211,3 +217,155 @@ This linear expected-value approximation does not simulate line-ups. With 100% m
   - an invalid range is refused;
   - JSON export;
   - phone layout.
+
+## Correction sprint: ranking rules and validation v2
+### The defect
+The independent review found that version 1 ordered clubs level on points by overall goal difference, then goals scored, with random order for exact ties. LaLiga applies the RFEF tie-breakers, which put **head-to-head first**.
+
+### Ranking rules (`ranking.js`)
+Clubs level on points are ordered as follows:
+1. **Head-to-head.**
+   - Two clubs: points, then goal difference, in their two matches.
+   - Three or more clubs: points, then goal difference, in a separate table of the matches between them.
+2. **Partial resolution:** clubs still level after a criterion are resolved again from step 1, among themselves only.
+3. **Overall criteria:** goal difference, then goals scored.
+4. **Fair play.**
+
+Further rules:
+- **Head-to-head only when complete.** It is used only once every match between the clubs concerned has been played. During a season, an incomplete head-to-head is skipped.
+- **Fair play is not in the data.** A tie only fair play could break is left as an unresolved block: its clubs share the positions with equal weight. It is never decided at random, and it is reported.
+- **Point adjustments by the competition** apply to final tables.
+- **One rule everywhere.** The same rules apply to:
+  - simulated final tables;
+  - historical final tables;
+  - backtest relegation labels;
+  - the table at the forecast date, used by the position baseline.
+
+### Check against official outcomes (S4)
+
+| | RFEF rules (v2) | Previous rule (v1) |
+|---|---|---|
+| Seasons whose relegated clubs equal the official sporting outcome | **14/14** | 12/14 |
+| Verified positions with points matching | **35/35** | — |
+| Final tables with a tie that needs fair play | 0 | — |
+| Seasons where the restart variant (head-to-head restart only after head-to-head splits) changes the order | 0 | — |
+
+The previous rule failed in two seasons:
+- **2014/15:** it relegated Granada instead of Eibar.
+- **2025/26:** it relegated Levante instead of Mallorca (three clubs on 42 points).
+
+Fixtures (`tests/ranking.test.mjs`, 9 tests):
+- synthetic cases for every rule;
+- the 2025/26, 2014/15 and 2015/16 boundary ties;
+- every rebuilt final table against S4;
+- consistency across simulation, replay and labels.
+
+**Special cases:**
+- **Almería 2014/15:** 3-point deduction, 29 points instead of 32. It changes no position.
+- **Elche 2014/15:** administrative relegation. The backtest uses the sporting outcome.
+
+### Validation v2 (`scripts/forecast-validation-v2.mjs` → `data/forecast-validation-v2.json`)
+**Protocol, unchanged from v1:**
+- tuning on 2015/16–2018/19 only;
+- hold-out 2019/20–2025/26;
+- relegation after matchday 13 for 2015/16–2025/26;
+- 4,000 simulations, seed 20261124.
+
+**Grid extended beyond 730 days:**
+- half-lives 120, 240, 365, 730, 1,095, 1,460 days, and no decay;
+- prior strength 2, 4, 8; Dixon–Coles off or on;
+- training window 1,095 or 1,825 days. Half-lives longer than the window are skipped, since a half-life longer than the window adds nothing.
+- **Chosen:** half-life 365 days, k 4, window 1825 days, Dixon–Coles off. The choice is not at the edge of the grid.
+
+**Uncertainty:** 2,000 bootstrap resamples, by match or team-season and by whole season; Wilson 95% intervals by calibration band.
+
+**Before and after:**
+
+| | v1 (before) | v2 (corrected) | v2 95% interval |
+|---|---|---|---|
+| Match log loss, hold-out (2660) | 0.9909 | **0.9893** | 0.972–1.006 |
+| Match Brier, hold-out | 0.5905 | **0.5893** | 0.578–0.601 |
+| Past-frequency baseline (log loss) | 1.0698 | 1.0698 | gain 0.067–0.094 |
+| Relegation Brier, all 220 | 0.0840 | **0.0871** | 0.063–0.113 |
+| Position baseline, all | 0.1128 | 0.1097 | gain 0.006–0.038 (by season 0.002–0.042) |
+| Relegation Brier, unseen 140 | 0.0927 | **0.0975** | 0.065–0.132 |
+| Position baseline, unseen | 0.1102 | 0.1076 | **gain -0.012–0.031: includes zero** |
+| Relegation log loss, all | 0.2642 | 0.2639 | — |
+| Relegation calibration error | 0.0396 | 0.0473 | — |
+
+**Relegation labels corrected:**
+- 2025-26 RCD Mallorca: stayed up → relegated (final position 18)
+- 2025-26 Levante UD: relegated → stayed up (final position 16)
+
+**Relegation calibration by band (all 220 team-seasons):**
+
+| Band | n | Relegated | Mean predicted | Observed | Wilson 95% |
+|---|---|---|---|---|---|
+| 0.00–0.05 | 126 | 2 | 0.009 | 0.016 | 0.004–0.056 |
+| 0.05–0.10 | 22 | 0 | 0.075 | 0.000 | 0.000–0.149 |
+| 0.10–0.20 | 11 | 3 | 0.147 | 0.273 | 0.098–0.566 |
+| 0.20–0.40 | 30 | 13 | 0.281 | 0.433 | 0.274–0.608 |
+| 0.40–0.60 | 14 | 3 | 0.475 | 0.214 | 0.076–0.476 |
+| 0.60–0.80 | 7 | 4 | 0.640 | 0.571 | 0.251–0.842 |
+| 0.80–1.00 | 10 | 8 | 0.907 | 0.800 | 0.490–0.943 |
+
+**Sensitivity** (reported, not used for the choice):
+
+| Half-life | Window | Brier, all | Brier, unseen |
+|---|---|---|---|
+| 120 | 1095 | 0.0869 | 0.0964 |
+| 120 | 1825 | 0.0869 | 0.0963 |
+| 240 | 1095 | 0.0863 | 0.0964 |
+| 240 | 1825 | 0.0863 | 0.0964 |
+| 365 | 1095 | 0.0873 | 0.0983 |
+| 365 | 1825 | 0.0871 | 0.0975 |
+| 730 | 1095 | 0.0885 | 0.0989 |
+| 730 | 1825 | 0.0887 | 0.0992 |
+| 1095 | 1095 | 0.0889 | 0.0992 |
+| 1095 | 1825 | 0.0894 | 0.1003 |
+| 1460 | 1825 | 0.0896 | 0.1005 |
+| none | 1095 | 0.0898 | 0.1001 |
+| none | 1825 | 0.0909 | 0.1023 |
+
+- **Monte Carlo noise:** another seed gives Brier 0.0870; no single probability moves by more than 0.025.
+- **Ties needing fair play at the relegation line:** 0.0023% of simulations on average, 0.025% at most. Effect on any relegation probability: under 0.03 percentage points.
+
+### What the corrected figures support
+- **Match-result forecasts:** better than past frequencies, with every interval excluding zero and the gain present in every season.
+- **Relegation over all 220 team-seasons:** better than the position baseline, with intervals excluding zero.
+- **Relegation on the 140 unseen team-seasons:** the advantage over the position baseline is **not statistically established**; the interval includes zero. The v1 claim of a clear relegation advantage is **withdrawn**.
+- **Calibration:** every band lies within its Wilson interval. Between 20% and 60%, where relegation decisions are made, the bands are small and alternate between under- and over-prediction.
+- **Internal criteria:** the three pre-registered criteria still pass. They are necessary, not sufficient.
+
+### Current season (2026/27)
+- **Still blocked.** 61 results played before 24 November 2026 are missing from the open dataset:
+  - matchdays 8–13: 10 each;
+  - one postponed match of matchday 6.
+- **Exact list:** on the Forecast Lab page.
+- **Requirements before any 2026/27 probability:**
+  1. A newer CC0 commit or a licensed results feed.
+  2. Independent review of this report.
+  3. The founder's approval.
+
+### Report integrity (Málaga case)
+`tests/case-report-integrity.test.mjs` (5 tests) and browser check 7b cover:
+- intervention magnitude;
+- activation date;
+- matches affected;
+- expected points;
+- financial assumptions;
+- missing-data labels;
+- scenario identity.
+
+**Defect found and fixed:** the HTML report re-rounded the 2-decimal JSON figures to one decimal. A value such as 29.4499 then printed 29.5 against 29.4 on screen. Figures shown are now rounded once, from the model value, and carried in the export as `shown`.
+
+**Exports now also carry:**
+- each scenario's exact intervention and the matches it affects;
+- the missing financial inputs, by name;
+- the reason for "costs unknown".
+
+### Reproduce
+1. `git clone https://github.com/openfootball/espana && git -C espana checkout 80035a93dd`
+2. `node scripts/build-football-dataset.mjs espana --check`
+3. `node scripts/forecast-validation-v2.mjs --check` (about 2–3 minutes)
+4. `node --test tests/ranking.test.mjs tests/forecast.test.mjs tests/case-report-integrity.test.mjs`

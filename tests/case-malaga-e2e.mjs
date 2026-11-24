@@ -103,6 +103,25 @@ await t('7 · exports: the HTML and JSON reports equal the analysis on screen an
   assert.ok(html.includes('class="box obs"') && html.includes('class="box est"') && html.includes('class="box hyp"')); assert.match(html, /not affiliated with/);
 });
 
+await t('7b · report integrity from the interface: changed magnitudes and dates, a missing cost; JSON and HTML equal the screen (identity, dates, points, finance, missing labels)', async () => {
+  const set = async (sel, v) => { const el = page.locator(sel); if (await el.evaluate(e => e.tagName) === 'SELECT') await el.selectOption(v); else { await el.fill(String(v)); await el.dispatchEvent('input'); } await page.waitForTimeout(150); };
+  const d = ctx.remaining.map(m => m.date);
+  await set('#attackNum', 37); await set('#attackFrom', d[10]); await set('#defenceNum', 12); await set('#defenceFrom', d[3]);
+  await page.click('[data-fin="hypothetical"]'); await page.waitForTimeout(200);
+  const wage = page.locator('[data-f="defence.monthlyWage"]'); await wage.fill(''); await wage.dispatchEvent('input'); await page.waitForTimeout(250);
+  const cards = await page.locator('#outcomes .out').evaluateAll(es => Object.fromEntries(es.map(e => [e.dataset.scenario, e.querySelector('b').textContent])));
+  const get = async kind => { const [dl] = await Promise.all([page.waitForEvent('download'), page.click(`[data-export="${kind}"]`)]); const f = join(out, `integrity.${kind}`); await dl.saveAs(f); return readFileSync(f, 'utf8'); };
+  const json = JSON.parse(await get('json')), html = await get('html'), e = json.estimates;
+  assert.deepEqual(json.hypotheses.interventions, {attackPct: 37, attackFrom: d[10], defencePct: 12, defenceFrom: d[3]});
+  for (const k of ['baseline', 'attack', 'defence', 'both']) { assert.equal(e[k].shown.expectedFinalPoints, cards[k], `${k}: export equals the card on screen`); assert.ok(html.includes(`<td>${cards[k]}</td>`), `${k} in HTML`); }
+  assert.deepEqual(e.attack.intervention, {attackPct: 37, attackFrom: d[10], defencePct: 0, defenceFrom: null}); assert.equal(e.attack.matchesAffected.attack, d.length - 10);
+  assert.equal(e.defence.matchesAffected.defence, d.length - 3); assert.ok(html.includes(`goals scored +37% from ${d[10]} (${d.length - 10} matches)`));
+  assert.equal(json.hypotheses.finance.defence.monthlyWage, null); assert.deepEqual(e.affordability.missingFinancialInputs, ['defence intervention: monthlyWage']);
+  assert.equal(e.affordability.defence.costs, 'unknown'); assert.match(html, /Costs unknown — not computed\. Costs unknown for defence/);
+  assert.equal(e.affordability.attack.immediateCost, report(ctx, json.hypotheses.interventions, json.hypotheses.finance).estimates.affordability.attack.immediateCost);
+  await wage.fill('75000'); await wage.dispatchEvent('input'); await page.click('[data-preset="equal"]'); await set('#attackFrom', JAN); await set('#defenceFrom', JAN);
+});
+
 await t('8 · calls to action: software page opens; the review request is a working pre-filled e-mail; no dead control', async () => {
   const href = await page.getAttribute('[data-cta="software"]', 'href'); const r = await page.request.get(new URL(href, URL0).href); assert.equal(r.status(), 200);
   const mail = new URL((await page.getAttribute('[data-cta="review"]', 'href')).replace(/&amp;/g, '&')); assert.equal(mail.pathname, 'kevin@lake-am.com'); assert.match(mail.searchParams.get('body'), /Winter Transfer Strategy Review/);

@@ -21,7 +21,8 @@ const server = http.createServer((req, res) => {
 });
 await new Promise(r => server.listen(0, '127.0.0.1', r));
 const BASE = `http://127.0.0.1:${server.address().port}`, URL0 = `${BASE}/lanova/cases/forecast-lab/`;
-const D = JSON.parse(readFileSync('lanova/cases/data/laliga.json', 'utf8')), V = JSON.parse(readFileSync('lanova/cases/data/forecast-validation.json', 'utf8'));
+const D = JSON.parse(readFileSync('lanova/cases/data/laliga.json', 'utf8')), V = JSON.parse(readFileSync('lanova/cases/data/forecast-validation-v2.json', 'utf8')), V1 = JSON.parse(readFileSync('lanova/cases/data/forecast-validation-v1.json', 'utf8'));
+const CH = {...V.tuning.chosen, halfLife: V.tuning.chosen.halfLife === 'none' ? Infinity : V.tuning.chosen.halfLife};
 const checks = [], errors = [], offsite = [];
 const t = async (name, fn) => { try { await fn(); checks.push({name, status: 'PASS'}); console.log('PASS', name); } catch (e) { checks.push({name, status: 'FAIL', error: String(e.message).split('\n').slice(0, 5).join(' | ')}); console.log('FAIL', name, '\n  ', String(e.message).split('\n').slice(0, 5).join('\n   ')); } };
 const browser = await chromium.launch();
@@ -36,45 +37,63 @@ async function open(opts) {
 const f3 = v => Number(v).toFixed(3);
 const {page, c: desk} = await open({viewport: {width: 1440, height: 900}});
 
-await t('1 · publication status: criteria as in the report; independent validation pending; current season blocked; no current-season figure', async () => {
+await t('1 · validation status (v2): criteria as in the report; relegation advantage on unseen seasons flagged as not established; pending; current season blocked', async () => {
   const st = await page.innerText('.status-grid');
   for (const x of Object.values(V.criteria)) assert.ok(st.includes(x.text), x.text);
-  assert.equal(await page.locator('.crit.ok').count(), Object.values(V.criteria).filter(x => x.passed).length);
-  assert.match(st, /Independent validation: pending/); assert.match(st, /Current season: blocked/);
+  const sig = V.relegation.holdout.ci95.brierGainVsPosition[0] > 0;
+  assert.equal(await page.getAttribute('[data-holdout-significant]', 'data-holdout-significant'), String(sig));
+  assert.match(st, sig ? /advantage confirmed/ : /advantage not established on unseen seasons[\s\S]*includes zero/);
+  assert.match(st, /Independent validation: pending/); assert.match(st, /Current season: blocked/); assert.match(st, /61 results of 2026\/27/);
   assert.match(await page.innerText('.case-hero'), /No probability for the current season is published/);
   assert.equal(await page.locator('#rs option', {hasText: '2026-27'}).count(), 0, 'current season not selectable');
   await page.screenshot({path: join(out, 'lab_top_desktop.png')});
 });
 
-await t('2 · match forecasts: hold-out scores and per-season figures equal the validation report', async () => {
-  const text = await page.locator('.case-section').nth(1).innerText(), h = V.holdout;
-  for (const k of ['logLoss', 'brier', 'rps']) for (const v of [h.model[k], h.baseRates[k], h.uniform[k]]) assert.ok(text.includes(f3(v)), `${k} ${f3(v)}`);
-  for (const s of h.perSeason) assert.ok(text.includes(s.season) && text.includes(f3(s.model.logLoss)), s.season);
+await t('2 · ranking correction: RFEF rules stated; 14/14 relegations as official (previous rule 12/14); 35/35 verified positions; the 2025/26 case and corrected labels', async () => {
+  const text = await page.locator('#h-rules').evaluate(h => h.closest('section').innerText), rk = V.rankingSummary;
+  assert.match(text, new RegExp(`${rk.relegationMatchesOfficial}/${rk.seasons}`)); assert.match(text, new RegExp(`previous rule: ${rk.previousRuleMatchesOfficial}/${rk.seasons}`)); assert.match(text, new RegExp(`${rk.positionsMatching}/${rk.positionsChecked}`));
+  assert.match(text, /Osasuna, Levante UD and RCD Mallorca finished on 42 points/); assert.match(text, /RCD Mallorca 2025-26 \(relegated\); Levante UD 2025-26 \(stayed up\)/);
+  assert.match(text, /never decided at random/);
+  await page.locator('#h-rules').scrollIntoViewIfNeeded(); await page.screenshot({path: join(out, 'lab_rules_desktop.png')});
+});
+
+await t('3 · Part 1 (match results) and Part 2 (relegation) shown separately; every figure equals the report, with intervals and the v1 figures', async () => {
+  const p1 = await page.locator('#h-match').evaluate(h => h.closest('section').innerText), h = V.holdout;
+  for (const v of [h.model.logLoss, h.baseRates.logLoss, h.uniform.logLoss, h.model.brier, h.ci95.logLoss[0], h.ci95.logLoss[1], h.ci95.logLossGainVsBaseRates[0], V1.holdout.model.logLoss]) assert.ok(p1.includes(Number(v).toFixed(3)), `part 1 ${v}`);
+  for (const s of h.perSeason) assert.ok(p1.includes(s.season) && p1.includes(s.model.logLoss.toFixed(3)), s.season);
+  const p2 = await page.locator('#h-rel').evaluate(x => x.closest('section').innerText), r = V.relegation;
+  for (const v of [V1.relegation.all.model.brier, r.all.model.brier, r.all.position.brier, r.all.uniform.brier, V1.relegation.holdout.model.brier, r.holdout.model.brier, r.holdout.position.brier, ...r.all.ci95.modelBrier, ...r.holdout.ci95.brierGainVsPosition]) assert.ok(p2.includes(Number(v).toFixed(3)), `part 2 ${v}`);
+  assert.match(p2, /that claim is withdrawn/);
+  assert.equal(await page.locator('#h-rel').evaluate(x => x.closest('section').querySelectorAll('table.bands tbody tr').length), r.bands.filter(b => b.n).length);
+  assert.equal(await page.locator('#h-rel').evaluate(x => x.closest('section').querySelectorAll('table.sens tbody tr').length), r.sensitivity.length);
+  assert.ok(p2.includes('1460') && p2.includes('no decay'), 'sensitivity beyond 730 days');
   assert.equal(await page.locator('.rels:not(.one) figure').count(), 3);
-  assert.equal(await page.locator('.rels').first().locator('circle').count(), ['home', 'draw', 'away'].reduce((n, k) => n + h.calibration[k].bins.length, 0));
-  await page.locator('.rels').first().scrollIntoViewIfNeeded(); await page.screenshot({path: join(out, 'lab_calibration_desktop.png')});
+  await page.locator('#h-rel').scrollIntoViewIfNeeded(); await page.screenshot({path: join(out, 'lab_relegation_desktop.png')});
+  await page.locator('table.bands').scrollIntoViewIfNeeded(); await page.screenshot({path: join(out, 'lab_calibration_desktop.png')});
 });
 
-await t('3 · relegation: scores against both baselines equal the report; the small mid-range bins are flagged', async () => {
-  const text = await page.locator('.case-section').nth(2).innerText(), r = V.relegation;
-  for (const v of [r.all.model.brier, r.all.position.brier, r.all.uniform.brier, r.all.model.logLoss, r.holdout.model.brier, r.holdout.position.brier]) assert.ok(text.includes(f3(v)), f3(v));
-  assert.match(text, /Read with care/); assert.match(text, /not yet used to publish a probability/);
-});
-
-await t('4 · live replay in the browser equals the same replay in Node (2018-19 after matchday 13, 4,000 simulations); actual outcome attached', async () => {
-  await page.selectOption('#rs', '2018-19'); await page.selectOption('#rm', '13'); await page.selectOption('#rn', '4000');
-  await page.click('#run'); await page.waitForSelector('#replay[data-season="2018-19"] table');
-  const want = replay(D, '2018-19', 13, {...V.tuning.chosen, n: 4000, seed: V.seed});
+await t('4 · live replay (2025-26 after matchday 13) equals Node; actual relegations from the RFEF table (Mallorca on head-to-head, Levante safe)', async () => {
+  await page.selectOption('#rs', '2025-26'); await page.selectOption('#rm', '13'); await page.selectOption('#rn', '4000');
+  await page.click('#run'); await page.waitForSelector('#replay[data-season="2025-26"] table');
+  const want = replay(D, '2025-26', 13, {...CH, n: 4000, seed: V.seed});
   const rows = await page.locator('#replay tbody tr').evaluateAll(trs => trs.map(tr => [...tr.cells].map(td => td.textContent.trim())));
   assert.equal(rows.length, 20);
   for (const [name, pts, exp, rel] of rows) {
     const id = Object.keys(want.names).find(k => want.names[k] === name), x = want.sim[id];
     assert.equal(Number(pts), x.currentPoints, name); assert.equal(exp, x.expectedPoints.toFixed(1), name); assert.equal(rel, `${Math.round(x.relegated * 100)}%`, name);
   }
-  assert.equal(await page.locator('#replay tr.breach').count(), 3, 'three actually relegated teams highlighted');
-  const w = await page.locator('#replay .bar').first().evaluate(b => [b.dataset.w, getComputedStyle(b).getPropertyValue('--w').trim()]); assert.equal(w[1], `${w[0]}%`, 'bar width applied');
-  assert.match(await page.innerText('#replay'), new RegExp(`Cut-off: results before ${want.cutOff}`));
-  await page.locator('#h-replay').scrollIntoViewIfNeeded(); await page.screenshot({path: join(out, 'lab_replay_desktop.png'), fullPage: false});
+  assert.equal(await page.locator('#replay tr.breach').count(), 3);
+  const mall = rows.find(r => r[0] === 'RCD Mallorca'), lev = rows.find(r => r[0] === 'Levante UD');
+  assert.match(mall[4], /^18 · relegated · on head-to-head$/); assert.match(lev[4], /^16/); assert.doesNotMatch(lev[4], /relegated/);
+  const w = await page.locator('#replay .bar').first().evaluate(b => [b.dataset.w, getComputedStyle(b).getPropertyValue('--w').trim()]); assert.equal(w[1], `${w[0]}%`);
+  await page.locator('#h-replay').scrollIntoViewIfNeeded(); await page.screenshot({path: join(out, 'lab_replay_desktop.png')});
+});
+
+await t('4b · the exact missing 2026/27 observations are listed (61, by matchday) with the data-rights requirement', async () => {
+  const sec = page.locator('#h-gap').locator('xpath=ancestor::section[1]'); const text = await sec.innerText();
+  assert.match(text, /61 results missing/); assert.match(text, /matchday 8: 10, matchday 9: 10, matchday 10: 10, matchday 11: 10, matchday 12: 10, matchday 13: 10/); assert.match(text, /matchday 6: 1/);
+  await sec.locator('summary').click(); assert.equal(await sec.locator('details tbody tr').count(), 61);
+  assert.match(text, /terms allow this reuse/);
 });
 
 await t('5 · calls to action and links: Málaga case, software page and every internal link answer 200; review is a pre-filled e-mail', async () => {

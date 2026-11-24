@@ -14,6 +14,7 @@
  * same inputs always give the same output (tested).
  */
 import {poisson, rows} from './football.js';
+import {standings, tally, amongFrom, straddlesRelegation} from './ranking.js';
 
 // ------------------------------------------------------------------ identity
 const STRIP = new Set(['fc', 'cf', 'c', 'f', 'cd', 'rc', 'rcd', 'ud', 'sd', 'ca', 'club', 'de', 'del', 'balompie', 'futbol']);
@@ -167,29 +168,46 @@ export function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79
 function sampleScore(M, u) { let s = 0; for (let i = 0; i < M.length; i++) for (let j = 0; j < M.length; j++) { s += M[i][j]; if (u < s) return [i, j]; } return [M.length - 1, M.length - 1]; }
 /**
  * Simulates the rest of a season from a state (matches with goals) and its remaining fixtures, `n` times with a
- * seed. Ranking: points, then goal difference, then goals scored (head-to-head, LaLiga's first tie-breaker, is not
- * modelled; equal teams are then ordered at random with the same seed). Returns, per team, the share of simulations
- * in each final position, the relegation share (last `relegated` places) and the average points.
+ * seed. Each simulated final table is ranked with the RFEF rules (ranking.js): points, then head-to-head (points and
+ * goal difference among the clubs level, re-applied to sub-groups), then overall goal difference and goals scored.
+ * A tie that only fair play could break (not in the data) is not broken at random: its clubs share the block's
+ * positions equally, and the share of simulations in which such a block straddles the relegation line is reported.
+ * Returns, per team, the share of simulations in each final position, the relegation share (last `relegated`
+ * places), the average points, and `unresolvedRelegationTies` (share of simulations with a straddling block).
+ * `adjust`: points added or removed by the competition ({team: -3}).
  */
-export function simulateSeason({played, remaining, ratings, n = 5000, seed = 20261124, relegated = 3}) {
-  const teams = [...new Set([...played, ...remaining].flatMap(m => [m.h, m.a]))], base = Object.fromEntries(teams.map(t => [t, {pts: 0, gd: 0, gf: 0}]));
-  for (const m of played) { const H = base[m.h], A = base[m.a]; H.gf += m.hg; A.gf += m.ag; H.gd += m.hg - m.ag; A.gd += m.ag - m.hg; if (m.hg > m.ag) H.pts += 3; else if (m.hg < m.ag) A.pts += 3; else { H.pts++; A.pts++; } }
+export function simulateSeason({played, remaining, ratings, n = 5000, seed = 20261124, relegated = 3, adjust = {}}) {
+  const fixtures = [...played, ...remaining], teams = [...new Set(fixtures.flatMap(m => [m.h, m.a]))], N = teams.length;
+  const base = tally(teams, played);
+  for (const [t, d] of Object.entries(adjust)) if (base[t]) base[t].points += d;
   const mats = remaining.map(m => { const mm = means(ratings, m.h, m.a); return scoreMatrix(mm.home, mm.away, ratings.rho); });
-  const R = rng(seed), pos = Object.fromEntries(teams.map(t => [t, Array(teams.length).fill(0)])), pts = Object.fromEntries(teams.map(t => [t, 0]));
+  // Fixtures between each pair, as references into the current simulation's scores (for head-to-head).
+  const cur = fixtures.map(m => ({h: m.h, a: m.a, hg: m.hg, ag: m.ag})), remIdx = remaining.map((_, i) => played.length + i), among = amongFrom(cur);
+  const R = rng(seed), pos = Object.fromEntries(teams.map(t => [t, new Float64Array(N)])), pts = Object.fromEntries(teams.map(t => [t, 0]));
+  let straddle = 0;
   for (let s = 0; s < n; s++) {
     const tb = Object.fromEntries(teams.map(t => [t, {...base[t]}]));
-    remaining.forEach((m, i) => { const [x, y] = sampleScore(mats[i], R()), H = tb[m.h], A = tb[m.a]; H.gf += x; A.gf += y; H.gd += x - y; A.gd += y - x; if (x > y) H.pts += 3; else if (x < y) A.pts += 3; else { H.pts++; A.pts++; } });
-    const order = teams.map(t => [t, R()]).sort((p, q) => tb[q[0]].pts - tb[p[0]].pts || tb[q[0]].gd - tb[p[0]].gd || tb[q[0]].gf - tb[p[0]].gf || p[1] - q[1]).map(x => x[0]);
-    order.forEach((t, k) => { pos[t][k]++; pts[t] += tb[t].pts; });
+    for (let i = 0; i < remaining.length; i++) {
+      const m = remaining[i], [x, y] = sampleScore(mats[i], R()), H = tb[m.h], A = tb[m.a], c = cur[remIdx[i]]; c.hg = x; c.ag = y;
+      H.gf += x; A.gf += y; H.ga += y; A.ga += x; H.gd += x - y; A.gd += y - x; if (x > y) H.points += 3; else if (x < y) A.points += 3; else { H.points++; A.points++; }
+    }
+    const table = standings(teams, cur, {overall: tb, among});
+    for (const r of table.rows) {
+      const [p0, p1] = r.sharedPositions ?? [r.position, r.position], w = 1 / (p1 - p0 + 1);
+      for (let k = p0; k <= p1; k++) pos[r.team][k - 1] += w;
+      pts[r.team] += r.points;
+    }
+    if (straddlesRelegation(table, relegated)) straddle++;
   }
-  const N = teams.length;
-  return Object.fromEntries(teams.map(t => [t, {positions: pos[t].map(c => c / n), relegated: pos[t].slice(N - relegated).reduce((a, b) => a + b, 0) / n, expectedPoints: pts[t] / n, currentPoints: base[t].pts}]));
+  const out = Object.fromEntries(teams.map(t => [t, {positions: [...pos[t]].map(c => c / n), relegated: [...pos[t]].slice(N - relegated).reduce((a, b) => a + b, 0) / n, expectedPoints: pts[t] / n, currentPoints: base[t].points}]));
+  Object.defineProperty(out, 'unresolvedRelegationTies', {value: straddle / n, enumerable: false});
+  return out;
 }
 /**
  * Historical replay at a matchday: ratings from matches before the first remaining fixture, simulation of the rest,
  * and the actual final outcome (the replay never reads results after the cut-off; the outcome is attached afterwards).
  */
-export function replay(dataset, season, afterMatchday, {n = 5000, seed = 20261124, ...opts} = {}) {
+export function replay(dataset, season, afterMatchday, {n = 5000, seed = 20261124, adjust = null, ...opts} = {}) {
   const all = allMatches(dataset), ms = all.filter(m => m.season === season);
   // Cut-off: the first match of a later matchday. A match of an earlier matchday postponed beyond it is treated as
   // not yet played, so neither the table nor the ratings know a result from after the cut-off.
@@ -199,11 +217,16 @@ export function replay(dataset, season, afterMatchday, {n = 5000, seed = 2026112
   const pr = newTeamPrior(all, cut), prev = new Set(all.filter(m => m.hg !== null && m.date < cut && days(m.date, cut) <= 400 && m.season !== season).flatMap(m => [m.h, m.a]));
   const visible = all.filter(m => m.date < cut && (m.season !== season || played.includes(m)));
   const ratings = fit(visible, cut, {...opts, teams, prior: t => (!prev.has(t) && pr ? [pr.attack, pr.defence] : [1, 1])});
+  // Point adjustments decided by the competition (e.g. a deduction) are known only at the end: they apply to the final
+  // table, not to the simulation from the cut-off.
   const sim = simulateSeason({played, remaining: remaining.map(m => ({...m, hg: null, ag: null})), ratings, n, seed});
+  // Table at the cut-off (RFEF rules; an incomplete head-to-head is skipped, as during a season).
+  const now = standings(teams, ms.map(m => (played.includes(m) ? m : {...m, hg: null, ag: null})));
   let actual = null;
   if (ms.every(m => m.hg !== null)) {
-    const fin = simulateSeason({played: ms, remaining: [], ratings, n: 1, seed});
-    actual = Object.fromEntries(Object.entries(fin).map(([t, x]) => [t, {position: x.positions.indexOf(1) + 1, relegated: x.relegated === 1, points: x.currentPoints}]));
+    const fin = standings(teams, ms, {adjust: adjust ?? {}}), N = teams.length;
+    actual = Object.fromEntries(fin.rows.map(r => [r.team, {position: r.position, sharedPositions: r.sharedPositions, relegated: r.sharedPositions ? null : r.position > N - 3, points: r.points, decidedBy: r.decidedBy}]));
   }
-  return {season, afterMatchday, cutOff: cut, ratingsFrom: ratings.matches, latestResultUsed: ratings.latest, sim, actual, names: Object.fromEntries(ms.flatMap(m => [[m.h, m.home], [m.a, m.away]]))};
+  return {season, afterMatchday, cutOff: cut, ratingsFrom: ratings.matches, latestResultUsed: ratings.latest, sim, unresolvedRelegationTies: sim.unresolvedRelegationTies, actual,
+    table: now.rows.map(r => ({team: r.team, position: r.position, points: r.points, gd: r.gd, gf: r.gf, sharedPositions: r.sharedPositions})), names: Object.fromEntries(ms.flatMap(m => [[m.h, m.home], [m.a, m.away]]))};
 }

@@ -1,4 +1,9 @@
 /**
+ * ARCHIVED (superseded by scripts/forecast-validation-v2.mjs). This produced forecast-validation-v1.json at commit
+ * 2a05287 with the previous ranking (overall goal difference, random order for exact ties). It is kept, unchanged in
+ * substance, as the 'before' reference; it no longer reproduces the v1 file because the engine now ranks with the
+ * RFEF rules. To reproduce v1 exactly: git checkout 2a05287 && node scripts/forecast-validation.mjs --check.
+ *
  * Walk-forward validation of the LANOVA Football Forecast Lab (lanova/cases/forecast.js) on the CC0 LaLiga dataset.
  *
  * 1. Tuning (2015/16–2018/19): a small grid of settings, chosen by mean log loss of match outcomes.
@@ -15,7 +20,7 @@
 import {readFileSync, writeFileSync, existsSync} from 'node:fs';
 import {walkForward, score, replay, calibration, brier, allMatches} from '../lanova/cases/forecast.js';
 
-const OUT = 'lanova/cases/data/forecast-validation.json', SEED = 20261124, SIMS = 4000, AT = 13;
+const OUT = 'lanova/cases/data/forecast-validation-v1.json', SEED = 20261124, SIMS = 4000, AT = 13;
 const TUNE = ['2015-16', '2016-17', '2017-18', '2018-19'], TEST = ['2019-20', '2020-21', '2021-22', '2022-23', '2023-24', '2024-25', '2025-26'];
 const GRID = [];
 for (const halfLife of [120, 240, 365, 730]) for (const k of [2, 4, 8]) for (const dixonColes of [false, true]) GRID.push({halfLife, k, dixonColes});
