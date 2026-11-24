@@ -119,6 +119,35 @@ await t('10 · residual fixes: hero counter from data; corrected positions show 
   assert.match(await page.innerText('#club-panel'), /Bilbao/);
 });
 
+await t('11 · behavioural: the Wikidata counter follows the served coverage data (two substituted count pairs, en-GB formatting; mock isolated)', async () => {
+  const fmtGB = n => n.toLocaleString('en-GB'), counter = async (pairs) => {
+    // A separate browser context: the interception cannot leak into the other checks.
+    const c = await browser.newContext({viewport: {width: 1440, height: 900}, reducedMotion: 'reduce'});
+    await c.route(/fonts\.(googleapis|gstatic)\.com|railway\.app/, r => r.abort());
+    if (pairs) await c.route('**/spain-data/coverage-2026-27.json', async route => {
+      const original = await route.fetch(), data = await original.json();   // the real file, served by the test server
+      data.wikidata.checked = pairs[0]; data.wikidata.playersWithQid = pairs[1];   // modified in memory only
+      await route.fulfill({response: original, json: data});
+    });
+    const p = await c.newPage(); p.on('pageerror', e => errors.push(e.message));
+    await p.goto(`${URL0}?club=es-malaga-cf`); await p.waitForSelector('table.squad tbody tr');
+    const out = {hero: await p.innerText('#wd-count'), tile: await p.locator('#coverage-panel').innerText()};
+    await c.close(); return out;
+  };
+  const real = COV.wikidata, before = await counter(null);
+  assert.equal(before.hero, `${fmtGB(real.checked)} of ${fmtGB(real.playersWithQid)} players with a Wikidata identifier were checked`);
+  assert.equal(before.hero, '333 of 1,028 players with a Wikidata identifier were checked');
+  for (const [checked, withQid, text] of [[12345, 67890, '12,345 of 67,890'], [7, 1234567, '7 of 1,234,567']]) {
+    const got = await counter([checked, withQid]);
+    assert.equal(got.hero, `${text} players with a Wikidata identifier were checked`, `served ${checked}/${withQid}`);
+    assert.doesNotMatch(got.hero, /\b333\b|1,028/, 'the original counts must not appear when other values are served');
+    assert.match(got.tile, new RegExp(`${text.replace(' of ', ' / ')}`), 'the coverage tile reads the same served values');
+  }
+  const after = await counter(null);   // no mock: the real data again
+  assert.equal(after.hero, before.hero, 'the mock did not persist');
+  assert.equal(JSON.parse(readFileSync('lanova/cases/spain-data/coverage-2026-27.json', 'utf8')).wikidata.checked, real.checked, 'dataset on disk unchanged');
+});
+
 await t('9 · no page error and no request to any other site', async () => { assert.deepEqual(errors, []); assert.deepEqual(offsite, []); });
 await desk.close(); await browser.close(); server.close();
 writeFileSync(join(out, 'spain-clubs-e2e-results.json'), JSON.stringify({generatedAt: new Date().toISOString(), checks}, null, 2));
