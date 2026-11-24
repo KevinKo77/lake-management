@@ -1,0 +1,656 @@
+{
+  "schema": "lanova-openfootballbase-manifest-verification-v1",
+  "repository": "https://github.com/florentfougeres/OpenFootballBase-Data",
+  "release": "data-1.24.6",
+  "releaseCommit": "99fcbb686b3c685ea43a3ad2f1e1bcb6d0c0f14d",
+  "archive": "https://github.com/florentfougeres/OpenFootballBase-Data/releases/download/data-1.24.6/openfootballbase-data.tar.gz",
+  "verifiedAt": "2026-11-24",
+  "archiveBytes": 41254886,
+  "expectedArchiveSha256": "16539db3ce2b28ef3c0e4500ac31c24d90995a02eafab57daf4cef8b6b8680f9",
+  "observedArchiveSha256": "16539db3ce2b28ef3c0e4500ac31c24d90995a02eafab57daf4cef8b6b8680f9",
+  "archiveSha256Matches": true,
+  "manifestPath": "manifest.json",
+  "manifestSha256": "106bb12e25e5ede802d49da48df2da2257146be86dd7e6cb3fb12ba89daa0820",
+  "manifestFileEntries": 83,
+  "manifestFileHashesChecked": 83,
+  "manifestFileHashMismatches": 0,
+  "method": "Downloaded the published release archive, verified the archive SHA-256, extracted it, then recomputed SHA-256 for every file entry in manifest.json.",
+  "limitations": "This verifies byte integrity against the publisher's release metadata and internal manifest; it does not independently establish the truth of the underlying Wikipedia/Wikidata records or grant rights beyond the stated licences.",
+  "verifiedFiles": [
+    {
+      "group": "tables",
+      "name": "club",
+      "path": "club/club.1441a283.parquet",
+      "expectedSha256": "1441a2839a656a8291e1999740da3629ffca9945efec2dfce684576b465519ce",
+      "observedSha256": "1441a2839a656a8291e1999740da3629ffca9945efec2dfce684576b465519ce"
+    },
+    {
+      "group": "tables",
+      "name": "birth",
+      "path": "birth/birth.a17ad497.parquet",
+      "expectedSha256": "a17ad49793bc04b6a7ff3d274f990a020a62ba4d9ce84c58eead299c4004b55d",
+      "observedSha256": "a17ad49793bc04b6a7ff3d274f990a020a62ba4d9ce84c58eead299c4004b55d"
+    },
+    {
+      "group": "tables",
+      "name": "entity_wiki",
+      "path": "entity_wiki/entity_wiki.b218ba11.parquet",
+      "expectedSha256": "b218ba110ce3bc00ecafc28061a781a2c024f8e72827d3c08a13747dccfddab1",
+      "observedSha256": "b218ba110ce3bc00ecafc28061a781a2c024f8e72827d3c08a13747dccfddab1"
+    },
+    {
+      "group": "tables",
+      "name": "competition",
+      "path": "competition/competition.b393c4a4.parquet",
+      "expectedSha256": "b393c4a4b4a18e04b6871faf80645685307cfd4cce65bdd1ac458cb7603f97f8",
+      "observedSha256": "b393c4a4b4a18e04b6871faf80645685307cfd4cce65bdd1ac458cb7603f97f8"
+    },
+    {
+      "group": "tables",
+      "name": "season",
+      "path": "season/season.a28d16c4.parquet",
+      "expectedSha256": "a28d16c43971897f21658bb747298604f3db83a3409833b1e214f8cd3f3d393e",
+      "observedSha256": "a28d16c43971897f21658bb747298604f3db83a3409833b1e214f8cd3f3d393e"
+    },
+    {
+      "group": "tables",
+      "name": "country",
+      "path": "country/country.c2d43633.parquet",
+      "expectedSha256": "c2d43633b4ed0f7ee4538120738d706a1ec1973bc62760896be0004ad9ad60bd",
+      "observedSha256": "c2d43633b4ed0f7ee4538120738d706a1ec1973bc62760896be0004ad9ad60bd"
+    },
+    {
+      "group": "tables",
+      "name": "career",
+      "path": "career/career.73c03e25.parquet",
+      "expectedSha256": "73c03e25294f2d7f6c82d6fc74073d2aabcdc87e2eb318a88c7d62f08a9b8a47",
+      "observedSha256": "73c03e25294f2d7f6c82d6fc74073d2aabcdc87e2eb318a88c7d62f08a9b8a47"
+    },
+    {
+      "group": "tables",
+      "name": "national",
+      "path": "national/national.bfecaab6.parquet",
+      "expectedSha256": "bfecaab60c3580ff158402a55a2af811fec801daa3e2ce4cf6222d899fe6c358",
+      "observedSha256": "bfecaab60c3580ff158402a55a2af811fec801daa3e2ce4cf6222d899fe6c358"
+    },
+    {
+      "group": "tables",
+      "name": "stat_club",
+      "path": "stat_club/stat_club.19fbda3f.parquet",
+      "expectedSha256": "19fbda3f901236b563e6bc14459c6d451f7f97023f773621eb71b5bf7ff642ce",
+      "observedSha256": "19fbda3f901236b563e6bc14459c6d451f7f97023f773621eb71b5bf7ff642ce"
+    },
+    {
+      "group": "tables",
+      "name": "stat_national",
+      "path": "stat_national/stat_national.deb89409.parquet",
+      "expectedSha256": "deb89409fb199fc0c757ab3140f3047a9730352552ad5f807d2b7475225c504a",
+      "observedSha256": "deb89409fb199fc0c757ab3140f3047a9730352552ad5f807d2b7475225c504a"
+    },
+    {
+      "group": "tables",
+      "name": "stat_source",
+      "path": "stat_source/stat_source.4d277a5d.parquet",
+      "expectedSha256": "4d277a5dc6f28aa0bdf6f787df454895ef5f5dd88240fca2ee18581435df7b75",
+      "observedSha256": "4d277a5dc6f28aa0bdf6f787df454895ef5f5dd88240fca2ee18581435df7b75"
+    },
+    {
+      "group": "tables",
+      "name": "winner",
+      "path": "winner/winner.b7349424.parquet",
+      "expectedSha256": "b73494245fc95e07d9bc6eddffffa3c33ae5111dcc9090c444258e19000ca3dc",
+      "observedSha256": "b73494245fc95e07d9bc6eddffffa3c33ae5111dcc9090c444258e19000ca3dc"
+    },
+    {
+      "group": "tables",
+      "name": "award",
+      "path": "award/award.e18a6e69.parquet",
+      "expectedSha256": "e18a6e692f271b67641d326a3c461b5721725819b5c0cd897b242050dfa8a662",
+      "observedSha256": "e18a6e692f271b67641d326a3c461b5721725819b5c0cd897b242050dfa8a662"
+    },
+    {
+      "group": "tables",
+      "name": "top_scorer",
+      "path": "top_scorer/top_scorer.574d1185.parquet",
+      "expectedSha256": "574d11857da9277038b8a3c8bc03a813254bd35d2f9b3e026ab30fb16d2de5ef",
+      "observedSha256": "574d11857da9277038b8a3c8bc03a813254bd35d2f9b3e026ab30fb16d2de5ef"
+    },
+    {
+      "group": "tables",
+      "name": "national_title",
+      "path": "national_title/national_title.f8610ca9.parquet",
+      "expectedSha256": "f8610ca9e886d519daad4b49b42625065c7b367828171b0e716d90ca5969bdad",
+      "observedSha256": "f8610ca9e886d519daad4b49b42625065c7b367828171b0e716d90ca5969bdad"
+    },
+    {
+      "group": "tables",
+      "name": "coach",
+      "path": "coach/coach.34c55bf4.parquet",
+      "expectedSha256": "34c55bf4368cffd4b5361f6b31d8b57a005221ca1212161bf97c4096c3672f06",
+      "observedSha256": "34c55bf4368cffd4b5361f6b31d8b57a005221ca1212161bf97c4096c3672f06"
+    },
+    {
+      "group": "tables",
+      "name": "coach_profile",
+      "path": "coach_profile/coach_profile.bd96700d.parquet",
+      "expectedSha256": "bd96700d12381119901e900c2f8114210bf006bb4951eeefbe4cfecf7e4d17d5",
+      "observedSha256": "bd96700d12381119901e900c2f8114210bf006bb4951eeefbe4cfecf7e4d17d5"
+    },
+    {
+      "group": "tables",
+      "name": "coach_career",
+      "path": "coach_career/coach_career.93840375.parquet",
+      "expectedSha256": "9384037572111563eaa02b0b770992a38e1a0e9697e76bc47a321aa69a2e8e99",
+      "observedSha256": "9384037572111563eaa02b0b770992a38e1a0e9697e76bc47a321aa69a2e8e99"
+    },
+    {
+      "group": "tables",
+      "name": "match",
+      "path": "match/match.215661ea.parquet",
+      "expectedSha256": "215661ea7813d85e1cffb33250094fd7a6a171e7f073c93c47bf077bd9e6c61e",
+      "observedSha256": "215661ea7813d85e1cffb33250094fd7a6a171e7f073c93c47bf077bd9e6c61e"
+    },
+    {
+      "group": "tables",
+      "name": "match_competition",
+      "path": "match_competition/match_competition.420f56fa.parquet",
+      "expectedSha256": "420f56fabe2817e51669f3ace268999aa7ddd0c504b34ca66f568c33323b5e3a",
+      "observedSha256": "420f56fabe2817e51669f3ace268999aa7ddd0c504b34ca66f568c33323b5e3a"
+    },
+    {
+      "group": "tables",
+      "name": "match_goal",
+      "path": "match_goal/match_goal.e26f62fe.parquet",
+      "expectedSha256": "e26f62fe03c212cb8b062a83b65cd99772447e1cf7ea8f8fff81a9b2683069d6",
+      "observedSha256": "e26f62fe03c212cb8b062a83b65cd99772447e1cf7ea8f8fff81a9b2683069d6"
+    },
+    {
+      "group": "tables",
+      "name": "match_lineup",
+      "path": "match_lineup/match_lineup.22937a9f.parquet",
+      "expectedSha256": "22937a9ff54fece400238b8221dfdec1b1ba778c24d6c8bbd6875aed0cb5e288",
+      "observedSha256": "22937a9ff54fece400238b8221dfdec1b1ba778c24d6c8bbd6875aed0cb5e288"
+    },
+    {
+      "group": "tables",
+      "name": "match_card",
+      "path": "match_card/match_card.441e11a1.parquet",
+      "expectedSha256": "441e11a1639f310e8a5e160c01f5141c8f0e84d6430b42ec0e422bbfbeb61e35",
+      "observedSha256": "441e11a1639f310e8a5e160c01f5141c8f0e84d6430b42ec0e422bbfbeb61e35"
+    },
+    {
+      "group": "tables",
+      "name": "player_openfootball",
+      "path": "player_openfootball/player_openfootball.cdcadaf5.parquet",
+      "expectedSha256": "cdcadaf57a4b307090bcff19aa00b8e3eab21efc977380e966223d6a8ee18098",
+      "observedSha256": "cdcadaf57a4b307090bcff19aa00b8e3eab21efc977380e966223d6a8ee18098"
+    },
+    {
+      "group": "tables",
+      "name": "player_external_id",
+      "path": "player_external_id/player_external_id.d700d273.parquet",
+      "expectedSha256": "d700d27313579100ec893d26e135bd6c7bf2e8c5544ccae68ad3b3054b1d05b4",
+      "observedSha256": "d700d27313579100ec893d26e135bd6c7bf2e8c5544ccae68ad3b3054b1d05b4"
+    },
+    {
+      "group": "tables",
+      "name": "player_profile",
+      "path": "player_profile/player_profile.50dac425.parquet",
+      "expectedSha256": "50dac425826342135e708f7bd14c6dde9e3162289888a1040aa021713ce14808",
+      "observedSha256": "50dac425826342135e708f7bd14c6dde9e3162289888a1040aa021713ce14808"
+    },
+    {
+      "group": "tables",
+      "name": "squad_source",
+      "path": "squad_source/squad_source.d3a0cd20.parquet",
+      "expectedSha256": "d3a0cd20ac37641c911e0f9eca7abae9f2bd51dde7d37ac4a5a176676d3df915",
+      "observedSha256": "d3a0cd20ac37641c911e0f9eca7abae9f2bd51dde7d37ac4a5a176676d3df915"
+    },
+    {
+      "group": "tables",
+      "name": "known_gap",
+      "path": "known_gap/known_gap.2e22296a.parquet",
+      "expectedSha256": "2e22296a6ef337962af4d87b8fe8c51b6deef0cf4ce8c8291ad7107a7ab3576f",
+      "observedSha256": "2e22296a6ef337962af4d87b8fe8c51b6deef0cf4ce8c8291ad7107a7ab3576f"
+    },
+    {
+      "group": "tables",
+      "name": "competition_club",
+      "path": "competition_club/competition_club.5eb08a4e.parquet",
+      "expectedSha256": "5eb08a4e63a1f6cea67fe81b8a7b47e179d87e0de213d8540209f8cee53a388e",
+      "observedSha256": "5eb08a4e63a1f6cea67fe81b8a7b47e179d87e0de213d8540209f8cee53a388e"
+    },
+    {
+      "group": "seasons",
+      "season": "2000/01",
+      "name": "squad",
+      "path": "squad/2000-01.08268b95.parquet",
+      "expectedSha256": "08268b950f99106d259475fc0c8caaf94f3aca6353243786d28ed413a54b5e2b",
+      "observedSha256": "08268b950f99106d259475fc0c8caaf94f3aca6353243786d28ed413a54b5e2b"
+    },
+    {
+      "group": "seasons",
+      "season": "2000/01",
+      "name": "club_season",
+      "path": "club_season/2000-01.f84ab43a.parquet",
+      "expectedSha256": "f84ab43a2127ea0342cbd2845ab791dddfcb00cf4acf13b5525cf3b43cba9897",
+      "observedSha256": "f84ab43a2127ea0342cbd2845ab791dddfcb00cf4acf13b5525cf3b43cba9897"
+    },
+    {
+      "group": "seasons",
+      "season": "2001/02",
+      "name": "squad",
+      "path": "squad/2001-02.d2bfb739.parquet",
+      "expectedSha256": "d2bfb739b27866a9b1139b0ee6330acb9b6baa2af2134e412561b1c4abb6a4a9",
+      "observedSha256": "d2bfb739b27866a9b1139b0ee6330acb9b6baa2af2134e412561b1c4abb6a4a9"
+    },
+    {
+      "group": "seasons",
+      "season": "2001/02",
+      "name": "club_season",
+      "path": "club_season/2001-02.9af66c99.parquet",
+      "expectedSha256": "9af66c996fcc4d8d3f2373172c5310f4dc52efab4d2576d319eb627f668347fe",
+      "observedSha256": "9af66c996fcc4d8d3f2373172c5310f4dc52efab4d2576d319eb627f668347fe"
+    },
+    {
+      "group": "seasons",
+      "season": "2002/03",
+      "name": "squad",
+      "path": "squad/2002-03.9ce10638.parquet",
+      "expectedSha256": "9ce1063891c10727ed22977fe312079b344124b95c7ffaf787b59a6ee22c8831",
+      "observedSha256": "9ce1063891c10727ed22977fe312079b344124b95c7ffaf787b59a6ee22c8831"
+    },
+    {
+      "group": "seasons",
+      "season": "2002/03",
+      "name": "club_season",
+      "path": "club_season/2002-03.01e07eec.parquet",
+      "expectedSha256": "01e07eec0787d89939aa9ebee9bcba4c730d3fe15bebeb8b98085e36d0ae6f64",
+      "observedSha256": "01e07eec0787d89939aa9ebee9bcba4c730d3fe15bebeb8b98085e36d0ae6f64"
+    },
+    {
+      "group": "seasons",
+      "season": "2003/04",
+      "name": "squad",
+      "path": "squad/2003-04.978ab087.parquet",
+      "expectedSha256": "978ab087cae78375fb89ed67b22ce4197955be195894baf07f56661247ce5ba5",
+      "observedSha256": "978ab087cae78375fb89ed67b22ce4197955be195894baf07f56661247ce5ba5"
+    },
+    {
+      "group": "seasons",
+      "season": "2003/04",
+      "name": "club_season",
+      "path": "club_season/2003-04.ea232c6e.parquet",
+      "expectedSha256": "ea232c6ea3ed04a8436f10d3649734733bf012f5c753f928991578300800719a",
+      "observedSha256": "ea232c6ea3ed04a8436f10d3649734733bf012f5c753f928991578300800719a"
+    },
+    {
+      "group": "seasons",
+      "season": "2004/05",
+      "name": "squad",
+      "path": "squad/2004-05.36ebfefe.parquet",
+      "expectedSha256": "36ebfefe910ed57c08326f98deecf7638b66be9e412b120c1a10145a61e9caba",
+      "observedSha256": "36ebfefe910ed57c08326f98deecf7638b66be9e412b120c1a10145a61e9caba"
+    },
+    {
+      "group": "seasons",
+      "season": "2004/05",
+      "name": "club_season",
+      "path": "club_season/2004-05.893adf06.parquet",
+      "expectedSha256": "893adf0603d20e00dc88fb5df8f2b3f813c587b98066a9c352bb57671aaa8642",
+      "observedSha256": "893adf0603d20e00dc88fb5df8f2b3f813c587b98066a9c352bb57671aaa8642"
+    },
+    {
+      "group": "seasons",
+      "season": "2005/06",
+      "name": "squad",
+      "path": "squad/2005-06.96cc6e73.parquet",
+      "expectedSha256": "96cc6e731e7fcf1dafc89543c2294d2a48fc294912f8c8766a5f9cac4b924acd",
+      "observedSha256": "96cc6e731e7fcf1dafc89543c2294d2a48fc294912f8c8766a5f9cac4b924acd"
+    },
+    {
+      "group": "seasons",
+      "season": "2005/06",
+      "name": "club_season",
+      "path": "club_season/2005-06.d85dac2d.parquet",
+      "expectedSha256": "d85dac2d1414a131e146302de9e3590fd0a8d0a1355993990e60360343dc41fa",
+      "observedSha256": "d85dac2d1414a131e146302de9e3590fd0a8d0a1355993990e60360343dc41fa"
+    },
+    {
+      "group": "seasons",
+      "season": "2006/07",
+      "name": "squad",
+      "path": "squad/2006-07.c62409f4.parquet",
+      "expectedSha256": "c62409f4ce079e43edc72605196f0c33ddac4e7512dc7043fefe96ca3a628936",
+      "observedSha256": "c62409f4ce079e43edc72605196f0c33ddac4e7512dc7043fefe96ca3a628936"
+    },
+    {
+      "group": "seasons",
+      "season": "2006/07",
+      "name": "club_season",
+      "path": "club_season/2006-07.7c1976f7.parquet",
+      "expectedSha256": "7c1976f707532c9c0b1a593f594edeefbe362ef0068a32737e18b3cfff1aa789",
+      "observedSha256": "7c1976f707532c9c0b1a593f594edeefbe362ef0068a32737e18b3cfff1aa789"
+    },
+    {
+      "group": "seasons",
+      "season": "2007/08",
+      "name": "squad",
+      "path": "squad/2007-08.ff7d1ecc.parquet",
+      "expectedSha256": "ff7d1ecc8aeaedd6fd0cbe008e29bda6e8cc0f347decacebf33a3c192d186558",
+      "observedSha256": "ff7d1ecc8aeaedd6fd0cbe008e29bda6e8cc0f347decacebf33a3c192d186558"
+    },
+    {
+      "group": "seasons",
+      "season": "2007/08",
+      "name": "club_season",
+      "path": "club_season/2007-08.42f40c0b.parquet",
+      "expectedSha256": "42f40c0bf04173a63ad775d6e8597faed8f4cab8cba2ef8bcda506e1221bfed0",
+      "observedSha256": "42f40c0bf04173a63ad775d6e8597faed8f4cab8cba2ef8bcda506e1221bfed0"
+    },
+    {
+      "group": "seasons",
+      "season": "2008/09",
+      "name": "squad",
+      "path": "squad/2008-09.869e9a76.parquet",
+      "expectedSha256": "869e9a76d720580d329a82ea271db5c41dfba2c39804a56458878fc4a61f5698",
+      "observedSha256": "869e9a76d720580d329a82ea271db5c41dfba2c39804a56458878fc4a61f5698"
+    },
+    {
+      "group": "seasons",
+      "season": "2008/09",
+      "name": "club_season",
+      "path": "club_season/2008-09.9bae78c0.parquet",
+      "expectedSha256": "9bae78c039a50c2fe56c6291b633cfe423f8c6d18d29d9e5bcd1daedec8425c6",
+      "observedSha256": "9bae78c039a50c2fe56c6291b633cfe423f8c6d18d29d9e5bcd1daedec8425c6"
+    },
+    {
+      "group": "seasons",
+      "season": "2009/10",
+      "name": "squad",
+      "path": "squad/2009-10.a14073df.parquet",
+      "expectedSha256": "a14073dffa7072640f003987852642788fdc6827c11549d1e28b0ff63d141e76",
+      "observedSha256": "a14073dffa7072640f003987852642788fdc6827c11549d1e28b0ff63d141e76"
+    },
+    {
+      "group": "seasons",
+      "season": "2009/10",
+      "name": "club_season",
+      "path": "club_season/2009-10.9eda6115.parquet",
+      "expectedSha256": "9eda611572f0021f7dec32ef8551f29dbe78ac07903036ed855825bb8ddf0eb2",
+      "observedSha256": "9eda611572f0021f7dec32ef8551f29dbe78ac07903036ed855825bb8ddf0eb2"
+    },
+    {
+      "group": "seasons",
+      "season": "2010/11",
+      "name": "squad",
+      "path": "squad/2010-11.a3ab8858.parquet",
+      "expectedSha256": "a3ab8858094a7b7bfd9bb31a7f67e27b88ebe862ed5dfe8cd0f835caefb0e9ea",
+      "observedSha256": "a3ab8858094a7b7bfd9bb31a7f67e27b88ebe862ed5dfe8cd0f835caefb0e9ea"
+    },
+    {
+      "group": "seasons",
+      "season": "2010/11",
+      "name": "club_season",
+      "path": "club_season/2010-11.0fd0b42a.parquet",
+      "expectedSha256": "0fd0b42a2f184af759a06e0fedd9e527d270eae1833e7c6171d766e303db0e37",
+      "observedSha256": "0fd0b42a2f184af759a06e0fedd9e527d270eae1833e7c6171d766e303db0e37"
+    },
+    {
+      "group": "seasons",
+      "season": "2011/12",
+      "name": "squad",
+      "path": "squad/2011-12.dd746537.parquet",
+      "expectedSha256": "dd7465379167a1b1c049081bd4e8626def346640481df25188de92d10a9d5834",
+      "observedSha256": "dd7465379167a1b1c049081bd4e8626def346640481df25188de92d10a9d5834"
+    },
+    {
+      "group": "seasons",
+      "season": "2011/12",
+      "name": "club_season",
+      "path": "club_season/2011-12.562f46c7.parquet",
+      "expectedSha256": "562f46c79e23f22cd41390f63b81a98039a48b7f3dd97675328c877a2d212182",
+      "observedSha256": "562f46c79e23f22cd41390f63b81a98039a48b7f3dd97675328c877a2d212182"
+    },
+    {
+      "group": "seasons",
+      "season": "2012/13",
+      "name": "squad",
+      "path": "squad/2012-13.0bc64a02.parquet",
+      "expectedSha256": "0bc64a025f20cf38a7de33109c8c72c383fcb8b1d31b2fef613b57200c332964",
+      "observedSha256": "0bc64a025f20cf38a7de33109c8c72c383fcb8b1d31b2fef613b57200c332964"
+    },
+    {
+      "group": "seasons",
+      "season": "2012/13",
+      "name": "club_season",
+      "path": "club_season/2012-13.603a4f51.parquet",
+      "expectedSha256": "603a4f511085845c4d07e2ca4eda947d5429e929364320cd1830a15e43ad9ea9",
+      "observedSha256": "603a4f511085845c4d07e2ca4eda947d5429e929364320cd1830a15e43ad9ea9"
+    },
+    {
+      "group": "seasons",
+      "season": "2013/14",
+      "name": "squad",
+      "path": "squad/2013-14.1c891c35.parquet",
+      "expectedSha256": "1c891c353341650f0202d252ec9d31d10377a26aa30c7b9b82a902c5654ffc08",
+      "observedSha256": "1c891c353341650f0202d252ec9d31d10377a26aa30c7b9b82a902c5654ffc08"
+    },
+    {
+      "group": "seasons",
+      "season": "2013/14",
+      "name": "club_season",
+      "path": "club_season/2013-14.ad3afe97.parquet",
+      "expectedSha256": "ad3afe971f79c216207dcc1e8435807aac3b8cb43d528961fc8fca41d552283e",
+      "observedSha256": "ad3afe971f79c216207dcc1e8435807aac3b8cb43d528961fc8fca41d552283e"
+    },
+    {
+      "group": "seasons",
+      "season": "2014/15",
+      "name": "squad",
+      "path": "squad/2014-15.ab57c2a4.parquet",
+      "expectedSha256": "ab57c2a47066047f23f665e0b8e22ab77ec53ac4a71be95928936250b04063ec",
+      "observedSha256": "ab57c2a47066047f23f665e0b8e22ab77ec53ac4a71be95928936250b04063ec"
+    },
+    {
+      "group": "seasons",
+      "season": "2014/15",
+      "name": "club_season",
+      "path": "club_season/2014-15.8ce3cb9e.parquet",
+      "expectedSha256": "8ce3cb9e4321aa36f1a6b456d475ee7c353189afb91d609eb8602ad521638395",
+      "observedSha256": "8ce3cb9e4321aa36f1a6b456d475ee7c353189afb91d609eb8602ad521638395"
+    },
+    {
+      "group": "seasons",
+      "season": "2015/16",
+      "name": "squad",
+      "path": "squad/2015-16.194285ba.parquet",
+      "expectedSha256": "194285babb2605884ebad885f95d1545d42297ac82b441d9c6dad3698d13904e",
+      "observedSha256": "194285babb2605884ebad885f95d1545d42297ac82b441d9c6dad3698d13904e"
+    },
+    {
+      "group": "seasons",
+      "season": "2015/16",
+      "name": "club_season",
+      "path": "club_season/2015-16.5d535aa5.parquet",
+      "expectedSha256": "5d535aa579e677bbe3d1e22d05cd5ba73a29624b7a96f44933a5c91f677e25f9",
+      "observedSha256": "5d535aa579e677bbe3d1e22d05cd5ba73a29624b7a96f44933a5c91f677e25f9"
+    },
+    {
+      "group": "seasons",
+      "season": "2016/17",
+      "name": "squad",
+      "path": "squad/2016-17.f84c867a.parquet",
+      "expectedSha256": "f84c867a4a42b462fe8cb2e7ce1a39cd017b328e124f1db43baf96f1fee04d36",
+      "observedSha256": "f84c867a4a42b462fe8cb2e7ce1a39cd017b328e124f1db43baf96f1fee04d36"
+    },
+    {
+      "group": "seasons",
+      "season": "2016/17",
+      "name": "club_season",
+      "path": "club_season/2016-17.a902f3c1.parquet",
+      "expectedSha256": "a902f3c12fe80d7663f68cb0adf4e7e20a634d1ce845e670be3f9beef7192163",
+      "observedSha256": "a902f3c12fe80d7663f68cb0adf4e7e20a634d1ce845e670be3f9beef7192163"
+    },
+    {
+      "group": "seasons",
+      "season": "2017/18",
+      "name": "squad",
+      "path": "squad/2017-18.d0491871.parquet",
+      "expectedSha256": "d04918710d4b5dd8ba7eac33fda3434679ab89dbc4e0eefc029dd7f020cae614",
+      "observedSha256": "d04918710d4b5dd8ba7eac33fda3434679ab89dbc4e0eefc029dd7f020cae614"
+    },
+    {
+      "group": "seasons",
+      "season": "2017/18",
+      "name": "club_season",
+      "path": "club_season/2017-18.4c6bfd8e.parquet",
+      "expectedSha256": "4c6bfd8ee13c2c62b4a8f2af749796eaa43f3a86c5b092a6e459595d3e41ad8f",
+      "observedSha256": "4c6bfd8ee13c2c62b4a8f2af749796eaa43f3a86c5b092a6e459595d3e41ad8f"
+    },
+    {
+      "group": "seasons",
+      "season": "2018/19",
+      "name": "squad",
+      "path": "squad/2018-19.28e4739d.parquet",
+      "expectedSha256": "28e4739d39f5046662aa6b97527dff4e1dfc98cf56d009e8c782255e706f3e7b",
+      "observedSha256": "28e4739d39f5046662aa6b97527dff4e1dfc98cf56d009e8c782255e706f3e7b"
+    },
+    {
+      "group": "seasons",
+      "season": "2018/19",
+      "name": "club_season",
+      "path": "club_season/2018-19.bc53536a.parquet",
+      "expectedSha256": "bc53536a19f8d5edfd1b8ab29c0f861dd0327332ee5bff6ea8ca0e035afea40e",
+      "observedSha256": "bc53536a19f8d5edfd1b8ab29c0f861dd0327332ee5bff6ea8ca0e035afea40e"
+    },
+    {
+      "group": "seasons",
+      "season": "2019/20",
+      "name": "squad",
+      "path": "squad/2019-20.8c5c4d1e.parquet",
+      "expectedSha256": "8c5c4d1ed037a5e40f35b2a503d407651e4f7fe1c5b937565b93e33bcc1d83ea",
+      "observedSha256": "8c5c4d1ed037a5e40f35b2a503d407651e4f7fe1c5b937565b93e33bcc1d83ea"
+    },
+    {
+      "group": "seasons",
+      "season": "2019/20",
+      "name": "club_season",
+      "path": "club_season/2019-20.84d8fa3d.parquet",
+      "expectedSha256": "84d8fa3db81f05eca7ad951e3c0ac2b26f4482448335b43eeda9cad7a9364063",
+      "observedSha256": "84d8fa3db81f05eca7ad951e3c0ac2b26f4482448335b43eeda9cad7a9364063"
+    },
+    {
+      "group": "seasons",
+      "season": "2020/21",
+      "name": "squad",
+      "path": "squad/2020-21.72a39526.parquet",
+      "expectedSha256": "72a39526b8b986e3ba8132ecd59c14b9336c1f37372be381595ba9d876ab3d07",
+      "observedSha256": "72a39526b8b986e3ba8132ecd59c14b9336c1f37372be381595ba9d876ab3d07"
+    },
+    {
+      "group": "seasons",
+      "season": "2020/21",
+      "name": "club_season",
+      "path": "club_season/2020-21.b149ecaf.parquet",
+      "expectedSha256": "b149ecaf905a883d3fffffdf1d3c5d3f9054347779d0575b3cc0582c065bf615",
+      "observedSha256": "b149ecaf905a883d3fffffdf1d3c5d3f9054347779d0575b3cc0582c065bf615"
+    },
+    {
+      "group": "seasons",
+      "season": "2021/22",
+      "name": "squad",
+      "path": "squad/2021-22.c0391bf9.parquet",
+      "expectedSha256": "c0391bf9f18a628dac321e447ab5b3ecba244c8abda74bdac05aa770aad525ff",
+      "observedSha256": "c0391bf9f18a628dac321e447ab5b3ecba244c8abda74bdac05aa770aad525ff"
+    },
+    {
+      "group": "seasons",
+      "season": "2021/22",
+      "name": "club_season",
+      "path": "club_season/2021-22.71ca160d.parquet",
+      "expectedSha256": "71ca160d6e779d5f1f5e66f0d0cff3752e56eaab64df25dee008632d98240849",
+      "observedSha256": "71ca160d6e779d5f1f5e66f0d0cff3752e56eaab64df25dee008632d98240849"
+    },
+    {
+      "group": "seasons",
+      "season": "2022/23",
+      "name": "squad",
+      "path": "squad/2022-23.d4443636.parquet",
+      "expectedSha256": "d4443636369cd844ba440f25936e931ff012349218fc89ba3cc4e8e7c19a87f3",
+      "observedSha256": "d4443636369cd844ba440f25936e931ff012349218fc89ba3cc4e8e7c19a87f3"
+    },
+    {
+      "group": "seasons",
+      "season": "2022/23",
+      "name": "club_season",
+      "path": "club_season/2022-23.40e8dbe4.parquet",
+      "expectedSha256": "40e8dbe469dae05b2b78256634b38ce1f7a58e662b9e392deaecd51d9fa64814",
+      "observedSha256": "40e8dbe469dae05b2b78256634b38ce1f7a58e662b9e392deaecd51d9fa64814"
+    },
+    {
+      "group": "seasons",
+      "season": "2023/24",
+      "name": "squad",
+      "path": "squad/2023-24.89cf4478.parquet",
+      "expectedSha256": "89cf4478bb1153f6acaacccb9a6bfd180f7658c35e75a252d81d82d5792ae15d",
+      "observedSha256": "89cf4478bb1153f6acaacccb9a6bfd180f7658c35e75a252d81d82d5792ae15d"
+    },
+    {
+      "group": "seasons",
+      "season": "2023/24",
+      "name": "club_season",
+      "path": "club_season/2023-24.3090bc26.parquet",
+      "expectedSha256": "3090bc26871c40654d18f3f03ee4a57504840dea2f33a2491845229af07e46b1",
+      "observedSha256": "3090bc26871c40654d18f3f03ee4a57504840dea2f33a2491845229af07e46b1"
+    },
+    {
+      "group": "seasons",
+      "season": "2024/25",
+      "name": "squad",
+      "path": "squad/2024-25.a9a9d769.parquet",
+      "expectedSha256": "a9a9d76945ee391a7296415fa839b85530193a409da7a4a15cfa1de1e7bf18a7",
+      "observedSha256": "a9a9d76945ee391a7296415fa839b85530193a409da7a4a15cfa1de1e7bf18a7"
+    },
+    {
+      "group": "seasons",
+      "season": "2024/25",
+      "name": "club_season",
+      "path": "club_season/2024-25.98f70425.parquet",
+      "expectedSha256": "98f70425b89fa5cf7e4749f4365029dac0fbd14ddb6c2797ca348d2b8e159627",
+      "observedSha256": "98f70425b89fa5cf7e4749f4365029dac0fbd14ddb6c2797ca348d2b8e159627"
+    },
+    {
+      "group": "seasons",
+      "season": "2025/26",
+      "name": "squad",
+      "path": "squad/2025-26.f8183b91.parquet",
+      "expectedSha256": "f8183b910c2b6a99995c9e840a63df6f392178620f1746ebe3bbc829cbe9cfd8",
+      "observedSha256": "f8183b910c2b6a99995c9e840a63df6f392178620f1746ebe3bbc829cbe9cfd8"
+    },
+    {
+      "group": "seasons",
+      "season": "2025/26",
+      "name": "club_season",
+      "path": "club_season/2025-26.7547d63e.parquet",
+      "expectedSha256": "7547d63e6c70b5078e44628414f7b6957cda796ac2edf6fa1bc5acd2bf4b8a4d",
+      "observedSha256": "7547d63e6c70b5078e44628414f7b6957cda796ac2edf6fa1bc5acd2bf4b8a4d"
+    },
+    {
+      "group": "seasons",
+      "season": "2026/27",
+      "name": "squad",
+      "path": "squad/2026-27.2ff12b07.parquet",
+      "expectedSha256": "2ff12b07aead2862a9c1eaea04ed5f6d88f2c4d5c7a8e14dcdc4aa91161b086e",
+      "observedSha256": "2ff12b07aead2862a9c1eaea04ed5f6d88f2c4d5c7a8e14dcdc4aa91161b086e"
+    },
+    {
+      "group": "seasons",
+      "season": "2026/27",
+      "name": "club_season",
+      "path": "club_season/2026-27.f2fdf0ee.parquet",
+      "expectedSha256": "f2fdf0ee6f7f125a2219f41fdcbf13e2965c71f3803e2637924ed2cd1cac7cc6",
+      "observedSha256": "f2fdf0ee6f7f125a2219f41fdcbf13e2965c71f3803e2637924ed2cd1cac7cc6"
+    }
+  ]
+}

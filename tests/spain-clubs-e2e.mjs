@@ -22,7 +22,7 @@ const BASE = `http://127.0.0.1:${server.address().port}`, URL0 = `${BASE}/lanova
 const J = f => JSON.parse(readFileSync(`lanova/cases/spain-data/${f}`, 'utf8')), S = J('squads-2026-27.cc-by-sa.json'), C = J('clubs-2026-27.cc-by-sa.json'), COV = J('coverage-2026-27.json');
 const checks = [], errors = [], offsite = [];
 const t = async (name, fn) => { try { await fn(); checks.push({name, status: 'PASS'}); console.log('PASS', name); } catch (e) { checks.push({name, status: 'FAIL', error: String(e.message).split('\n').slice(0, 5).join(' | ')}); console.log('FAIL', name, '\n  ', String(e.message).split('\n').slice(0, 5).join('\n   ')); } };
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.CHROMIUM_PATH ? {executablePath: process.env.CHROMIUM_PATH} : {});
 async function open(opts, path = URL0) {
   const c = await browser.newContext({...opts, reducedMotion: 'reduce'});
   await c.route(/fonts\.(googleapis|gstatic)\.com|railway\.app/, r => r.abort());
@@ -34,32 +34,37 @@ async function open(opts, path = URL0) {
 const {page, c: desk} = await open({viewport: {width: 1440, height: 900}});
 const rowsOf = () => page.locator('table.squad tbody tr').evaluateAll(trs => trs.map(tr => ({id: tr.dataset.player, q: tr.dataset.quality, cells: [...tr.cells].map(td => td.innerText.trim()), href: tr.querySelector('td:last-child a')?.href})));
 
-await t('1 · opens on Málaga CF (LaLiga): 28 real players, each with a dated Wikipedia revision link, status and the data as-of date', async () => {
+await t('1 · opens on Málaga CF: dated listings are explicit, Wikidata check coverage is partial, no official-registration claim', async () => {
   assert.match(await page.innerText('#h-pick'), /Choose a club/); assert.match(await page.innerText('#explorer'), /Data as of 24 Nov 2026/);
   const want = S.players.filter(p => p.club === 'es-malaga-cf'), rows = await rowsOf();
   assert.equal(rows.length, want.length);
   for (const r of rows) { const p = want.find(x => x.id === r.id); assert.ok(p, r.id); assert.equal(r.href, p.source.url); assert.equal(r.q, p.quality); assert.equal(r.cells[0], String(p.shirtNumber ?? '—')); assert.ok(r.cells[1].startsWith(p.name)); }
-  assert.match(await page.innerText('#club-panel'), /Q8857/); assert.equal(await page.locator('img').count(), 0, 'no logo or photograph');
+  assert.match(await page.innerText('#club-panel'), /Q8857/); assert.match(await page.innerText('#explorer'), /333 \/ 1,028/); assert.match(await page.innerText('#club-panel'), /official registration not established/); assert.equal(await page.locator('img').count(), 0, 'no logo or photograph');
+  const expected = {GK:2,DF:10,MF:9,FW:7}; for (const [k,n] of Object.entries(expected)) assert.equal(COV.clubs.find(c=>c.club==='es-malaga-cf').positionCounts.effective[k], n);
   await page.screenshot({path: join(out, 'spain_malaga_desktop.png')});
 });
 
 await t('2 · provenance: a player expands to show his id, Wikidata check, birth source and the reason for his status', async () => {
   await page.locator('table.squad tbody tr').first().locator('summary').click();
   const prov = await page.locator('table.squad tbody tr').first().locator('.prov').innerText();
-  assert.match(prov, /Verified listing: listed in the squad section of a revision dated 2026-11-07/); assert.match(prov, /LANOVA player id Q38827144/); assert.match(prov, /Wikidata membership of this club: /); assert.match(prov, /Born: 1994-04-21/);
+  assert.match(prov, /Dated Wikipedia listing: listed in the squad section of a revision dated 2026-11-07/); assert.match(prov, /LANOVA player id Q38827144/); assert.match(prov, /Wikidata membership of this club: /); assert.match(prov, /Born: 1994-04-21/); assert.match(prov, /not proof of official registration/);
 });
 
 await t('3 · filters: position (goalkeepers) and status narrow the list to what the data say', async () => {
   await page.selectOption('#pos', 'GK'); const gk = await rowsOf(); assert.equal(gk.length, S.players.filter(p => p.club === 'es-malaga-cf' && p.position === 'GK').length); assert.ok(gk.every(r => r.cells[2] === 'Goalkeeper'));
   await page.selectOption('#pos', 'all'); await page.selectOption('#qual', 'UNVERIFIED'); assert.match(await page.innerText('table.squad'), /No player matches these filters/);
   await page.selectOption('#qual', 'all');
+  await page.selectOption('#pos', 'FW'); const forwards = await rowsOf(); assert.equal(forwards.length, 7); assert.ok(forwards.some(r=>r.id==='Q104708933')); assert.ok(forwards.some(r=>r.id==='Q59914882'));
+  await page.selectOption('#qual', 'CORROBORATED'); assert.equal((await rowsOf()).length, 4); assert.ok((await page.innerText('table.squad')).includes('Position corroborated'));
+  await page.selectOption('#qual', 'all'); await page.locator('tr[data-player="Q104708933"] summary').click(); const correction=await page.locator('tr[data-player="Q104708933"] .prov').innerText(); assert.match(correction,/source snapshot says Midfielder/); assert.match(correction,/Displayed position: Forward/); assert.match(correction,/Official club source/);
 });
 
 await t('4 · results: Málaga 13 played, 0-5-8, 9–24, 5 points; checks shown; gate stays closed', async () => {
   const txt = await page.innerText('#results-panel');
-  assert.match(txt, /13 played: 0 won, 5 drawn, 8 lost, goals 9–24, 5 points/); assert.match(txt, /128 of 130 results due/); assert.match(txt, /gate stays closed/);
+  assert.match(txt, /13 played: 0 won, 5 drawn, 8 lost, goals 9–24, 5 points/); assert.match(txt, /129 of 130 fixtures due.*completed/); assert.match(txt, /gate stays closed/);
   assert.match(txt, /agrees with LANOVA verified Málaga line/); assert.match(txt, /agrees with openfootball/);
   await page.locator('#results-panel').scrollIntoViewIfNeeded(); await page.screenshot({path: join(out, 'spain_results_desktop.png')});
+  await page.selectOption('#club','es-rayo-vallecano'); const rayo=await page.innerText('#results-panel'); assert.match(rayo,/Suspended at 24′, interim score 0–0; resumption scheduled 9 Dec 2026/); assert.match(rayo,/official LaLiga resumption listing: 2026-12-09/); assert.doesNotMatch(rayo,/24 played:/);
 });
 
 await t('5 · Segunda División: 22 clubs; a club with contradictory records is flagged incomplete and shows unverified players; no results claimed', async () => {
@@ -84,7 +89,7 @@ await t('6 · coverage: 42 clubs listed with counts equal to the data; inferred 
 await t('7 · deep link, sources and licences, Málaga case and CTAs', async () => {
   await page.goto(`${URL0}?club=es-sd-eibar`); await page.waitForSelector('table.squad tbody tr');
   assert.match(await page.innerText('#club-panel'), /SD Eibar/); assert.equal(await page.getAttribute('[data-division="segunda"]', 'aria-checked'), 'true');
-  const src = await page.innerText('#sources'); assert.match(src, /CC BY-SA 4\.0/); assert.match(src, /CC0/); assert.match(src, /OpenLigaDB \(ODbL 1\.0\): no LaLiga or Segunda 2026\/27/);
+  const src = await page.innerText('#sources'); assert.match(src, /CC BY-SA 4\.0/); assert.match(src, /CC0/); assert.match(src,/LANOVA modified\/adapted these source data/); assert.match(src, /OpenLigaDB \(ODbL 1\.0\): no LaLiga or Segunda 2026\/27/);
   for (const href of ['../spain-data/squads-2026-27.cc-by-sa.json', '../spain-data/wikidata-2026-27.cc0.json', '../malaga-winter-2027/', '../../../platform.html']) assert.equal((await page.request.get(new URL(href, page.url()).href)).status(), 200, href);
   assert.match(await page.getAttribute('[data-cta="review"]', 'href'), /^mailto:kevin@lake-am\.com/);
   await page.goto(`${URL0}?club=es-malaga-cf`); await page.waitForSelector('table.squad tbody tr');

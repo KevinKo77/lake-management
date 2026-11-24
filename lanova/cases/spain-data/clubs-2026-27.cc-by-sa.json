@@ -56,7 +56,7 @@
    "competition": "laliga",
    "season": "2026-27",
    "wikidataQid": "Q8687",
-   "city": "Ibaigane Palace",
+   "city": "Bilbao",
    "founded": "1898-07-18",
    "lanovaResultNames": [
     "Athletic Club"
@@ -71,6 +71,15 @@
     "lang": "es",
     "title": "Anexo:Temporada 2026-27 del Athletic Club",
     "revid": 176244176
+   },
+   "sourceCity": "Ibaigane Palace",
+   "cityCorrection": {
+    "club": "es-athletic-bilbao",
+    "sourceCity": "Ibaigane Palace",
+    "correctedCity": "Bilbao",
+    "reason": "The source value is the club headquarters building, not the city. The club's official contact page gives the Ibaigane address in Bilbao.",
+    "source": "https://www.athletic-club.eus/en/contacto/",
+    "verifiedAt": "2026-11-24"
    }
   },
   {

@@ -22,6 +22,7 @@ table.squad .prov p { margin: 6px 0; }
 .q-verified { color: #0b6b4e; background: #e2f0e9; border-color: #b9dccb; }
 .q-inferred { color: #9a4a06; background: #fbefdc; border-color: #ecd2a8; }
 .q-unverified { color: #b42318; background: #fde8e6; border-color: #f3c2bd; }
+.q-corroborated { color: #2146a6; background: #e9efff; border-color: #c7d4ff; }
 .results tr[data-status="missing"] td { background: #fff7ea; }
 .cov-table summary { cursor: pointer; font-weight: 600; margin: 8px 0; }
 .cov-table tr.div-row td { background: var(--surface-2); }

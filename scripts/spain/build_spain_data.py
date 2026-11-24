@@ -66,6 +66,10 @@ def main():
     ap.add_argument('--laliga', default=os.path.join(ROOT, 'lanova/cases/data/laliga.json')); ap.add_argument('--check', action='store_true'); a = ap.parse_args()
     ev = lambda f: json.load(open(os.path.join(OUT, 'evidence', f), encoding='utf-8'))
     rel, revs = ev('openfootballbase-release.json'), ev('wikipedia-revisions.json')['revisions']
+    manual = ev('manual-corrections-2026-11-24.json')
+    match_corrections = ev('laliga-match-corrections-2026-11-24.json')['corrections']
+    position_corrections = {x['wikidataQid']: x for x in manual['positionCorrections']}
+    city_corrections = {x['club']: x for x in manual['cityCorrections']}
     man = json.load(open(os.path.join(a.ofb, 'manifest.json')))
     # Integrity: every file used must match the manifest fingerprint.
     used = {}
@@ -100,10 +104,17 @@ def main():
         else:
             verif.append(promo['clubs'][club])
         aliases = sorted({x for x in [club, wtitle, local, official, labels['en'], labels['es'], *of_names.get(club, set())] if x} - {official or local or club})
-        clubs.append({'id': 'es-' + slug(club), 'name': club, 'officialName': official or local, 'officialNameSource': 'Wikidata P1448' if official else 'OpenFootballBase club.name_local',
-            'aliases': aliases, 'competition': COMPS[comp], 'season': SEASON, 'wikidataQid': qid, 'city': city, 'founded': founded,
+        cid = 'es-' + slug(club); city_fix = city_corrections.get(cid)
+        if city_fix:
+            assert city == city_fix['sourceCity'], f"city correction source changed for {club}: {city}"
+            verif.append(f"City corrected from source value {city!r} to {city_fix['correctedCity']} using {city_fix['source']}")
+        club_row = {'id': cid, 'name': club, 'officialName': official or local, 'officialNameSource': 'Wikidata P1448' if official else 'OpenFootballBase club.name_local',
+            'aliases': aliases, 'competition': COMPS[comp], 'season': SEASON, 'wikidataQid': qid,
+            'city': city_fix['correctedCity'] if city_fix else city, 'founded': founded,
             'lanovaResultNames': sorted(of_names.get(club, set())), 'verification': verif, 'verified': len(verif) >= 2,
-            'squadSource': {'lang': slang, 'title': stitle, 'revid': srev}})
+            'squadSource': {'lang': slang, 'title': stitle, 'revid': srev}}
+        if city_fix: club_row['sourceCity'] = city; club_row['cityCorrection'] = city_fix
+        clubs.append(club_row)
     ids = [c['id'] for c in clubs]
     assert len(clubs) == 42 and len(set(ids)) == 42 and sum(c['competition'] == 'laliga' for c in clubs) == 20, 'registry must have 20 + 22 distinct clubs'
     by_name = {c['name']: c for c in clubs}
@@ -138,11 +149,20 @@ def main():
         if reasons: quality = 'UNVERIFIED'
         elif rv and rv['timestamp'] >= WINDOW_CLOSED: quality = 'VERIFIED'; reasons.append(f"listed in the squad section of a revision dated {rv['timestamp'][:10]}, after the summer window closed")
         else: quality = 'INFERRED'; reasons.append(f"squad source revision dated {rv['timestamp'][:10] if rv else 'unknown'}, before the summer window closed")
-        players.append({'id': pid, 'wikidataQid': qid or None, 'name': name, 'club': c['id'], 'season': SEASON, 'position': pos, 'shirtNumber': num, 'nationality': nat or None,
+        player = {'id': pid, 'wikidataQid': qid or None, 'name': name, 'club': c['id'], 'season': SEASON, 'position': pos, 'shirtNumber': num, 'nationality': nat or None,
             **dob_of(qid, wd_out, birth), 'loan': {'loan_in': 'on loan to this club', 'arrived_mid': None, 'left_mid': None}.get(stint) if stint else None,
             'stint': stint, 'stintDate': sdate, 'loanFrom': sother if stint == 'loan_in' else None, 'listedIn': listed.split(',') if listed else [], 'quality': quality, 'qualityReasons': reasons,
-            'wikidataMembership': membership,
-            'source': {'lang': slang, 'title': stitle, 'revid': srev, 'revisionDate': rv['timestamp'] if rv else None, 'section': section, 'url': f'https://{slang}.wikipedia.org/w/index.php?oldid={srev}'}})
+            'wikidataMembership': membership, 'registrationStatus': 'not-established',
+            'source': {'lang': slang, 'title': stitle, 'revid': srev, 'revisionDate': rv['timestamp'] if rv else None, 'section': section, 'url': f'https://{slang}.wikipedia.org/w/index.php?oldid={srev}'}}
+        correction = position_corrections.get(qid)
+        if correction:
+            assert correction['club'] == c['id'] and correction['name'] == name, f"position correction identity mismatch: {qid}"
+            assert correction['sourcePosition'] == pos, f"position correction source changed for {name}: {pos}"
+            player['positionCorrection'] = {'sourcePosition': pos, 'correctedPosition': correction['correctedPosition'],
+                'officialLabel': correction['officialLabel'], 'evidenceStatus': 'independently-corroborated',
+                'source': correction['source'], 'verifiedAt': correction['verifiedAt'], 'reason': correction['reason']}
+        players.append(player)
+    assert set(position_corrections) == {p['wikidataQid'] for p in players if p.get('positionCorrection')}, 'every manual position correction must map to one source row'
 
     # ---------------------------------------------------------------- results (LaLiga 2026/27)
     mt = con.execute(f"""SELECT match_id, round, match_date, home_club, away_club, ft_home, ft_away, source_ref, result_source FROM {rp('match')}
@@ -161,14 +181,37 @@ def main():
             'dateNote': dnote, 'home': by_name[h]['id'], 'away': by_name[aw]['id'], 'status': 'completed' if done else ('missing' if str(date) < AS_OF else 'scheduled'),
             'score': [fh, fa] if done else None, 'source': {'results': 'Wikipedia (via OpenFootballBase match table)' if rsrc == 'wikipedia' else rsrc, 'fixtures': sref},
             'validation': checks or (['single source: not independently verified'] if done else [])})
-    due = [x for x in res if x['date'] < AS_OF]
-    comp_rep = {'due': len(due), 'completed': sum(x['status'] == 'completed' for x in due), 'missing': [x['id'] for x in due if x['status'] == 'missing'],
+    # Apply separately sourced corrections after preserving the release's original snapshot values.
+    for correction in match_corrections:
+        row = next((x for x in res if x['id'] == correction['id']), None)
+        assert row, f"match correction target not found: {correction['id']}"
+        assert row['status'] == correction['sourceStatus'] and row['date'] == correction['sourceScheduledDate'], f"source snapshot changed for {correction['id']}"
+        row['sourceSnapshot'] = {'date': row['date'], 'status': row['status'], 'score': row['score']}
+        row['correction'] = correction
+        if correction['status'] == 'completed':
+            row['date'] = correction['playedOn']; row['dateKind'] = 'actual playing date confirmed by official LaLiga match page'
+            row['status'] = 'completed'; row['score'] = correction['score']
+            row['validation'] = [f"official LaLiga result page (verified {correction['verifiedAt']})"]
+        elif correction['status'] == 'suspended':
+            row['status'] = 'suspended'; row['score'] = None
+            row['suspension'] = {'interimScore': correction['interimScore'], 'minute': correction['suspendedAtMinute'],
+                'resumptionDate': correction['resumptionDate'], 'resumptionTime': correction['resumptionTime']}
+            row['dateNote'] = f"Suspended at {correction['suspendedAtMinute']}′ at {correction['interimScore'][0]}–{correction['interimScore'][1]}; resumption scheduled {correction['resumptionDate']}"
+            row['validation'] = [f"official Rayo Vallecano status: suspended", f"official LaLiga resumption listing: {correction['resumptionDate']}"]
+        else: raise AssertionError(f"unsupported match correction status: {correction['status']}")
+    due = [x for x in res if (x.get('sourceSnapshot', {}).get('date') or x['date']) < AS_OF]
+    unfinished = [x for x in due if x['status'] != 'completed']
+    status_counts = {k: sum(x['status'] == k for x in due) for k in ('completed', 'postponed', 'suspended', 'missing', 'scheduled')}
+    comp_rep = {'due': len(due), 'completed': sum(x['status'] == 'completed' for x in due), 'unfinished': [x['id'] for x in unfinished],
+        'statusCounts': status_counts, 'missing': [x['id'] for x in due if x['status'] == 'missing'], 'suspended': [x['id'] for x in due if x['status'] == 'suspended'],
         'agreeWithOpenfootball': sum('agrees with openfootball (CC0)' in x['validation'] for x in res), 'conflicts': [x['id'] for x in res if any('CONFLICT' in v for v in x['validation'])],
         'singleSource': sum(x['validation'] == ['single source: not independently verified'] for x in res), 'gate': 'closed'}
-    comp_rep['gateReasons'] = ([f"{len(comp_rep['missing'])} result(s) due by {AS_OF} missing"] if comp_rep['missing'] else []) + [f"{comp_rep['singleSource']} result(s) from a single, non-authoritative source"]
+    comp_rep['gateReasons'] = ([f"{len(unfinished)} fixture(s) due by {AS_OF} remain unfinished ({', '.join(k for k in ('postponed', 'suspended', 'missing') if status_counts[k])})"] if unfinished else []) + [f"{comp_rep['singleSource']} result(s) from a single, non-authoritative source"]
 
     # ---------------------------------------------------------------- coverage
     cov = []
+    def effective_pos(p): return p.get('positionCorrection', {}).get('correctedPosition', p['position'])
+    def position_counts(ps, field): return {k: sum((p.get(field) if field == 'sourcePosition' else effective_pos(p)) == k for p in ps) for k in ('GK', 'DF', 'MF', 'FW')}
     for c in clubs:
         ps = [p for p in players if p['club'] == c['id']]; q = {k: sum(p['quality'] == k for p in ps) for k in ('VERIFIED', 'INFERRED', 'UNVERIFIED')}
         rv = revs.get(str(c['squadSource']['revid']), {}).get('timestamp')
@@ -180,21 +223,28 @@ def main():
         cov.append({'club': c['id'], 'name': c['name'], 'competition': c['competition'], 'players': len(ps), **{k.lower(): v for k, v in q.items()},
             'withWikidataQid': sum(1 for p in ps if p['wikidataQid']), 'wikidataChecked': sum(1 for p in ps if p['wikidataMembership'] != 'not-checked'),
             'withShirtNumber': sum(1 for p in ps if p['shirtNumber'] is not None), 'withPosition': sum(1 for p in ps if p['position']), 'withNationality': sum(1 for p in ps if p['nationality']),
-            'withDateOfBirth': sum(1 for p in ps if p['dateOfBirth']), 'sourceRevisionDate': rv, 'status': 'incomplete or needs review' if flags else 'listed squad (not an official registration list)', 'flags': flags})
+            'withDateOfBirth': sum(1 for p in ps if p['dateOfBirth']), 'positionCounts': {'source': position_counts(ps, 'sourcePosition'), 'effective': position_counts(ps, 'effectivePosition')},
+            'independentlyCorroboratedPositions': sum(1 for p in ps if p.get('positionCorrection')), 'sourceRevisionDate': rv,
+            'status': 'incomplete or needs review' if flags else 'listed squad (not an official registration list)', 'flags': flags})
     div = {d: {'clubs': sum(x['competition'] == d for x in cov), 'clubsWithSquad': sum(x['competition'] == d and x['players'] > 0 for x in cov), 'players': sum(x['players'] for x in cov if x['competition'] == d),
         'verified': sum(x['verified'] for x in cov if x['competition'] == d), 'inferred': sum(x['inferred'] for x in cov if x['competition'] == d), 'unverified': sum(x['unverified'] for x in cov if x['competition'] == d),
-        'clubsFlagged': sum(1 for x in cov if x['competition'] == d and x['flags'])} for d in ('laliga', 'segunda')}
+        'clubsFlagged': sum(1 for x in cov if x['competition'] == d and x['flags']),
+        'positionCounts': {k: sum(x['positionCounts']['effective'][k] for x in cov if x['competition'] == d) for k in ('GK', 'DF', 'MF', 'FW')}} for d in ('laliga', 'segunda')}
 
     meta = {'season': SEASON, 'asOf': AS_OF, 'source': {'openfootballbase': {**{k: rel[k] for k in ('repository', 'release', 'releaseCommit', 'archive', 'archiveSha256', 'manifestGeneratedAt')}, 'files': used}}}
     out = {
         'clubs-2026-27.cc-by-sa.json': {'schema': 'lanova-spain-clubs-v1', 'licence': 'CC BY-SA 4.0', 'attribution': [ATTR_OFB, ATTR_WD], **meta, 'clubs': clubs},
         'squads-2026-27.cc-by-sa.json': {'schema': 'lanova-spain-squads-v1', 'licence': 'CC BY-SA 4.0', 'attribution': [ATTR_OFB, ATTR_WD], **meta, 'windowClosed': WINDOW_CLOSED[:10],
-            'qualityLevels': {'VERIFIED': 'Listed in the squad section of a Wikipedia revision dated after the summer window closed, with no contradiction (not an official registration list).',
-                'INFERRED': 'Listed in a squad source dated before the window closed: membership not confirmed for the current period.', 'UNVERIFIED': 'Contradictory: listed at two clubs, marked as left, or Wikidata membership ended.'},
+            'registrationPolicy': 'No player is described as officially registered unless a named official registration source is present; none is included in this dataset.',
+            'qualityLevels': {'VERIFIED': 'Listed in the squad section of a dated Wikipedia snapshot after the summer window closed, with no contradiction. This verifies a listing only, not a registration.',
+                'INFERRED': 'Listed in a squad source dated before the window closed; current membership is not established.', 'UNVERIFIED': 'Contradictory: listed at two clubs, marked as left, or Wikidata membership ended.'},
+            'positionCorrections': manual['positionCorrections'],
             'players': players},
         'wikidata-2026-27.cc0.json': {'schema': 'lanova-spain-wikidata-v1', 'licence': 'CC0 1.0', 'attribution': [ATTR_WD], 'season': SEASON, 'asOf': AS_OF,
             'checked': len(wd_out), 'playersWithQid': len(qid_clubs), 'note': 'Facts read from Wikidata (wbgetentities). A membership (P54) without an end date is not treated as proof of a current registration.', 'players': dict(sorted(wd_out.items()))},
-        'results-laliga-2026-27.cc-by-sa.json': {'schema': 'lanova-spain-results-v1', 'licence': 'CC BY-SA 4.0', 'attribution': [ATTR_OFB], **meta, 'competition': 'laliga', 'completeness': comp_rep, 'matches': res},
+        'results-laliga-2026-27.cc-by-sa.json': {'schema': 'lanova-spain-results-v1', 'licence': 'CC BY-SA 4.0', 'attribution': [ATTR_OFB], **meta, 'competition': 'laliga',
+            'statusDefinitions': {'completed': 'Played and has a final score.', 'scheduled': 'Not yet played; future fixture remains on the schedule.', 'postponed': 'Not played and rescheduled or awaiting a new date.', 'suspended': 'Started but not completed; an interim score is not a final result.', 'missing': 'Past scheduled date with no verified final result or explicit postponement/suspension evidence.'},
+            'resultCorrections': match_corrections, 'completeness': comp_rep, 'matches': res},
         'coverage-2026-27.json': {'schema': 'lanova-spain-coverage-v1', **meta, 'divisions': div, 'clubs': cov,
             'wikidata': {'playersWithQid': len(qid_clubs), 'checked': len(wd_out), 'membership': {k: sum(p['wikidataMembership'] == k for p in players) for k in ('open', 'ended', 'no-statement', 'not-checked')}},
             'results': {'laliga': comp_rep, 'segunda': {'due': None, 'completed': 0, 'note': 'No usable 2026/27 Segunda results: none in openfootball (CC0), OpenFootballBase (no 2026/27 Segunda match table) or OpenLigaDB (no league).'}}},

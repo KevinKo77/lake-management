@@ -58,11 +58,16 @@ test('squads: every listing has a registry club, a traceable dated source, a qua
   for (const [q, cs] of Object.entries(qc)) if (cs.size > 1) for (const p of S.players.filter(x => x.wikidataQid === q)) assert.equal(p.quality, 'UNVERIFIED');
 });
 
-test('Málaga CF: 28 sourced players, numbers 1–39, one dated revision, verified listing, loans marked (5 on loan in)', () => {
+test('Málaga CF: source positions preserved and four official-source corrections produce 2 GK, 10 DF, 9 MF, 7 FW', () => {
   const m = S.players.filter(p => p.club === 'es-malaga-cf');
   assert.equal(m.length, 28); assert.equal(new Set(m.map(p => p.shirtNumber)).size, 28); assert.ok(m.every(p => p.source.revid === 1384338452 && p.source.revisionDate.startsWith('2026-11-07')));
   assert.ok(m.every(p => p.quality === 'VERIFIED')); assert.deepEqual(m.filter(p => p.loan).map(p => p.name).sort(), ['Adam Aznou', 'Carlos Dotor', 'Jens Cajuste', 'José Salinas', 'Juan Cruz']); assert.ok(m.some(p => p.name === 'Alfonso Herrero' && p.position === 'GK' && p.shirtNumber === 1));
   assert.deepEqual(Object.fromEntries(['GK', 'DF', 'MF', 'FW'].map(k => [k, m.filter(p => p.position === k).length])), {GK: 2, DF: 10, MF: 13, FW: 3});
+  assert.deepEqual(Object.fromEntries(['GK', 'DF', 'MF', 'FW'].map(k => [k, m.filter(p => (p.positionCorrection?.correctedPosition ?? p.position) === k).length])), {GK: 2, DF: 10, MF: 9, FW: 7});
+  const fixes = EV('manual-corrections-2026-11-24.json').positionCorrections;
+  assert.equal(fixes.length, 4);
+  for (const f of fixes) { const p = m.find(x => x.wikidataQid === f.wikidataQid); assert.ok(p); assert.equal(p.position, f.sourcePosition); assert.equal(p.positionCorrection.correctedPosition, f.correctedPosition); assert.equal(p.positionCorrection.evidenceStatus, 'independently-corroborated'); assert.equal(p.positionCorrection.source, f.source); assert.equal(p.registrationStatus, 'not-established'); }
+  assert.equal(S.registrationPolicy.includes('none is included'), true);
 });
 
 test('licence separation: the CC0 file holds Wikidata facts only; no ODbL data anywhere; attribution present', () => {
@@ -73,11 +78,13 @@ test('licence separation: the CC0 file holds Wikidata facts only; no ODbL data a
   assert.equal(FEAS.sources.find(s => s.id === 'C').decision, 'REJECT');
 });
 
-test('results: 380 fixtures; matchdays 1–7 agree with openfootball on 69/69; Málaga line equals LANOVA\'s verified line; exact missing results; gate closed', () => {
+test('results: 380 fixtures; 129/130 due complete, one suspended; Levante official 1–1; gate remains closed', () => {
   assert.equal(R.matches.length, 380); assert.equal(new Set(R.matches.map(m => m.id)).size, 380);
   assert.equal(R.completeness.agreeWithOpenfootball, 69); assert.deepEqual(R.completeness.conflicts, []);
-  assert.deepEqual(R.completeness.missing, ['2026-27/md08/es-rayo-vallecano-v-es-athletic-bilbao', '2026-27/md13/es-levante-ud-v-es-elche-cf']);
-  assert.equal(R.completeness.due, 130); assert.equal(R.completeness.completed, 128); assert.equal(R.completeness.gate, 'closed');
+  assert.deepEqual(R.completeness.missing, []); assert.equal(R.completeness.due, 130); assert.equal(R.completeness.completed, 129); assert.equal(R.completeness.statusCounts.suspended, 1); assert.equal(R.completeness.singleSource, 57); assert.equal(R.completeness.gate, 'closed');
+  const levante = R.matches.find(m => m.id === '2026-27/md13/es-levante-ud-v-es-elche-cf'); assert.deepEqual([levante.date, levante.score, levante.status], ['2026-11-23', [1, 1], 'completed']); assert.equal(levante.sourceSnapshot.status, 'missing'); assert.match(levante.validation[0], /official LaLiga result page/);
+  const suspended = R.matches.find(m => m.id === '2026-27/md08/es-rayo-vallecano-v-es-athletic-bilbao'); assert.equal(suspended.status, 'suspended'); assert.equal(suspended.score, null); assert.deepEqual(suspended.suspension, {interimScore: [0, 0], minute: 24, resumptionDate: '2026-12-09', resumptionTime: '20:00'});
+  assert.equal(R.statusDefinitions.suspended.includes('not completed'), true); assert.equal(R.statusDefinitions.postponed.includes('Not played'), true);
   const mal = R.matches.filter(m => m.status === 'completed' && (m.home === 'es-malaga-cf' || m.away === 'es-malaga-cf')), line = EV('malaga-verified-line.json').aggregateAfterMatchday13;
   let w = 0, d = 0, l = 0, gf = 0, ga = 0; for (const m of mal) { const f = m.home === 'es-malaga-cf' ? m.score[0] : m.score[1], g = m.home === 'es-malaga-cf' ? m.score[1] : m.score[0]; gf += f; ga += g; f > g ? w++ : f === g ? d++ : l++; }
   assert.deepEqual({played: mal.length, won: w, drawn: d, lost: l, goalsFor: gf, goalsAgainst: ga, points: 3 * w + d}, line);
@@ -85,10 +92,10 @@ test('results: 380 fixtures; matchdays 1–7 agree with openfootball on 69/69; M
   assert.ok(R.matches.filter(m => m.date >= '2026-11-24').every(m => m.status === 'scheduled' && m.score === null), 'no future result');
 });
 
-test('readiness: the existing gate refuses the recovered results (single-sourced, 2 missing); reproduced from the files', () => {
+test('readiness: official completed result is counted, suspended match is not; incomplete licensed snapshot keeps prediction gate closed', () => {
   assert.equal(execFileSync('node', ['scripts/spain/results-readiness.mjs', '--check']).toString().trim(), 'lanova/cases/spain-data/results-readiness-2026-27.json is reproduced exactly');
-  assert.equal(RR.missingFromOpenfootball, 61); assert.equal(RR.recovered, 59); assert.equal(RR.gate.usable, false); assert.match(RR.decision, /^BLOCKED/);
-  assert.equal(RR.notRecovered.length, 2);
+  assert.equal(RR.missingFromOpenfootball, 61); assert.equal(RR.recovered, 60); assert.equal(RR.recoveredAndIndependentlyVerified, 3); assert.equal(RR.gate.usable, false); assert.match(RR.decision, /^BLOCKED/);
+  assert.equal(RR.notRecovered.length, 1); assert.match(RR.notRecovered[0], /Rayo Vallecano.*Athletic Club/);
 });
 
 test('coverage report: counts add up to the squad file, by club and division; incomplete squads flagged', () => {
@@ -97,4 +104,7 @@ test('coverage report: counts add up to the squad file, by club and division; in
   assert.ok(COV.clubs.find(x => x.club === 'es-real-sociedad-b').flags.some(f => /before the summer window/.test(f)));
   assert.ok(COV.clubs.find(x => x.club === 'es-levante-ud').flags.length >= 1);
   assert.equal(COV.wikidata.checked, W.checked); assert.equal(COV.wikidata.playersWithQid, W.playersWithQid);
+  const mal = COV.clubs.find(x => x.club === 'es-malaga-cf'); assert.deepEqual(mal.positionCounts.source, {GK: 2, DF: 10, MF: 13, FW: 3}); assert.deepEqual(mal.positionCounts.effective, {GK: 2, DF: 10, MF: 9, FW: 7});
+  assert.equal(C.clubs.find(x => x.id === 'es-athletic-bilbao').city, 'Bilbao'); assert.equal(C.clubs.find(x => x.id === 'es-athletic-bilbao').sourceCity, 'Ibaigane Palace');
+  const manifestEvidence = EV('openfootballbase-manifest-verification.json'); assert.equal(manifestEvidence.archiveSha256Matches, true); assert.equal(manifestEvidence.manifestFileEntries, 83); assert.equal(manifestEvidence.manifestFileHashesChecked, 83); assert.equal(manifestEvidence.manifestFileHashMismatches, 0); assert.equal(manifestEvidence.verifiedFiles.length, 83); assert.ok(manifestEvidence.verifiedFiles.every(f => f.expectedSha256 === f.observedSha256));
 });

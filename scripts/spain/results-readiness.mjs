@@ -14,12 +14,12 @@ const C = JSON.parse(readFileSync('lanova/cases/spain-data/clubs-2026-27.cc-by-s
 const ofName = Object.fromEntries(C.clubs.map(c => [c.id, D.seasons['2026-27'].matches.flatMap(m => [m[2], m[3]]).find(n => c.lanovaResultNames.includes(n))]));
 const missing = missingResults(D, AS_OF);
 const matches = R.matches.filter(m => m.status === 'completed').map(m => ({id: fixtureId('2026-27', m.matchday, ofName[m.home], ofName[m.away]), playedOn: m.date, hg: m.score[0], ag: m.score[1],
-  verifiedAgainst: m.validation.find(v => v.startsWith('agrees with')) ?? null, registryId: m.id}));
-const snapshot = {provider: 'OpenFootballBase-Data (results read from Wikipedia)', licence: 'CC BY-SA 4.0', licenceUrl: 'https://creativecommons.org/licenses/by-sa/4.0/', permittedUse: {commercial: true, conditions: 'attribution; share-alike for the derived dataset'},
+  verifiedAgainst: m.validation.find(v => v.startsWith('agrees with') || v.startsWith('official LaLiga result')) ?? null, registryId: m.id}));
+const snapshot = {provider: 'OpenFootballBase-Data (Wikipedia-derived results), with separately cited official LaLiga correction(s)', licence: 'CC BY-SA 4.0', licenceUrl: 'https://creativecommons.org/licenses/by-sa/4.0/', permittedUse: {commercial: true, conditions: 'attribution; share-alike for the derived dataset; official correction source cited separately'},
   retrievedAt: rel.manifestGeneratedAt, sha256: rel.archiveSha256, verification: 'matchdays 1–7 against openfootball (CC0); Málaga CF results against LANOVA\'s verified line', matches};
 const check = checkSnapshot(snapshot, missing), byId = new Map(matches.map(m => [m.id, m]));
 const rows = missing.map(m => { const x = byId.get(m.id); return {id: m.id, matchday: m.matchday, scheduledDate: m.scheduledDate, home: m.home, away: m.away, recovered: Boolean(x), score: x ? [x.hg, x.ag] : null, independentlyVerified: Boolean(x?.verifiedAgainst)}; });
-const report = {schema: 'lanova-results-readiness-v1', asOf: AS_OF, season: '2026-27', candidate: {provider: snapshot.provider, licence: snapshot.licence, retrievedAt: snapshot.retrievedAt, sha256: snapshot.sha256},
+const report = {schema: 'lanova-results-readiness-v1', asOf: AS_OF, season: '2026-27', candidate: {provider: snapshot.provider, licence: snapshot.licence, retrievedAt: snapshot.retrievedAt, sha256: snapshot.sha256, supplement: 'Levante UD–Elche CF 1–1 on 2026-11-23 verified from the official LaLiga match page; suspended Rayo Vallecano–Athletic Club fixture remains excluded from completed results.'},
   missingFromOpenfootball: missing.length, recovered: rows.filter(r => r.recovered).length, recoveredAndIndependentlyVerified: rows.filter(r => r.independentlyVerified).length,
   notRecovered: rows.filter(r => !r.recovered).map(r => r.id), gate: {usable: check.usable, problems: [...new Set(check.problems.map(p => p.replace(/: .*$/, '')))].map(p => `${p} (${check.problems.filter(q => q.startsWith(p)).length})`)},
   decision: check.usable ? 'READY' : 'BLOCKED: gate closed — keep the current-season probability restriction', missing: rows};

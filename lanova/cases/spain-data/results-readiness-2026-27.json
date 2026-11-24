@@ -3,23 +3,23 @@
  "asOf": "2026-11-24",
  "season": "2026-27",
  "candidate": {
-  "provider": "OpenFootballBase-Data (results read from Wikipedia)",
+  "provider": "OpenFootballBase-Data (Wikipedia-derived results), with separately cited official LaLiga correction(s)",
   "licence": "CC BY-SA 4.0",
   "retrievedAt": "2026-11-23T13:49:13+00:00",
-  "sha256": "16539db3ce2b28ef3c0e4500ac31c24d90995a02eafab57daf4cef8b6b8680f9"
+  "sha256": "16539db3ce2b28ef3c0e4500ac31c24d90995a02eafab57daf4cef8b6b8680f9",
+  "supplement": "Levante UD–Elche CF 1–1 on 2026-11-23 verified from the official LaLiga match page; suspended Rayo Vallecano–Athletic Club fixture remains excluded from completed results."
  },
  "missingFromOpenfootball": 61,
- "recovered": 59,
- "recoveredAndIndependentlyVerified": 2,
+ "recovered": 60,
+ "recoveredAndIndependentlyVerified": 3,
  "notRecovered": [
-  "2026-27/md08/Rayo Vallecano de Madrid v Athletic Club",
-  "2026-27/md13/Levante UD v Elche CF"
+  "2026-27/md08/Rayo Vallecano de Madrid v Athletic Club"
  ],
  "gate": {
   "usable": false,
   "problems": [
    "not verified against an authoritative result (57)",
-   "does not cover 2 of 61 missing results (partial snapshots are not mixed with the open dataset) (1)"
+   "does not cover 1 of 61 missing results (partial snapshots are not mixed with the open dataset) (1)"
   ]
  },
  "decision": "BLOCKED: gate closed — keep the current-season probability restriction",
@@ -755,9 +755,12 @@
    "scheduledDate": "2026-11-22",
    "home": "Levante UD",
    "away": "Elche CF",
-   "recovered": false,
-   "score": null,
-   "independentlyVerified": false
+   "recovered": true,
+   "score": [
+    1,
+    1
+   ],
+   "independentlyVerified": true
   },
   {
    "id": "2026-27/md13/Rayo Vallecano de Madrid v Valencia CF",
