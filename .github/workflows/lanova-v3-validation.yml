@@ -1,4 +1,4 @@
-# Independent validation of the LANOVA V3 candidate branch (PR #27).
+# Independent validation of the LANOVA candidate branches (V3 release, PR #27; Advantage Lab V1 development branch).
 # Read-only: no secret, no deployment, no write to any branch, Railway or Stripe. It only checks out the exact head
 # commit of the pull request, runs the unit and browser suites, and keeps their logs and screenshots as artifacts.
 name: LANOVA V3 validation
@@ -17,8 +17,8 @@ concurrency:
 
 jobs:
   suite:
-    # Targeted at the V3 candidate branch (PR #27); a manual run validates the branch it is started on.
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'claude/lanova-v3-integrated'
+    # Targeted at the candidate branches; a manual run validates the branch it is started on.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'claude/lanova-v3-integrated' || github.event.pull_request.head.ref == 'development/lanova-advantage-v1-20261124'
     name: ${{ matrix.name }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -31,6 +31,8 @@ jobs:
           - {id: finance, name: 'Browser · Finance demo', cmd: 'node tests/finance-demo-e2e.mjs ci-out/finance', browser: true}
           - {id: advantage, name: 'Browser · Advantage Lab', cmd: 'node tests/advantage-e2e.mjs ci-out/advantage', browser: true}
           - {id: mobile, name: 'Browser · mobile, touch (iPhone 13)', cmd: 'node tests/mobile-e2e.mjs ci-out/mobile', browser: true}
+          - {id: advantage-v1, name: 'Browser · Advantage Lab V1 (desktop + iPhone 13)', cmd: 'node tests/advantage-v1-e2e.mjs ci-out/advantage-v1', browser: true}
+          - {id: baseline, name: 'Regression · Advantage Lab vs validated V3 (faa7695)', cmd: 'node scripts/compare-advantage-baseline.mjs', browser: false, history: true}
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
@@ -39,6 +41,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+          fetch-depth: ${{ matrix.history && '0' || '1' }}
 
       - name: Confirm the commit under test
         run: |
@@ -75,7 +78,7 @@ jobs:
             echo "Commit: \`$HEAD_SHA\` · Node $(node --version)"
             echo
             echo '```'
-            grep -E '^(PASS|FAIL|not ok|# (tests|pass|fail))|checks passed' "ci-out/${{ matrix.id }}.log" || echo "no log"
+            grep -E '^(PASS|FAIL|DIFFERENT|not ok|# (tests|pass|fail))|checks passed|cases identical' "ci-out/${{ matrix.id }}.log" || echo "no log"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
