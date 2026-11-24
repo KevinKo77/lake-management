@@ -1,0 +1,10 @@
+# Review controls for the Player Intelligence publication gate (see lanova/player-intelligence/PUBLICATION-POLICY.md).
+# Effective only with branch protection on main: "Require a pull request", "Require review from Code Owners" and the
+# "LANOVA V3 validation" checks marked as required.
+/lanova/player-intelligence/publication-policy.json  @KevinKo77
+/lanova/player-intelligence/rights/                  @KevinKo77
+/lanova/player-intelligence/                         @KevinKo77
+/scripts/player-intelligence/                        @KevinKo77
+/lanova/cases/player-intelligence/demo-data/         @KevinKo77
+/tests/player-intelligence*                          @KevinKo77
+/.github/                                            @KevinKo77

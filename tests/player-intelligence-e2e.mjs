@@ -113,6 +113,17 @@ await t('8 · phone (iPhone 13, touch): no horizontal overflow; search, profile 
   await c.close();
 });
 
+await t('10 · fail closed in the browser: only the approved fixture bytes are shown; a tampered dataset labelled "synthetic" is refused', async () => {
+  const policy = JSON.parse(readFileSync('lanova/player-intelligence/publication-policy.json', 'utf8'));
+  assert.equal(await page.getAttribute('[data-approved]', 'data-approved'), policy.approvals[0].outputSha256);
+  const c = await browser.newContext({viewport: {width: 1440, height: 900}});
+  await c.route(/fonts\.(googleapis|gstatic)\.com|railway\.app/, r => r.abort());
+  await c.route('**/demo-data/demo-facts.json', async route => { const res = await route.fetch(), d = await res.json(); d.synthetic = true; d.players[0].observed.goals = 99; await route.fulfill({response: res, json: d}); });
+  const p = await c.newPage(); await p.goto(URL0); await p.waitForSelector('[data-refused]');
+  assert.match(await p.innerText('[data-refused]'), /not an approved fictional fixture/); assert.equal(await p.locator('.pi-results').count(), 0);
+  await c.close();
+});
+
 await t('9 · no page error and no request to any other site', async () => { assert.deepEqual(errors, []); assert.deepEqual(offsite, []); });
 await desk.close(); await browser.close(); server.close();
 writeFileSync(join(out, 'player-intelligence-e2e-results.json'), JSON.stringify({generatedAt: new Date().toISOString(), checks}, null, 2));

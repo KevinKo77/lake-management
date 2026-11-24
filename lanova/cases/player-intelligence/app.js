@@ -119,13 +119,24 @@ function sources() {
   const d = S.data, a = S.audit, ia = d.identityAudit;
   document.getElementById('sources').innerHTML = `<header class="sec-head"><div><h2 id="h-src">4 · Sources, rights and limits</h2></div></header>
     <div class="method-grid">
-      <div><h3>This page: demonstration data</h3><p class="small">${esc(d.source.description)}. Licence: ${esc(d.source.licence)}. Identity audit: ${ia.resolved} resolved, ${ia.ambiguous} ambiguous, ${ia.unresolved} unresolved, ${ia.conflict} conflict, of ${ia.records} records. ${d.validation.inconsistencies.length} inconsistent source record(s) are shown, not corrected.</p></div>
+      <div><h3>This page: demonstration data</h3><p class="small" data-approved="${esc(S.digest)}">${esc(d.source.description)}. Licence: ${esc(d.source.licence)}. Shown because its SHA-256 (<span class="mono">${esc(S.digest.slice(0, 12))}…</span>) is the fictional fixture approved in the publication policy. Identity audit: ${ia.resolved} resolved, ${ia.ambiguous} ambiguous, ${ia.unresolved} unresolved, ${ia.conflict} conflict, of ${ia.records} records. ${d.validation.inconsistencies.length} inconsistent source record(s) are shown, not corrected.</p></div>
       <div><h3>Real LaLiga 2025/26: withheld</h3><p class="small" data-rights="${esc(a?.decision ?? '')}"><b>${esc(a?.decision ?? 'audit not loaded')}</b>. ${esc(a?.decisionReason ?? '')}</p>
         ${a ? `<p class="small">Parser check on the real file (aggregates only, ${esc(a.auditedOn)}): ${a.parserReconciliation.matches} matches, ${a.parserReconciliation.appearances.toLocaleString('en-GB')} appearances, ${a.parserReconciliation.goalsExcludingOwnGoals.toLocaleString('en-GB')} goals — identical to an independent parse. Identity: ${a.identityAudit.resolved} of ${a.identityAudit.playerClubRecords} records resolved with evidence, ${a.identityAudit.unresolved} left unresolved.</p>` : ''}</div>
       <div><h3>How minutes are estimated</h3><p class="small">${esc(d.minutesMethod.formula)}.</p><ul class="small">${d.minutesMethod.limitations.map(l => `<li>${esc(l)}</li>`).join('')}</ul></div></div>
     <p class="small muted">Player Intelligence describes history. It does not rate players, value them, predict their performance or recommend a signing. Position and nationality are never treated as evidence of ability.</p>`;
 }
 
-Promise.all(['demo-data/demo-facts.json', '../../player-intelligence/evidence/source-audit-laliga-2025-26.json'].map(f => fetch(f).then(r => { if (!r.ok) throw new Error(`${f}: HTTP ${r.status}`); return r.json(); })))
-  .then(([data, audit]) => { S.data = data; S.audit = audit; if (!data.synthetic) throw new Error('only the synthetic demonstration dataset may be shown here'); readUrl(); shell(); results(); profile(); comparison(); sources(); })
-  .catch(e => { root.innerHTML = `<p class="notice warn" role="alert">The dataset could not be loaded (${esc(e.message)}).</p>`; });
+// Fail closed: the dataset is shown only if its exact bytes are the output the reviewed publication policy approves as a
+// fictional fixture. A "synthetic" flag inside the file is not trusted on its own.
+const hex = buf => [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2, '0')).join('');
+const get = f => fetch(f).then(r => { if (!r.ok) throw new Error(`${f}: HTTP ${r.status}`); return r; });
+Promise.all([get('demo-data/demo-facts.json').then(r => r.arrayBuffer()), get('../../player-intelligence/publication-policy.json').then(r => r.json()), get('../../player-intelligence/evidence/source-audit-laliga-2025-26.json').then(r => r.json())])
+  .then(async ([bytes, policy, audit]) => {
+    const digest = hex(await crypto.subtle.digest('SHA-256', bytes));
+    const ok = policy?.defaultDecision === 'DENY' && policy.approvals?.some(a => a.kind === 'fictional-fixture' && a.outputPath === 'lanova/cases/player-intelligence/demo-data/demo-facts.json' && a.outputSha256 === digest);
+    if (!ok) throw new Error('this dataset is not an approved fictional fixture (publication policy) — not shown');
+    const data = JSON.parse(new TextDecoder().decode(bytes));
+    if (!data.synthetic) throw new Error('only the fictional demonstration dataset may be shown here');
+    S.data = data; S.audit = audit; S.digest = digest; readUrl(); shell(); results(); profile(); comparison(); sources();
+  })
+  .catch(e => { root.innerHTML = `<p class="notice warn" role="alert" data-refused>The dataset could not be shown (${esc(e.message)}).</p>`; });

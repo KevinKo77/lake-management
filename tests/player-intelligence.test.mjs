@@ -176,16 +176,17 @@ test('reproducibility: the fixture and the dataset rebuild byte for byte; a chan
   assert.match(execFileSync('node', ['scripts/player-intelligence/build_player_facts.mjs', '--check']).toString(), /reproduced exactly/);
   const tmp = mkdtempSync(join(tmpdir(), 'pi-')), out1 = join(tmp, 'a.json'), out2 = join(tmp, 'b.json');
   execFileSync('node', ['scripts/player-intelligence/build_player_facts.mjs', '--out', out1]); execFileSync('node', ['scripts/player-intelligence/build_player_facts.mjs', '--out', out2]);
-  assert.equal(readFileSync(out1, 'utf8'), readFileSync(out2, 'utf8')); assert.equal(readFileSync(out1, 'utf8'), readFileSync(`${DIR}/demo-facts.json`, 'utf8'));
+  assert.equal(readFileSync(out1, 'utf8'), readFileSync(out2, 'utf8'));   // outside the repository: identical, and labelled restricted
+  assert.equal(JSON.parse(readFileSync(out1, 'utf8')).synthetic, false); assert.match(JSON.parse(readFileSync(out1, 'utf8')).source.publication, /^RESTRICTED/);
   writeFileSync(join(tmp, 'src.txt'), TXT + '\n'); const r = spawnSync('node', ['scripts/player-intelligence/build_player_facts.mjs', '--source', join(tmp, 'src.txt'), '--out', join(tmp, 'c.json')]);
   assert.equal(r.status, 1); assert.match(r.stderr.toString(), /differs from the manifest/);
 });
 
-test('source-rights gate: non-synthetic data are refused inside the repository; only fictional data and aggregates are published', () => {
+test('source-rights gate: unapproved outputs are refused inside the repository; only fictional data and aggregates are published', () => {
   const tmp = mkdtempSync(join(tmpdir(), 'pi-')), man = join(tmp, 'manifest.json');
   writeFileSync(man, JSON.stringify({...MAN, synthetic: false, rightsDecision: 'BLOCKED'}));
   const r = spawnSync('node', ['scripts/player-intelligence/build_player_facts.mjs', '--manifest', man, '--out', 'lanova/cases/player-intelligence/demo-data/should-not-exist.json']);
-  assert.equal(r.status, 2); assert.match(r.stderr.toString(), /refusing to write non-synthetic data inside the repository/);
+  assert.equal(r.status, 2); assert.match(r.stderr.toString(), /publication gate: DENIED — no approval in the policy/);
   assert.equal(D.synthetic, true); assert.equal(REG.synthetic, true); assert.ok(REG.players.every(p => /^SYN-/.test(p.id))); assert.ok(D.players.every(p => p.playerId === null || /^SYN-/.test(p.playerId)));
   assert.match(D.competition, /FICTIONAL/);
   const audit = JSON.parse(readFileSync('lanova/player-intelligence/evidence/source-audit-laliga-2025-26.json', 'utf8'));

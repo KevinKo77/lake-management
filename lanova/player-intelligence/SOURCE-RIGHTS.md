@@ -27,7 +27,7 @@ So the line-ups appear to come from worldfootball.net match reports and the foot
 ## What is published, and what is not
 - **Published:** the engines (parser, identity, facts, comparison, contract, report), a **fictional** demonstration dataset, and **aggregate** audit figures (`evidence/source-audit-laliga-2025-26.json`): counts only, no player-level data.
 - **Not published:** any real player-level record from the file, and the 2025/26 identity registry built from OpenFootballBase.
-- **Build guard:** `scripts/player-intelligence/build_player_facts.mjs` refuses (exit 2) to write a non-synthetic dataset inside the repository unless the manifest records `rightsDecision: "ACCEPTED"`.
+- **Publication gate (fail closed):** `publication-policy.json` blocks this source by its SHA-256. Inside the repository, only the approved fictional fixture can be written. Manifest fields such as `rightsDecision` or `synthetic` authorise nothing. A tree scan in CI fails if any unapproved dataset, registry or Football.TXT "full" file is committed. See [PUBLICATION-POLICY.md](PUBLICATION-POLICY.md).
 
 ## What would unblock it
 One of these:
@@ -35,4 +35,4 @@ One of these:
 - a source whose own terms grant that right;
 - line-ups the club itself owns (for example its own match sheets).
 
-Record the evidence here, set `rightsDecision: "ACCEPTED"` in the manifest, and get founder approval before publishing.
+Then add a reviewed rights-evidence file under `rights/` and a `licensed-source` approval in `publication-policy.json`, with code-owner (founder) review. Remove the source from the blocked list only in that same reviewed change. Editing a manifest is never enough.

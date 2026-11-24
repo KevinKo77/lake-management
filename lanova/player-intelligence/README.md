@@ -49,7 +49,13 @@ node --test tests/player-intelligence.test.mjs
 node tests/player-intelligence-e2e.mjs out/player-intelligence     # desktop + iPhone 13
 ```
 
-Local audit of the real file. Its outputs stay **outside** the repository: the build refuses otherwise.
+Publication is fail closed (see [PUBLICATION-POLICY.md](PUBLICATION-POLICY.md)):
+```bash
+node scripts/player-intelligence/publication_gate.mjs              # scans the published tree: only approved artifacts
+node --test tests/player-intelligence-gate.test.mjs                # adversarial bypass attempts
+```
+
+Local audit of the real file. Its outputs stay **outside** the repository and are labelled RESTRICTED; the gate refuses any public path.
 ```bash
 python3 scripts/player-intelligence/registry_from_ofb.py --ofb <OpenFootballBase data-1.24.6 dir> --txt <1-liga-full.txt> --out /tmp/pi/registry.json
 node scripts/player-intelligence/build_player_facts.mjs --source <1-liga-full.txt> --registry /tmp/pi/registry.json --manifest /tmp/pi/manifest.json --out /tmp/pi/facts.json
