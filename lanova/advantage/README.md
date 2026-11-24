@@ -44,6 +44,15 @@ A financial gain is in one of three states (`gainStatus`, `financialStatus` in t
 - `range`: `monthlyGain: null` and a documented `gainRange` — both ends (low ≤ high), the duration, and `basis`, the source (a quote, an offer, a past season). Without a source the range is refused: a range is not a guess;
 - `unknown`: `monthlyGain: null` and no range (not estimable).
 
+The same classification (`gainClassification` in `lab.js`) is used by the interface, the Decision Brief and the HTML, JSON and CSV exports. In the lists of missing data:
+- a known gain adds nothing;
+- a documented range reads "financial gain: documented range LOW to HIGH per month (source: …); single figure not known";
+- only a truly unknown gain reads "financial gain (not estimable)".
+
+The JSON brief gives each option a `financialGain` object (`status`, `label`, `perMonth`, `range`, `basis`). The CSV export has a "Missing data" column.
+
+*Correction (independent review, 24 Nov 2026):* a documented range used to be listed as "financial gain (not estimable)" in the missing data. The wording is fixed and the calculations are unchanged (`tests/advantage-gain-classification.test.mjs`).
+
 ## Formulas
 
 ### Totals per option (`optionTotals`)

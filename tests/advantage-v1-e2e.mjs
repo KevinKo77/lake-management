@@ -144,6 +144,28 @@ await t('8 · phone (iPhone 13, touch): workflow, editors and sensitivity usable
   await c2.close();
 });
 
+await t('8a · documented gain range (independent-review defect): known, range and unknown read the same on screen and in the HTML, JSON and CSV exports; header V1', async () => {
+  const PITCH = 'Artificial training pitch', STRIKER = 'Experienced striker';
+  for (const [label, opts] of [['desktop', {viewport: {width: 1440, height: 900}}], ['phone', {...devices['iPhone 13']}]]) {
+    const {page: p, ctx: c} = await open(opts); await p.waitForSelector('svg.map');
+    assert.match(await p.innerText('.brand'), /ADVANTAGE LAB · V1$/, label);
+    const items = await p.locator('#h-brief').evaluate(h => [...h.closest('section').querySelectorAll('h3')].find(x => /Data missing for a definitive decision/.test(x.textContent)).nextElementSibling.innerText);
+    const pitch = items.split('\n').filter(x => x.startsWith(PITCH));
+    assert.equal(pitch.length, 1, `${label}: ${items}`); assert.match(pitch[0], /documented range 8,000 to 20,000 per month .* single figure not known/); assert.doesNotMatch(pitch[0], /not estimable/);
+    assert.ok(items.split('\n').some(x => x.startsWith(STRIKER) && /financial gain \(not estimable\)/.test(x)), `${label}: truly unknown gain still reported`);
+    await p.locator('#h-brief').evaluate(h => [...h.closest('section').querySelectorAll('h3')].find(x => /Data missing/.test(x.textContent)).scrollIntoView({block: 'center'}));
+    await p.screenshot({path: join(out, `v1_gain_range_fixed_${label}.png`)});
+    if (label === 'desktop') {
+      const html = await save(p, '[data-export="html"]', 'brief-range.html'), json = JSON.parse(await save(p, '[data-export="json"]', 'brief-range.json')).brief, csv = await save(p, '[data-export="csv"]', 'brief-range.csv');
+      assert.match(html, /Artificial training pitch[^<]*: financial gain: documented range 8,000 to 20,000 per month/); assert.doesNotMatch(html, /Artificial training pitch[^<]*: financial gain \(not estimable\)/);
+      const jp = json.options.find(o => o.name.startsWith(PITCH)); assert.equal(jp.financialGain.status, 'range'); assert.deepEqual(jp.financialGain.range, [8000, 20000]); assert.ok(!jp.missingData.some(x => /not estimable/.test(x)));
+      assert.equal(json.options.find(o => o.name.startsWith(STRIKER)).financialGain.status, 'unknown'); assert.ok(json.missingForADecision.some(x => x.startsWith(PITCH) && /documented range/.test(x)));
+      const row = csv.split('\r\n').find(l => l.startsWith(`"${PITCH}`)); assert.match(row, /documented range 8,000 to 20,000 per month/); assert.doesNotMatch(row, /financial gain \(not estimable\)/);
+    }
+    await c.close();
+  }
+});
+
 await t('9 · no page error and no request to any other site', async () => { assert.deepEqual(errors, []); assert.deepEqual(offsite, []); });
 await ctx.close(); await browser.close(); server.close();
 writeFileSync(join(out, 'advantage-v1-e2e-results.json'), JSON.stringify({generatedAt: new Date().toISOString(), checks}, null, 2));
