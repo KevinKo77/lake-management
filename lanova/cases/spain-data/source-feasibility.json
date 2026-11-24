@@ -9,7 +9,7 @@
    "name": "OpenFootballBase-Data",
    "url": "https://github.com/florentfougeres/OpenFootballBase-Data",
    "release": "data-1.24.6 (release commit 99fcbb6, 2026-11-23; manifest generated 2026-11-23T13:49:13Z; archive SHA-256 16539db3…80f9)",
-   "inspection": "Release archive downloaded and opened (Parquet, DuckDB); manifest checksums verified for every file used; 2026/27 season status 'open'. Club-season, squad, match, club and birth tables queried directly (not only the README).",
+   "inspection": "Release archive downloaded and opened (Parquet, DuckDB); archive SHA-256 and all 91 hashed manifest files verified by scripts/spain/verify_ofb_archive.py (5 used by LANOVA); 2026/27 season status 'open'. Club-season, squad, match, club and birth tables queried directly (not only the README).",
    "licence": "Data: CC BY-SA 4.0 (derived from Wikipedia; README 'Sources, licences and limits'). Code: MIT (LICENSE file — software only, not the data). Wikidata-derived parts CC0. Club logos: not part of the data licence (often non-free).",
    "commercialReuse": "Permitted under CC BY-SA 4.0: attribution to Wikipedia contributors and the dataset; LANOVA's derived dataset must be shared under CC BY-SA 4.0 (share-alike). Display on a commercial site is allowed with attribution. The derived squad/registry/results files are published under CC BY-SA 4.0 and kept separate from CC0 and LANOVA's own code.",
    "coverageVerified": {
@@ -97,5 +97,10 @@
    "added official result correction for Levante UD–Elche CF and marked Rayo Vallecano–Athletic Club suspended, not completed"
   ],
   "licence": "Derived squad, registry and results files remain CC BY-SA 4.0 with attribution and share-alike; Wikidata CC0 facts remain separate."
+ },
+ "archiveVerification": {
+  "command": "python3 scripts/spain/verify_ofb_archive.py",
+  "log": "evidence/openfootballbase-manifest-verification.json",
+  "result": "PASS: archive SHA-256, git tag commit, manifest date and 91/91 manifest file hashes (tables 29, seasons 54, work 7, home 1). GitHub-published asset digest not readable (REST API HTTP 403): not claimed."
  }
 }

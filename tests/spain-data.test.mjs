@@ -106,5 +106,47 @@ test('coverage report: counts add up to the squad file, by club and division; in
   assert.equal(COV.wikidata.checked, W.checked); assert.equal(COV.wikidata.playersWithQid, W.playersWithQid);
   const mal = COV.clubs.find(x => x.club === 'es-malaga-cf'); assert.deepEqual(mal.positionCounts.source, {GK: 2, DF: 10, MF: 13, FW: 3}); assert.deepEqual(mal.positionCounts.effective, {GK: 2, DF: 10, MF: 9, FW: 7});
   assert.equal(C.clubs.find(x => x.id === 'es-athletic-bilbao').city, 'Bilbao'); assert.equal(C.clubs.find(x => x.id === 'es-athletic-bilbao').sourceCity, 'Ibaigane Palace');
-  const manifestEvidence = EV('openfootballbase-manifest-verification.json'); assert.equal(manifestEvidence.archiveSha256Matches, true); assert.equal(manifestEvidence.manifestFileEntries, 83); assert.equal(manifestEvidence.manifestFileHashesChecked, 83); assert.equal(manifestEvidence.manifestFileHashMismatches, 0); assert.equal(manifestEvidence.verifiedFiles.length, 83); assert.ok(manifestEvidence.verifiedFiles.every(f => f.expectedSha256 === f.observedSha256));
+  const manifestEvidence = EV('openfootballbase-manifest-verification.json'); assert.equal(manifestEvidence.archiveSha256Matches, true); assert.equal(manifestEvidence.manifestFileEntries, 91); assert.equal(manifestEvidence.manifestFileHashesChecked, 91); assert.equal(manifestEvidence.manifestFileHashMismatches, 0); assert.equal(manifestEvidence.verifiedFiles.length, 91); assert.ok(manifestEvidence.verifiedFiles.every(f => f.expectedSha256 === f.observedSha256));
+});
+
+test('positions: effectivePosition is what LANOVA uses (corrected where corroborated, else the source value); the source value is kept', () => {
+  for (const p of S.players) assert.equal(p.effectivePosition, p.positionCorrection ? p.positionCorrection.correctedPosition : p.position, p.name);
+  const m = S.players.filter(p => p.club === 'es-malaga-cf'), n = (k, f) => m.filter(p => p[f] === k).length;
+  assert.deepEqual(Object.fromEntries(['GK', 'DF', 'MF', 'FW'].map(k => [k, n(k, 'effectivePosition')])), {GK: 2, DF: 10, MF: 9, FW: 7});
+  assert.deepEqual(Object.fromEntries(['GK', 'DF', 'MF', 'FW'].map(k => [k, n(k, 'position')])), {GK: 2, DF: 10, MF: 13, FW: 3});
+  assert.deepEqual(m.filter(p => p.positionCorrection).map(p => [p.shirtNumber, p.position, p.effectivePosition]).sort((a, b) => a[0] - b[0]), [[7, 'MF', 'FW'], [11, 'MF', 'FW'], [19, 'MF', 'FW'], [24, 'MF', 'FW']]);
+  assert.match(S.positionNote, /Consumers must read effectivePosition/);
+  for (const x of COV.clubs) { const ps = S.players.filter(p => p.club === x.club); for (const k of ['GK', 'DF', 'MF', 'FW']) { assert.equal(x.positionCounts.source[k], ps.filter(p => p.position === k).length); assert.equal(x.positionCounts.effective[k], ps.filter(p => p.effectivePosition === k).length); } }
+  assert.match(readFileSync('lanova/cases/spain-clubs/app.js', 'utf8'), /const positionOf = p => p\.effectivePosition;/);
+});
+
+test('evidence codes: VERIFIED is documented as an internal code for a dated listing; never shown bare; no "Verified" heading', () => {
+  assert.match(S.qualityCodeNote, /internal evidence code, not a verification of official status/); assert.match(COV.countNote, /not official verification or registration/);
+  assert.ok(S.players.every(p => p.registrationStatus === 'not-established'));
+  const app = readFileSync('lanova/cases/spain-clubs/app.js', 'utf8'), html = readFileSync('lanova/cases/spain-clubs/index.html', 'utf8'), readme = readFileSync('lanova/cases/spain-data/README.md', 'utf8');
+  assert.doesNotMatch(app + html, />\s*Verified\s*</, 'no bare "Verified" heading or label');
+  assert.match(app, /VERIFIED: 'Dated Wikipedia listing'/); assert.match(app, /Dated listings<\/th>/);
+  assert.match(readme, /internal evidence codes/); assert.match(readme, /\| `VERIFIED` \| Dated Wikipedia listing \|/);
+});
+
+test('Wikidata check counter is read from the data, not hardcoded', () => {
+  const html = readFileSync('lanova/cases/spain-clubs/index.html', 'utf8'), app = readFileSync('lanova/cases/spain-clubs/app.js', 'utf8');
+  assert.doesNotMatch(html, /\b333\b|1,028/); assert.match(html, /id="wd-count"/);
+  assert.match(app, /S\.coverage\.wikidata\.checked/); assert.equal(COV.wikidata.checked, W.checked); assert.equal(COV.wikidata.checked, Object.keys(W.players).length);
+});
+
+test('CC BY-SA files declare LANOVA\'s modifications; the CC0 file does not mix them', () => {
+  for (const f of [C, S, J('results-laliga-2026-27.cc-by-sa.json')]) { assert.equal(f.modifiedByLanova, true); assert.ok(f.modifications.length >= 5); assert.ok(f.modifications.some(m => /source value kept/.test(m))); }
+  assert.ok(!('modifiedByLanova' in W)); assert.equal(W.licence, 'CC0 1.0');
+});
+
+test('archive integrity: the committed audit log comes from scripts/spain/verify_ofb_archive.py and covers every hashed manifest entry (91)', () => {
+  const v = EV('openfootballbase-manifest-verification.json'), rel = EV('openfootballbase-release.json');
+  assert.equal(v.command, 'python3 scripts/spain/verify_ofb_archive.py'); assert.ok(readFileSync('scripts/spain/verify_ofb_archive.py', 'utf8').includes("for group in ('tables', 'seasons', 'work', 'home')"));
+  assert.equal(v.summary, 'PASS'); assert.equal(v.observedArchiveSha256, rel.archiveSha256); assert.equal(v.archiveSha256Matches, true);
+  assert.deepEqual(v.manifestFileEntriesByGroup, {tables: 29, seasons: 54, work: 7, home: 1}); assert.equal(v.filesUsedByLanova, 5);
+  assert.ok(v.verifiedFiles.every(f => f.observedSha256 === f.expectedSha256)); assert.equal(new Set(v.verifiedFiles.map(f => f.path)).size, 91);
+  for (const f of Object.values(S.source.openfootballbase.files)) assert.ok(v.verifiedFiles.some(x => x.path === f.path && x.usedByLanova && x.observedSha256 === f.sha256), f.path);
+  const gh = v.steps.find(s => /published by GitHub/.test(s.step)); assert.ok(gh.result === 'PASS' || (gh.result === 'BLOCKED' && v.blockers.length >= 1), 'an unreadable digest is recorded as blocked, never claimed');
+  assert.equal(v.steps.find(s => /git tag/.test(s.step)).tagCommit, rel.releaseCommit);
 });

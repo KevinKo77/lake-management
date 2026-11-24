@@ -4,6 +4,14 @@
  "attribution": [
   "Squads, club seasons and results: OpenFootballBase-Data release data-1.24.6 (github.com/florentfougeres/OpenFootballBase-Data), derived from Wikipedia by its contributors — CC BY-SA 4.0. Each player cites its Wikipedia page and revision."
  ],
+ "modifiedByLanova": true,
+ "modifications": [
+  "Filtered the OpenFootballBase release to LaLiga and Segunda División 2026/27 (competitions ESP-LL, ESP-SD).",
+  "Normalized club identities and aliases; mapped clubs to LANOVA ids, Wikidata QIDs and the club names used in LANOVA results.",
+  "Added the date of each cited Wikipedia revision, evidence codes with reasons, Wikidata membership checks and dates of birth (Wikidata, CC0).",
+  "Recorded dated corrections with the source value kept: 4 Málaga CF positions (positionCorrection / effectivePosition), 2 LaLiga fixtures (sourceSnapshot), 1 club city (sourceCity).",
+  "Cross-checked results against openfootball (CC0), LANOVA's verified Málaga CF line and official LaLiga match pages."
+ ],
  "season": "2026-27",
  "asOf": "2026-11-24",
  "source": {
@@ -44,6 +52,47 @@
   }
  },
  "competition": "laliga",
+ "statusDefinitions": {
+  "completed": "Played and has a final score.",
+  "scheduled": "Not yet played; future fixture remains on the schedule.",
+  "postponed": "Not played and rescheduled or awaiting a new date.",
+  "suspended": "Started but not completed; an interim score is not a final result.",
+  "missing": "Past scheduled date with no verified final result or explicit postponement/suspension evidence."
+ },
+ "resultCorrections": [
+  {
+   "id": "2026-27/md13/es-levante-ud-v-es-elche-cf",
+   "status": "completed",
+   "sourceStatus": "missing",
+   "sourceScheduledDate": "2026-11-22",
+   "playedOn": "2026-11-23",
+   "score": [
+    1,
+    1
+   ],
+   "reason": "The OpenFootballBase release was generated before the match was played. The official LaLiga match page records the final score and actual date.",
+   "source": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-levante-ud-elche-cf-13",
+   "verifiedAt": "2026-11-24"
+  },
+  {
+   "id": "2026-27/md08/es-rayo-vallecano-v-es-athletic-bilbao",
+   "status": "suspended",
+   "sourceStatus": "missing",
+   "sourceScheduledDate": "2026-10-10",
+   "interimScore": [
+    0,
+    0
+   ],
+   "suspendedAtMinute": 24,
+   "resumptionDate": "2026-12-09",
+   "resumptionTime": "20:00",
+   "reason": "The fixture was suspended before completion; the interim 0–0 is not a final result and must not count as completed.",
+   "statusSource": "https://www.rayovallecano.es/partidos",
+   "resumptionSource": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-rayo-vallecano-athletic-club-8",
+   "suspensionDetailSource": "https://efe.com/deportes/2026-10-29/partido-rayo-vallecano-athletic-club-diciembre/",
+   "verifiedAt": "2026-11-24"
+  }
+ ],
  "completeness": {
   "due": 130,
   "completed": 129,
@@ -6850,46 +6899,5 @@
    },
    "validation": []
   }
- ],
- "resultCorrections": [
-  {
-   "id": "2026-27/md13/es-levante-ud-v-es-elche-cf",
-   "status": "completed",
-   "sourceStatus": "missing",
-   "sourceScheduledDate": "2026-11-22",
-   "playedOn": "2026-11-23",
-   "score": [
-    1,
-    1
-   ],
-   "reason": "The OpenFootballBase release was generated before the match was played. The official LaLiga match page records the final score and actual date.",
-   "source": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-levante-ud-elche-cf-13",
-   "verifiedAt": "2026-11-24"
-  },
-  {
-   "id": "2026-27/md08/es-rayo-vallecano-v-es-athletic-bilbao",
-   "status": "suspended",
-   "sourceStatus": "missing",
-   "sourceScheduledDate": "2026-10-10",
-   "interimScore": [
-    0,
-    0
-   ],
-   "suspendedAtMinute": 24,
-   "resumptionDate": "2026-12-09",
-   "resumptionTime": "20:00",
-   "reason": "The fixture was suspended before completion; the interim 0–0 is not a final result and must not count as completed.",
-   "statusSource": "https://www.rayovallecano.es/partidos",
-   "resumptionSource": "https://www.laliga.com/partido/temporada-2026-2027-laliga-ea-sports-rayo-vallecano-athletic-club-8",
-   "suspensionDetailSource": "https://efe.com/deportes/2026-10-29/partido-rayo-vallecano-athletic-club-diciembre/",
-   "verifiedAt": "2026-11-24"
-  }
- ],
- "statusDefinitions": {
-  "completed": "Played and has a final score.",
-  "scheduled": "Not yet played; future fixture remains on the schedule.",
-  "postponed": "Not played and rescheduled or awaiting a new date.",
-  "suspended": "Started but not completed; an interim score is not a final result.",
-  "missing": "Past scheduled date with no verified final result or explicit postponement/suspension evidence."
- }
+ ]
 }

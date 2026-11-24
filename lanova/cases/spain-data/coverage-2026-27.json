@@ -39,6 +39,7 @@
    }
   }
  },
+ "countNote": "verified / inferred / unverified count the internal quality codes: verified = dated Wikipedia listings, not official verification or registration.",
  "divisions": {
   "laliga": {
    "clubs": 20,
@@ -86,9 +87,6 @@
    "withPosition": 30,
    "withNationality": 29,
    "withDateOfBirth": 29,
-   "sourceRevisionDate": "2026-11-10T23:30:11Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -103,7 +101,10 @@
      "FW": 9
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T23:30:11Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-atletico-madrid",
@@ -119,9 +120,6 @@
    "withPosition": 25,
    "withNationality": 25,
    "withDateOfBirth": 25,
-   "sourceRevisionDate": "2026-11-08T22:12:40Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -136,7 +134,10 @@
      "FW": 4
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T22:12:40Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-ca-osasuna",
@@ -152,9 +153,6 @@
    "withPosition": 24,
    "withNationality": 24,
    "withDateOfBirth": 24,
-   "sourceRevisionDate": "2026-11-07T20:20:13Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -169,7 +167,10 @@
      "FW": 5
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-07T20:20:13Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-celta-de-vigo",
@@ -185,9 +186,6 @@
    "withPosition": 25,
    "withNationality": 25,
    "withDateOfBirth": 25,
-   "sourceRevisionDate": "2026-11-05T23:10:48Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -202,7 +200,10 @@
      "FW": 9
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-05T23:10:48Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-deportivo-alaves",
@@ -218,9 +219,6 @@
    "withPosition": 27,
    "withNationality": 27,
    "withDateOfBirth": 26,
-   "sourceRevisionDate": "2026-11-08T19:52:39Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -235,7 +233,10 @@
      "FW": 4
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:52:39Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-deportivo-de-la-coruna",
@@ -251,9 +252,6 @@
    "withPosition": 28,
    "withNationality": 28,
    "withDateOfBirth": 28,
-   "sourceRevisionDate": "2026-11-07T20:17:25Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -268,7 +266,10 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-07T20:17:25Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-elche-cf",
@@ -284,9 +285,6 @@
    "withPosition": 28,
    "withNationality": 28,
    "withDateOfBirth": 28,
-   "sourceRevisionDate": "2026-11-08T14:59:22Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -301,7 +299,10 @@
      "FW": 6
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T14:59:22Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-fc-barcelona",
@@ -317,9 +318,6 @@
    "withPosition": 27,
    "withNationality": 27,
    "withDateOfBirth": 26,
-   "sourceRevisionDate": "2026-11-09T18:51:23Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -334,7 +332,10 @@
      "FW": 8
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T18:51:23Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-getafe-cf",
@@ -350,11 +351,6 @@
    "withPosition": 24,
    "withNationality": 24,
    "withDateOfBirth": 24,
-   "sourceRevisionDate": "2026-11-08T19:31:59Z",
-   "status": "incomplete or needs review",
-   "flags": [
-    "1 contradictory player record(s)"
-   ],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -369,7 +365,12 @@
      "FW": 6
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:31:59Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
   },
   {
    "club": "es-levante-ud",
@@ -385,12 +386,6 @@
    "withPosition": 23,
    "withNationality": 0,
    "withDateOfBirth": 31,
-   "sourceRevisionDate": "2026-11-10T13:54:21Z",
-   "status": "incomplete or needs review",
-   "flags": [
-    "43 players listed: the source may include non-first-team players",
-    "3 contradictory player record(s)"
-   ],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -405,7 +400,13 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T13:54:21Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "43 players listed: the source may include non-first-team players",
+    "3 contradictory player record(s)"
+   ]
   },
   {
    "club": "es-malaga-cf",
@@ -421,9 +422,6 @@
    "withPosition": 28,
    "withNationality": 28,
    "withDateOfBirth": 27,
-   "sourceRevisionDate": "2026-11-07T20:13:19Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -438,7 +436,10 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 4
+   "independentlyCorroboratedPositions": 4,
+   "sourceRevisionDate": "2026-11-07T20:13:19Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-rcd-espanyol",
@@ -454,9 +455,6 @@
    "withPosition": 25,
    "withNationality": 25,
    "withDateOfBirth": 25,
-   "sourceRevisionDate": "2026-11-07T20:17:43Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -471,7 +469,10 @@
      "FW": 9
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-07T20:17:43Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-racing-de-santander",
@@ -487,9 +488,6 @@
    "withPosition": 24,
    "withNationality": 24,
    "withDateOfBirth": 24,
-   "sourceRevisionDate": "2026-11-08T02:06:33Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -504,7 +502,10 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T02:06:33Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-rayo-vallecano",
@@ -520,9 +521,6 @@
    "withPosition": 26,
    "withNationality": 26,
    "withDateOfBirth": 26,
-   "sourceRevisionDate": "2026-11-08T19:55:29Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -537,7 +535,10 @@
      "FW": 6
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:55:29Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-real-betis",
@@ -553,11 +554,6 @@
    "withPosition": 26,
    "withNationality": 25,
    "withDateOfBirth": 27,
-   "sourceRevisionDate": "2026-11-11T22:10:05Z",
-   "status": "incomplete or needs review",
-   "flags": [
-    "1 contradictory player record(s)"
-   ],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -572,7 +568,12 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-11T22:10:05Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
   },
   {
    "club": "es-real-madrid-cf",
@@ -588,9 +589,6 @@
    "withPosition": 27,
    "withNationality": 27,
    "withDateOfBirth": 27,
-   "sourceRevisionDate": "2026-11-08T22:17:38Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -605,7 +603,10 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T22:17:38Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-real-sociedad",
@@ -621,9 +622,6 @@
    "withPosition": 24,
    "withNationality": 24,
    "withDateOfBirth": 24,
-   "sourceRevisionDate": "2026-11-10T21:07:39Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -638,7 +636,10 @@
      "FW": 6
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T21:07:39Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-sevilla-fc",
@@ -654,9 +655,6 @@
    "withPosition": 27,
    "withNationality": 27,
    "withDateOfBirth": 25,
-   "sourceRevisionDate": "2026-11-08T22:12:46Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -671,7 +669,10 @@
      "FW": 8
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T22:12:46Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-valencia-cf",
@@ -687,9 +688,6 @@
    "withPosition": 29,
    "withNationality": 29,
    "withDateOfBirth": 26,
-   "sourceRevisionDate": "2026-11-08T19:51:52Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -704,7 +702,10 @@
      "FW": 9
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:51:52Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-villarreal-cf",
@@ -720,9 +721,6 @@
    "withPosition": 24,
    "withNationality": 24,
    "withDateOfBirth": 24,
-   "sourceRevisionDate": "2026-11-08T19:31:37Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -737,7 +735,10 @@
      "FW": 6
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:31:37Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-ad-ceuta-fc",
@@ -753,9 +754,6 @@
    "withPosition": 30,
    "withNationality": 30,
    "withDateOfBirth": 23,
-   "sourceRevisionDate": "2026-11-09T01:45:22Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -770,7 +768,10 @@
      "FW": 3
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T01:45:22Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-albacete-balompie",
@@ -786,9 +787,6 @@
    "withPosition": 24,
    "withNationality": 24,
    "withDateOfBirth": 22,
-   "sourceRevisionDate": "2026-10-30T12:41:44Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -803,7 +801,10 @@
      "FW": 6
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-30T12:41:44Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-burgos-cf",
@@ -819,9 +820,6 @@
    "withPosition": 27,
    "withNationality": 27,
    "withDateOfBirth": 24,
-   "sourceRevisionDate": "2026-11-10T11:39:07Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -836,7 +834,10 @@
      "FW": 4
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T11:39:07Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-cd-castellon",
@@ -852,9 +853,6 @@
    "withPosition": 29,
    "withNationality": 29,
    "withDateOfBirth": 23,
-   "sourceRevisionDate": "2026-10-04T03:26:59Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -869,7 +867,10 @@
      "FW": 10
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-04T03:26:59Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-cd-eldense",
@@ -885,11 +886,6 @@
    "withPosition": 27,
    "withNationality": 27,
    "withDateOfBirth": 18,
-   "sourceRevisionDate": "2026-10-24T13:59:30Z",
-   "status": "incomplete or needs review",
-   "flags": [
-    "1 contradictory player record(s)"
-   ],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -904,7 +900,12 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-24T13:59:30Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
   },
   {
    "club": "es-cd-leganes",
@@ -920,9 +921,6 @@
    "withPosition": 24,
    "withNationality": 24,
    "withDateOfBirth": 24,
-   "sourceRevisionDate": "2026-10-31T17:57:13Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -937,7 +935,10 @@
      "FW": 5
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-31T17:57:13Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-cd-tenerife",
@@ -953,9 +954,6 @@
    "withPosition": 27,
    "withNationality": 26,
    "withDateOfBirth": 18,
-   "sourceRevisionDate": "2026-11-09T14:01:03Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -970,7 +968,10 @@
      "FW": 10
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T14:01:03Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-ce-sabadell-fc",
@@ -986,9 +987,6 @@
    "withPosition": 27,
    "withNationality": 27,
    "withDateOfBirth": 26,
-   "sourceRevisionDate": "2026-11-10T09:12:07Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -1003,7 +1001,10 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T09:12:07Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-cadiz-cf",
@@ -1019,11 +1020,6 @@
    "withPosition": 27,
    "withNationality": 26,
    "withDateOfBirth": 20,
-   "sourceRevisionDate": "2026-11-08T19:08:19Z",
-   "status": "incomplete or needs review",
-   "flags": [
-    "1 contradictory player record(s)"
-   ],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -1038,7 +1034,12 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:08:19Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
   },
   {
    "club": "es-cordoba-cf",
@@ -1054,11 +1055,6 @@
    "withPosition": 27,
    "withNationality": 0,
    "withDateOfBirth": 25,
-   "sourceRevisionDate": "2026-11-10T12:31:04Z",
-   "status": "incomplete or needs review",
-   "flags": [
-    "1 contradictory player record(s)"
-   ],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -1073,7 +1069,12 @@
      "FW": 9
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-10T12:31:04Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
   },
   {
    "club": "es-fc-andorra",
@@ -1089,9 +1090,6 @@
    "withPosition": 28,
    "withNationality": 28,
    "withDateOfBirth": 27,
-   "sourceRevisionDate": "2026-11-03T11:56:11Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -1106,7 +1104,10 @@
      "FW": 9
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-03T11:56:11Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-girona-fc",
@@ -1122,9 +1123,6 @@
    "withPosition": 29,
    "withNationality": 27,
    "withDateOfBirth": 25,
-   "sourceRevisionDate": "2026-11-11T14:43:42Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 4,
@@ -1139,7 +1137,10 @@
      "FW": 8
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-11T14:43:42Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-granada-cf",
@@ -1155,9 +1156,6 @@
    "withPosition": 26,
    "withNationality": 26,
    "withDateOfBirth": 21,
-   "sourceRevisionDate": "2026-11-03T01:52:29Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -1172,7 +1170,10 @@
      "FW": 5
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-03T01:52:29Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-rc-celta-fortuna",
@@ -1188,9 +1189,6 @@
    "withPosition": 24,
    "withNationality": 0,
    "withDateOfBirth": 8,
-   "sourceRevisionDate": "2026-11-09T12:46:54Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -1205,7 +1203,10 @@
      "FW": 6
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T12:46:54Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-rcd-mallorca",
@@ -1221,9 +1222,6 @@
    "withPosition": 28,
    "withNationality": 28,
    "withDateOfBirth": 25,
-   "sourceRevisionDate": "2026-11-08T18:45:57Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -1238,7 +1236,10 @@
      "FW": 8
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T18:45:57Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-real-oviedo",
@@ -1254,11 +1255,6 @@
    "withPosition": 27,
    "withNationality": 27,
    "withDateOfBirth": 23,
-   "sourceRevisionDate": "2026-11-09T13:57:48Z",
-   "status": "incomplete or needs review",
-   "flags": [
-    "1 contradictory player record(s)"
-   ],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -1273,7 +1269,12 @@
      "FW": 8
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-09T13:57:48Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "1 contradictory player record(s)"
+   ]
   },
   {
    "club": "es-real-sociedad-b",
@@ -1289,11 +1290,6 @@
    "withPosition": 27,
    "withNationality": 0,
    "withDateOfBirth": 21,
-   "sourceRevisionDate": "2026-09-01T07:05:47Z",
-   "status": "incomplete or needs review",
-   "flags": [
-    "squad source dated 2026-09-01, before the summer window closed"
-   ],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -1308,7 +1304,12 @@
      "FW": 9
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-09-01T07:05:47Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "squad source dated 2026-09-01, before the summer window closed"
+   ]
   },
   {
    "club": "es-real-valladolid",
@@ -1324,11 +1325,6 @@
    "withPosition": 31,
    "withNationality": 31,
    "withDateOfBirth": 30,
-   "sourceRevisionDate": "2026-11-12T06:31:58Z",
-   "status": "incomplete or needs review",
-   "flags": [
-    "2 contradictory player record(s)"
-   ],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -1343,7 +1339,12 @@
      "FW": 7
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-12T06:31:58Z",
+   "status": "incomplete or needs review",
+   "flags": [
+    "2 contradictory player record(s)"
+   ]
   },
   {
    "club": "es-sd-eibar",
@@ -1359,9 +1360,6 @@
    "withPosition": 24,
    "withNationality": 18,
    "withDateOfBirth": 23,
-   "sourceRevisionDate": "2026-10-31T17:54:37Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -1376,7 +1374,10 @@
      "FW": 6
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-31T17:54:37Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-sporting-de-gijon",
@@ -1392,9 +1393,6 @@
    "withPosition": 24,
    "withNationality": 24,
    "withDateOfBirth": 23,
-   "sourceRevisionDate": "2026-10-26T10:04:29Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -1409,7 +1407,10 @@
      "FW": 6
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-10-26T10:04:29Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-ud-almeria",
@@ -1425,9 +1426,6 @@
    "withPosition": 27,
    "withNationality": 27,
    "withDateOfBirth": 25,
-   "sourceRevisionDate": "2026-11-08T19:40:55Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 3,
@@ -1442,7 +1440,10 @@
      "FW": 5
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-11-08T19:40:55Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   },
   {
    "club": "es-ud-las-palmas",
@@ -1458,9 +1459,6 @@
    "withPosition": 29,
    "withNationality": 29,
    "withDateOfBirth": 27,
-   "sourceRevisionDate": "2026-09-12T07:03:33Z",
-   "status": "listed squad (not an official registration list)",
-   "flags": [],
    "positionCounts": {
     "source": {
      "GK": 2,
@@ -1475,7 +1473,10 @@
      "FW": 3
     }
    },
-   "independentlyCorroboratedPositions": 0
+   "independentlyCorroboratedPositions": 0,
+   "sourceRevisionDate": "2026-09-12T07:03:33Z",
+   "status": "listed squad (not an official registration list)",
+   "flags": []
   }
  ],
  "wikidata": {

@@ -5,6 +5,14 @@
   "Squads, club seasons and results: OpenFootballBase-Data release data-1.24.6 (github.com/florentfougeres/OpenFootballBase-Data), derived from Wikipedia by its contributors — CC BY-SA 4.0. Each player cites its Wikipedia page and revision.",
   "Identities and facts: Wikidata (www.wikidata.org) — CC0 1.0."
  ],
+ "modifiedByLanova": true,
+ "modifications": [
+  "Filtered the OpenFootballBase release to LaLiga and Segunda División 2026/27 (competitions ESP-LL, ESP-SD).",
+  "Normalized club identities and aliases; mapped clubs to LANOVA ids, Wikidata QIDs and the club names used in LANOVA results.",
+  "Added the date of each cited Wikipedia revision, evidence codes with reasons, Wikidata membership checks and dates of birth (Wikidata, CC0).",
+  "Recorded dated corrections with the source value kept: 4 Málaga CF positions (positionCorrection / effectivePosition), 2 LaLiga fixtures (sourceSnapshot), 1 club city (sourceCity).",
+  "Cross-checked results against openfootball (CC0), LANOVA's verified Málaga CF line and official LaLiga match pages."
+ ],
  "season": "2026-27",
  "asOf": "2026-11-24",
  "source": {
@@ -64,7 +72,8 @@
    "verification": [
     "OpenFootballBase club_season 2026/27 (ESP-LL), source page es:Anexo:Temporada 2026-27 del Athletic Club rev 176244176",
     "Wikidata Q138806502 (2026–27 La Liga) P1923 participating team",
-    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)"
+    "openfootball/espana 2026-27/1-liga.txt fixtures (CC0)",
+    "City corrected from source value 'Ibaigane Palace' to Bilbao using https://www.athletic-club.eus/en/contacto/"
    ],
    "verified": true,
    "squadSource": {

@@ -13,6 +13,9 @@ const S = {clubs: null, squads: null, coverage: null, results: null, wd: null, d
 const dateLabel = d => (d ? new Date(`${d.slice(0, 10)}T12:00:00Z`).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'}) : '—');
 const ageAt = (dob, at) => { if (!dob || dob.length < 10) return null; const [y, m, d] = dob.split('-').map(Number), [Y, M, D] = at.split('-').map(Number); return Y - y - (M < m || (M === m && D < d) ? 1 : 0); };
 
+function heroCounts() {
+  const el = document.getElementById('wd-count'); if (el) el.textContent = `${fmt(S.coverage.wikidata.checked)} of ${fmt(S.coverage.wikidata.playersWithQid)} players with a Wikidata identifier were checked`;
+}
 function readUrl() {
   const q = new URLSearchParams(location.search), c = q.get('club'), club = S.clubs.clubs.find(x => x.id === c);
   if (club) { S.club = club.id; S.division = club.competition; } else if (q.get('division') in DIV) { S.division = q.get('division'); S.club = S.clubs.clubs.find(x => x.competition === S.division).id; }
@@ -45,7 +48,8 @@ function render() {
   document.getElementById('pos').value = S.pos; document.getElementById('qual').value = S.qual;
   club(); squad(); results(); writeUrl();
 }
-const positionOf = p => p.positionCorrection?.correctedPosition ?? p.position;
+// effectivePosition = source value, or the officially corroborated value where positionCorrection exists (see squads.positionNote).
+const positionOf = p => p.effectivePosition;
 const evidenceMatches = (p, q) => q === 'all' || (q === 'CORROBORATED' ? Boolean(p.positionCorrection) : p.quality === q);
 function club() {
   const c = S.clubs.clubs.find(x => x.id === S.club), cv = S.coverage.clubs.find(x => x.club === S.club);
@@ -71,7 +75,7 @@ function squad() {
         <p>Official registration: ${esc(p.registrationStatus === 'not-established' ? 'not established by the sources in this dataset' : 'documented by an official source')}.</p>
         <p>LANOVA player id <span class="mono">${esc(p.id)}</span>${p.wikidataQid ? ` · Wikidata <a href="https://www.wikidata.org/wiki/${esc(p.wikidataQid)}" rel="noopener noreferrer" target="_blank">${esc(p.wikidataQid)}</a>` : ' · no Wikidata item'} · Wikidata membership of this club: ${esc({open: 'open (no end date; not proof of registration)', ended: 'ended', 'no-statement': 'not recorded', 'not-checked': 'not checked yet'}[p.wikidataMembership])}.</p>
         <p>Born: ${p.dateOfBirth ? `${esc(p.dateOfBirth)} (${esc(p.dateOfBirthSource)})` : 'not sourced'}${p.loanFrom ? ` · on loan from ${esc(p.loanFrom)}` : ''} · listed on ${esc(p.listedIn.join(', ') || p.source.lang)} Wikipedia.</p></div></details></td>
-      <td>${positionOf(p) ? esc(POS[positionOf(p)]) : '<span class="muted">not given</span>'}${p.positionCorrection ? '<br><span class="small muted">source: Midfielder</span>' : ''}</td><td>${p.nationality ? esc(p.nationality) : '<span class="muted">not given</span>'}</td><td class="n">${age ?? '—'}</td>
+      <td>${positionOf(p) ? esc(POS[positionOf(p)]) : '<span class="muted">not given</span>'}${p.positionCorrection ? `<br><span class="small muted">source: ${esc(POS[p.position] ?? 'not given')}</span>` : ''}</td><td>${p.nationality ? esc(p.nationality) : '<span class="muted">not given</span>'}</td><td class="n">${age ?? '—'}</td>
       <td><span class="q q-${p.quality.toLowerCase()}">${esc(QUAL[p.quality])}</span>${p.positionCorrection ? '<br><span class="q q-corroborated">Position corroborated</span>' : ''}</td>
       <td><a href="${esc(p.source.url)}" rel="noopener noreferrer" target="_blank" title="${esc(p.source.title)} — ${esc(p.source.section)}">${esc(p.source.lang)}.wikipedia, ${esc(dateLabel(p.source.revisionDate))}</a></td></tr>`; }).join('') || '<tr><td colspan="7" class="muted">No player matches these filters.</td></tr>'}</tbody></table></div>
     <p class="small muted">Nationality is the sporting nationality shown in the squad table. Age is at ${esc(dateLabel(at))}, from Wikidata. No performance metric, market value, wage or predicted contribution is shown or implied.</p>`;
@@ -85,7 +89,7 @@ function results() {
   const comp = S.results.completeness, shown = ms.filter(m => m.status !== 'scheduled').concat(ms.filter(m => m.status === 'scheduled').slice(0, 3));
   box.innerHTML = `<header class="sec-head"><div><span class="kind obs">Observed</span><h2 id="h-results">Results 2026/27</h2><p class="muted">${done.length} played: ${w} won, ${d} drawn, ${l} lost, goals ${gf}–${ga}, ${3 * w + d} points. LaLiga as a whole: ${comp.completed} of ${comp.due} fixtures due by ${esc(dateLabel(S.results.asOf))} completed.</p></div></header>
     <div class="table-wrap"><table class="results"><thead><tr><th class="n">MD</th><th>Date</th><th>Match</th><th class="n">Score</th><th>Check</th></tr></thead><tbody>
-    ${shown.map(m => `<tr data-status="${m.status}"><td class="n">${m.matchday}</td><td>${esc(dateLabel(m.date))}${m.dateNote ? ` <span class="tag" title="${esc(m.dateNote)}">date?</span>` : ''}</td><td>${esc(name(m.home))} – ${esc(name(m.away))}</td>
+    ${shown.map(m => `<tr data-status="${m.status}"><td class="n">${m.matchday}</td><td>${esc(dateLabel(m.date))}${m.dateNote && m.status !== 'suspended' ? ` <span class="tag" title="${esc(m.dateNote)}">date?</span>` : ''}${m.status === 'suspended' ? ' <span class="tag" title="scheduled date; the match is suspended and resumes on the date shown in Check">scheduled</span>' : ''}</td><td>${esc(name(m.home))} – ${esc(name(m.away))}</td>
       <td class="n">${m.score ? `${m.score[0]}–${m.score[1]}` : `<span class="muted">${m.status === 'suspended' ? 'suspended' : m.status === 'missing' ? 'missing' : 'not played yet'}</span>`}</td><td class="small">${m.status === 'suspended' ? `<b>Suspended</b> at ${m.suspension.minute}′, interim score ${m.suspension.interimScore[0]}–${m.suspension.interimScore[1]}; resumption scheduled ${esc(dateLabel(m.suspension.resumptionDate))}. ` : ''}${esc(m.validation.join('; ') || '—')}</td></tr>`).join('')}</tbody></table></div>
     <p class="small muted">Results: Wikipedia via OpenFootballBase (CC BY-SA 4.0); matchdays 1–7 agree with openfootball (CC0) on all ${comp.agreeWithOpenfootball} results. One fixture is suspended, not a completed 0–0. The current-season data gate stays closed (${esc(comp.gateReasons.join('; '))}), so no 2026/27 probability is computed anywhere in LANOVA.</p>`;
 }
@@ -95,7 +99,7 @@ function coverage() {
     <div class="tiles cov-tiles">${Object.entries(c.divisions).map(([k, d]) => `<div data-division-cov="${k}"><span>${DIV[k]}</span><b>${d.players}</b><em>players at ${d.clubsWithSquad}/${d.clubs} clubs · ${d.verified} dated listings · ${d.inferred} inferred · ${d.unverified} unverified · ${d.clubsFlagged} club(s) flagged</em></div>`).join('')}
       <div><span>Wikidata membership checked</span><b>${fmt(c.wikidata.checked)} / ${fmt(c.wikidata.playersWithQid)}</b><em>Only checked records have a Wikidata membership result; remaining records are not checked.</em></div>
       <div><span>LaLiga results</span><b>${c.results.laliga.completed}/${c.results.laliga.due}</b><em>due by ${esc(dateLabel(c.asOf))}; Segunda: none usable</em></div></div>
-    <details class="cov-table"><summary>Coverage by club (42)</summary><div class="table-wrap"><table><thead><tr><th>Club</th><th class="n">Players</th><th class="n">Verified</th><th class="n">Inferred</th><th class="n">Unverified</th><th class="n">With No.</th><th class="n">With birth date</th><th>Source dated</th><th>Status</th></tr></thead><tbody>
+    <details class="cov-table"><summary>Coverage by club (42)</summary><div class="table-wrap"><table><thead><tr><th>Club</th><th class="n">Players</th><th class="n">Dated listings</th><th class="n">Inferred</th><th class="n">Unverified (contradictory)</th><th class="n">With No.</th><th class="n">With birth date</th><th>Source dated</th><th>Status</th></tr></thead><tbody>
       ${['laliga', 'segunda'].map(k => `<tr class="div-row"><td colspan="9"><b>${DIV[k]}</b></td></tr>${c.clubs.filter(x => x.competition === k).map(row).join('')}`).join('')}</tbody></table></div></details>
     <ul class="small gaps"><li><b>Absent:</b> shirt numbers for ${S.squads.players.filter(p => p.shirtNumber === null).length} players, positions for ${S.squads.players.filter(p => !positionOf(p)).length}, nationality for ${S.squads.players.filter(p => !p.nationality).length}, birth date for ${S.squads.players.filter(p => !p.dateOfBirth).length}; Segunda 2026/27 results. LaLiga: ${c.results.laliga.completed}/${c.results.laliga.due} completed, with ${c.results.laliga.suspended.length} suspended.</li>
       <li><b>Not in this product:</b> player ratings, minutes, market values, wages, contract lengths, injuries, club logos and player photographs (rights not cleared).</li>
@@ -110,5 +114,5 @@ function sources() {
       <div><h3>Not used</h3><ul class="small"><li>OpenLigaDB (ODbL 1.0): no LaLiga or Segunda 2026/27 league exists (checked 24 Nov 2026).</li><li>Club logos and player photographs: not part of the data licence; not displayed.</li><li>No paid source, no scraping of sites whose terms forbid it.</li></ul></div></div>`;
 }
 Promise.all(['clubs-2026-27.cc-by-sa.json', 'squads-2026-27.cc-by-sa.json', 'coverage-2026-27.json', 'results-laliga-2026-27.cc-by-sa.json', 'wikidata-2026-27.cc0.json'].map(f => fetch(`../spain-data/${f}`).then(r => { if (!r.ok) throw new Error(`${f}: HTTP ${r.status}`); return r.json(); })))
-  .then(([clubs, squads, coverage, results, wd]) => { Object.assign(S, {clubs, squads, coverage, results, wd}); readUrl(); page(); })
+  .then(([clubs, squads, coverage, results, wd]) => { Object.assign(S, {clubs, squads, coverage, results, wd}); heroCounts(); readUrl(); page(); })
   .catch(e => { root.innerHTML = `<div class="notice" role="alert">The data could not be loaded (${esc(e.message)}). Nothing is shown without it.</div>`; });

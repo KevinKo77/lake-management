@@ -82,6 +82,7 @@ await t('6 · coverage: 42 clubs listed with counts equal to the data; inferred 
   await page.click('.cov-table summary'); const rows = await page.locator('.cov-table tr[data-cov]').count(); assert.equal(rows, 42);
   const rsb = await page.locator('.cov-table tr[data-cov="es-real-sociedad-b"]').innerText(); assert.match(rsb, /before the summer window closed/);
   for (const x of COV.clubs.slice(0, 5)) { const cells = await page.locator(`.cov-table tr[data-cov="${x.club}"] td`).allInnerTexts(); assert.equal(Number(cells[1]), x.players); assert.equal(Number(cells[2]), x.verified); }
+  const head = await page.locator('.cov-table thead').innerText(); assert.match(head, /Dated listings/); assert.doesNotMatch(head, /^\s*Verified\s*$/m);
   await page.click('.cov-table [data-goto="es-real-sociedad-b"]'); await page.waitForTimeout(150);
   assert.match(await page.innerText('#club-panel'), /Real Sociedad B/); assert.ok((await rowsOf()).every(r => r.q === 'INFERRED'));
 });
@@ -104,6 +105,18 @@ await t('8 · phone (iPhone 13, touch): no horizontal overflow; division and clu
   assert.match(await ph.innerText('#club-panel'), /CD Tenerife/); assert.ok(await over() <= 1);
   await ph.locator('#club-panel').scrollIntoViewIfNeeded(); await ph.screenshot({path: join(out, 'spain_club_phone.png')});
   await c.close();
+});
+
+await t('10 · residual fixes: hero counter from data; corrected positions show the source value; suspended fixture has no "date?" tag', async () => {
+  await page.goto(`${URL0}?club=es-malaga-cf`); await page.waitForSelector('table.squad tbody tr');
+  assert.equal(await page.innerText('#wd-count'), `${COV.wikidata.checked.toLocaleString('en-GB')} of ${COV.wikidata.playersWithQid.toLocaleString('en-GB')} players with a Wikidata identifier were checked`);
+  const rows = await rowsOf(), fw = rows.filter(r => r.cells[2].startsWith('Forward'));
+  assert.equal(fw.length, 7); assert.equal(rows.filter(r => /source: Midfielder/.test(r.cells[2])).length, 4);
+  for (const n of ['Haitam', 'Joaquín Muñoz', 'Juan Cruz', 'Julen Lobete']) assert.ok(rows.some(r => r.cells[1].startsWith(n) && r.cells[2].startsWith('Forward')), n);
+  await page.goto(`${URL0}?club=es-athletic-bilbao`); await page.waitForSelector('#results-panel table');
+  const ra = page.locator('#results-panel tr[data-status="suspended"]'); assert.equal(await ra.count(), 1);
+  const cells = await ra.locator('td').allInnerTexts(); assert.doesNotMatch(cells[1], /date\?/); assert.match(cells[1], /10 Oct 2026 scheduled/); assert.match(cells[3], /suspended/); assert.match(cells[4], /9 Dec 2026|2026-12-09/);
+  assert.match(await page.innerText('#club-panel'), /Bilbao/);
 });
 
 await t('9 · no page error and no request to any other site', async () => { assert.deepEqual(errors, []); assert.deepEqual(offsite, []); });
