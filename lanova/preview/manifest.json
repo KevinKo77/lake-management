@@ -1,0 +1,102 @@
+{
+  "sourceCommit": "1c65549f51ff346486cba40bfc18288d0c0e6d14",
+  "preparedAt": "2026-11-05T01:08:16.514Z",
+  "files": [
+    {
+      "path": "index.html",
+      "sha256": "2204f8e1c2f0855d9a40e46938312de8c51674d83e42931193ed67bde6c10c8e"
+    },
+    {
+      "path": "recruitment/engine/analysis.js",
+      "sha256": "80f79090de8545e2094fdb13e13356dc2cac33cfab2177488f85d7180399116d"
+    },
+    {
+      "path": "recruitment/engine/baseline.js",
+      "sha256": "e623b9f4660bad144363058e168d4e9769966b757e129b7937d85d7a0099e361"
+    },
+    {
+      "path": "recruitment/engine/contract.js",
+      "sha256": "c2edc6bbd7557bc1aaa8207b62fb993e2ad27fafd1648ff925522ada038b470b"
+    },
+    {
+      "path": "recruitment/engine/optimizer.js",
+      "sha256": "cd1d0525c8a253bf7b4783f86e46850b49a0cb7f04361eaca57c065347b1d062"
+    },
+    {
+      "path": "recruitment/scenario.js",
+      "sha256": "b822f697aa7a9c013b11de92c994255491ff61ae78c3513a288ab2c96b22e3a7"
+    },
+    {
+      "path": "RELEASE.md",
+      "sha256": "0887de0f5cbdab0125e03ecc1c4ca6922694e56e1c64bfe4a3142e8fa268d8d3"
+    },
+    {
+      "path": "src/finance.js",
+      "sha256": "91927f42ad15c61702dfd2208382b64023c314eb2e66c42bbd7a401892795bec"
+    },
+    {
+      "path": "src/format.js",
+      "sha256": "3ecd4efb909a5461e6a7b27b8ce9c23d4ab8d29441ef04a58b4ea01a64ca1da4"
+    },
+    {
+      "path": "v3/app.js",
+      "sha256": "85383bd39789b13457d6546c685d737edf6ddacae91fd6bc2ce0e6454c666ef6"
+    },
+    {
+      "path": "v3/demo/config.js",
+      "sha256": "fcece1cd623aff257ad0e700485526661c02b209ce03bd6f26b1b8c3014ae92a"
+    },
+    {
+      "path": "v3/demo/explain.js",
+      "sha256": "fe8be3e1ad4d0d80a1b05e98fc154f472def6ab432b99edba12d16c8dc0fa74b"
+    },
+    {
+      "path": "v3/demo/scenarios.js",
+      "sha256": "68c200955a2658fc1667fa9ff2be3561d603aeca23388329ccefb63d94af7657"
+    },
+    {
+      "path": "v3/demo/try.css",
+      "sha256": "e0dfbae6d33f648327ccd772b43466ab3bb86b8aa9bd97e1a64a3e4dc3d79016"
+    },
+    {
+      "path": "v3/demo/try.js",
+      "sha256": "5f0f36c706ac70c96c44bdc082e6c09a113dbfad1cdf72cf24e3c7a9ba37f520"
+    },
+    {
+      "path": "v3/demo/worker.js",
+      "sha256": "892685022b439174c90f036d1d9e9bc21a6d6cef3687770bc7317860a29cbcd5"
+    },
+    {
+      "path": "v3/index.html",
+      "sha256": "87bd45397f343a9efb6fbf826faf200169d34ad63991100cd2a51f7742c68dc4"
+    },
+    {
+      "path": "v3/JSZIP-LICENSE.md",
+      "sha256": "898db6422f17d67ea32ea4eaaa1f8c745db2659dd130e9f42dd37f513f9a57c1"
+    },
+    {
+      "path": "v3/jszip.min.js",
+      "sha256": "d14e71a95ef3290dec66a9cfdd8a37c2dd624f6f2b594c4512f607d4a56e19fc"
+    },
+    {
+      "path": "v3/model.js",
+      "sha256": "bac324b9c4af7b7fb85a32fc728767e09fb7f6b1e4e0e20d1bedf15a06221948"
+    },
+    {
+      "path": "v3/style.css",
+      "sha256": "f7137014ef43fa4e7083e729b5c1b75862015b7c755e0cd8aa74ffa29b6a2ca9"
+    },
+    {
+      "path": "v3/try.html",
+      "sha256": "48a07befef7c0efbc1deff08494e63fc257f8973e3d5a96dacfcd115011f5486"
+    },
+    {
+      "path": "v3/worker.js",
+      "sha256": "b558bb19c7dbf9d70a0ff6342897a8f7b279e7820638153179deeb9b54e79c0d"
+    },
+    {
+      "path": "v3/zip-worker.js",
+      "sha256": "9f59b49a195bae90511f6e36c3ac0f6d4f0abc406064fd6cae51745ebff35451"
+    }
+  ]
+}

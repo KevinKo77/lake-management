@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Try LANOVA · football recruitment decisions</title>
+<link rel="stylesheet" href="demo/try.css">
+</head>
+<body data-view="home">
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar">
+  <a class="brand" href="try.html" aria-label="LANOVA Sports home">LA<span>NOVA</span><small>SPORTS</small></a>
+  <nav aria-label="Main">
+    <a href="try.html" aria-current="page">Try LANOVA</a>
+    <a href="index.html">Use your own shortlist</a>
+    <button type="button" class="link" data-pilot>Request a pilot</button>
+  </nav>
+</header>
+<p class="ribbon">Demonstration with fictional clubs, players and numbers. Nothing you do here leaves this browser.</p>
+
+<main id="main">
+  <!-- Home: choose a case -->
+  <section id="home" class="home">
+    <p class="eyebrow">Football recruitment, decided with numbers you can check</p>
+    <h1>See a transfer-window decision in three minutes.</h1>
+    <p class="lede">Pick a fictional club. LANOVA weighs every combination of its shortlist against the budget, wages and cash it can really afford, then explains what to sign, what it costs and what could go wrong.</p>
+    <div id="cases" class="cases"></div>
+    <p class="fine">No registration, no spreadsheet. Expected points are illustrative estimates written for these fictional cases, not data about real players.</p>
+  </section>
+
+  <!-- Case view -->
+  <section id="case" hidden>
+    <button type="button" class="back" id="back">← All cases</button>
+    <div class="decision card">
+      <p class="eyebrow" id="case-tier"></p>
+      <h1 id="case-club"></h1>
+      <p class="question" id="case-decision"></p>
+      <ul class="facts" id="case-facts"></ul>
+    </div>
+
+    <div class="card" id="confirm-card">
+      <h2>1 · Check the inputs</h2>
+      <p class="muted">LANOVA only calculates with inputs you have confirmed. These are fictional and pre-filled for the demo.</p>
+      <details id="inputs-details">
+        <summary>Show the shortlist and club limits</summary>
+        <div class="scroll"><table id="inputs-table"></table></div>
+        <dl class="limits" id="inputs-limits"></dl>
+      </details>
+      <label class="check"><input type="checkbox" id="confirm"> I have checked these fictional inputs.</label>
+      <button type="button" class="primary" id="run" disabled>Show LANOVA’s recommendation</button>
+      <p id="run-status" class="status" role="status" aria-live="polite"></p>
+    </div>
+
+    <div id="result" hidden aria-live="polite">
+      <div id="stale" class="stale" hidden>Updating the recommendation… the figures below are out of date.</div>
+      <div class="card hero" id="rec-card">
+        <p class="eyebrow">2 · LANOVA recommends</p>
+        <h2 id="rec-headline"></h2>
+        <div id="rec-players" class="players"></div>
+        <p id="rec-proof" class="muted small"></p>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>Why</h3><ul id="why" class="bullets"></ul></div>
+        <div class="card"><h3>What the club would spend</h3><div id="spend"></div></div>
+      </div>
+      <div class="card warn"><h3>What could go wrong</h3><ul id="risks" class="bullets"></ul></div>
+      <div class="card" id="whatif-card">
+        <h3>What if…?</h3>
+        <p class="muted small">Change one assumption, see the change before it is applied, then recalculate.</p>
+        <div id="whatifs" class="whatifs"></div>
+        <div id="whatif-confirm" class="whatif-confirm" hidden>
+          <p><strong>This will change:</strong></p><ul id="whatif-changes"></ul>
+          <button type="button" class="primary" id="whatif-apply">Confirm and recalculate</button>
+          <button type="button" class="ghost" id="whatif-cancel">Cancel</button>
+        </div>
+        <div id="whatif-result" class="whatif-result" hidden></div>
+        <button type="button" class="ghost" id="whatif-reset" hidden>Back to the original case</button>
+      </div>
+      <div class="card"><h3>Other options</h3><ul id="alternatives" class="bullets"></ul>
+        <details><summary>Why not the other players?</summary><ul id="not-chosen" class="bullets"></ul></details>
+      </div>
+      <details class="card detail" id="detail">
+        <summary>Detailed financial view (for analysts)</summary>
+        <div id="detail-body"></div>
+      </details>
+      <div class="actions">
+        <button type="button" class="primary" id="print">Print / save the decision report</button>
+        <button type="button" class="ghost" data-pilot>Request a pilot</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="pilot" class="card pilot" hidden role="dialog" aria-labelledby="pilot-title">
+    <h2 id="pilot-title">Request a pilot</h2>
+    <p id="pilot-text"></p>
+    <a id="pilot-link" class="primary button" hidden>Contact us</a>
+    <button type="button" class="ghost" id="pilot-close">Close</button>
+  </div>
+</main>
+
+<section id="report" class="report" aria-hidden="true"></section>
+<footer class="foot">LANOVA Sports prototype · fictional demonstration data · not financial or legal advice · calculations run in your browser with the LANOVA recruitment engine.</footer>
+<script type="module" src="demo/try.js"></script>
+</body>
+</html>
+
