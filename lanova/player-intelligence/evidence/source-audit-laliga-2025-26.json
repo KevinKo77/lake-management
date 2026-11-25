@@ -1,0 +1,86 @@
+{
+ "schema": "lanova-player-source-audit-v1",
+ "auditedOn": "2026-11-24",
+ "decision": "BLOCKED — not published",
+ "decisionReason": "The repository declares CC0, but the detailed line-ups appear to be generated from third-party football sites (worldfootball.net match reports via yorobot/worldfootball, plus a football-data.org API cache). Those providers' rights and terms are not established, so commercial redistribution rights for the line-up data are not sufficiently established.",
+ "source": {
+  "repository": "https://github.com/openfootball/espana",
+  "file": "2025-26/1-liga-full.txt",
+  "repositoryHead": "80035a93dd4920985af52aa097a54a6fb888563b",
+  "fileLastChangedIn": "6ae1e0f1dcfedefcfd1513d9ec54b06a681612c9 (2026-07-31, 'auto-update week 31', automated)",
+  "sha256": "453103e77b46fdae96fcf9b3616e1fce553473ae02a98bfb9bb366d9c2fbab42",
+  "declaredLicence": "CC0 1.0 (LICENSE.md of the repository)"
+ },
+ "provenanceEvidence": [
+  {
+   "repository": "https://github.com/yorobot/football.json",
+   "revision": "28937238a744f08b355a3cbc3eab1d19b60d9d65",
+   "file": ".github/workflows/update_full.yml",
+   "fact": "workflow 'Update datasets (full versions w/ lineups, etc.)'"
+  },
+  {
+   "repository": "https://github.com/yorobot/fbup",
+   "revision": "9bea32fd81b575d5fc30685451f726cebb9bf684",
+   "file": "fbup/lib/fbup/main.rb",
+   "fact": "default source paths /sports/cache.api.fbdat and /sports/cache.wfb"
+  },
+  {
+   "repository": "https://github.com/yorobot/fbup",
+   "revision": "9bea32fd81b575d5fc30685451f726cebb9bf684",
+   "file": "README.md, NOTES.UPDATE.md, patch.csv",
+   "fact": "'World & Co via wfb', 'add wfb upstream', wfb tool from ../worldfootball"
+  },
+  {
+   "repository": "https://github.com/yorobot/worldfootball",
+   "revision": "d06a57c70266dfe9c3a35f3faa169cd6962ae462",
+   "file": "wfb/lib/worldfootball/download.rb",
+   "fact": "BASE_URL = 'https://www.worldfootball.net'; downloads schedule and match report pages into a web cache"
+  },
+  {
+   "repository": "https://github.com/yorobot/sport.db.more",
+   "revision": "1a2cbe30e10b334cf8c98b27c6eb0065daa01be1",
+   "file": "fbdat/NOTES.md",
+   "fact": "fbdat = football-data.org API responses (crests.football-data.org, match status codes)"
+  }
+ ],
+ "notVerifiable": [
+  "The terms of use of worldfootball.net and football-data.org could not be read from the audit environment (hosts not reachable).",
+  "No statement in the openfootball repository names the origin of the line-ups."
+ ],
+ "parserReconciliation": {
+  "note": "Aggregates only; no player-level data are published.",
+  "matches": 380,
+  "appearances": 11953,
+  "goalsExcludingOwnGoals": 1000,
+  "penaltyGoals": 104,
+  "ownGoals": 24,
+  "yellowCards": 1652,
+  "secondYellowCards": 38,
+  "straightRedCards": 69,
+  "parseProblems": 0,
+  "inconsistencies": 0,
+  "independentCheck": "OpenFootballBase data-1.24.6 match_goal / match_lineup / match_card tables (built from the same file by a different parser): 380 matches, 11953 line-up rows, goals 896 + 104 penalties + 24 own goals, yellow 1652, red 69 — identical.",
+  "scoreCheck": "sum of scorers = sum of scores (1024) in every match"
+ },
+ "identityAudit": {
+  "registry": "2025/26 LaLiga squad listings with Wikidata QIDs (OpenFootballBase data-1.24.6, from dated Wikipedia revisions): 565 players, 20 clubs mapped by fixture alignment (>= 36/38 matches)",
+  "playerClubRecords": 613,
+  "resolved": 482,
+  "resolvedHighConfidence": 371,
+  "resolvedMediumConfidence": 111,
+  "ambiguous": 0,
+  "unresolved": 131,
+  "conflict": 0,
+  "unresolvedReasons": {
+   "no documented player with this name at this club-season": 128,
+   "name matches players documented only at other clubs or seasons (not used)": 3
+  },
+  "appearanceCoverage": {
+   "total": 11953,
+   "onResolvedRecords": 10406,
+   "share": 0.871
+  },
+  "playersAtTwoClubs": 7,
+  "crossCheck": "Against the QIDs OpenFootballBase attaches to the same line-ups: 480 player-club pairs found by both, appearance counts identical in 480/480; 53 pairs only in OpenFootballBase (it matches more loosely), 2 only in LANOVA."
+ }
+}

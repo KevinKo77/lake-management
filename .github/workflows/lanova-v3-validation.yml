@@ -18,7 +18,7 @@ concurrency:
 jobs:
   suite:
     # Targeted at the candidate branches; a manual run validates the branch it is started on.
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'claude/lanova-v3-integrated' || github.event.pull_request.head.ref == 'development/lanova-advantage-v1-20261124' || github.event.pull_request.head.ref == 'development/lanova-winter-transfer-intelligence-20261124' || github.event.pull_request.head.ref == 'development/lanova-spain-real-data-v1-20261124'
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'claude/lanova-v3-integrated' || github.event.pull_request.head.ref == 'development/lanova-advantage-v1-20261124' || github.event.pull_request.head.ref == 'development/lanova-winter-transfer-intelligence-20261124' || github.event.pull_request.head.ref == 'development/lanova-spain-real-data-v1-20261124' || github.event.pull_request.head.ref == 'development/lanova-player-intelligence-v1-20261124'
     name: ${{ matrix.name }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -35,6 +35,8 @@ jobs:
           - {id: case-malaga, name: 'Browser · Málaga winter case (desktop + iPhone 13)', cmd: 'node tests/case-malaga-e2e.mjs ci-out/case-malaga', browser: true}
           - {id: forecast-lab, name: 'Browser · Football Forecast Lab (desktop + iPhone 13)', cmd: 'node tests/forecast-lab-e2e.mjs ci-out/forecast-lab', browser: true}
           - {id: spain-clubs, name: 'Browser · Spanish clubs & squads (desktop + iPhone 13)', cmd: 'node tests/spain-clubs-e2e.mjs ci-out/spain-clubs', browser: true}
+          - {id: pi-publication-gate, name: 'Publication gate · Player Intelligence (fail closed)', cmd: 'node scripts/player-intelligence/publication_gate.mjs', browser: false}
+          - {id: player-intelligence, name: 'Browser · Player Intelligence V1 (desktop + iPhone 13)', cmd: 'node tests/player-intelligence-e2e.mjs ci-out/player-intelligence', browser: true}
           - {id: validation-v2, name: 'Reproducibility · forecast validation v2 (byte for byte)', cmd: 'node scripts/forecast-validation-v2.mjs --check', browser: false}
           - {id: baseline, name: 'Regression · Advantage Lab vs validated V3 (faa7695)', cmd: 'node scripts/compare-advantage-baseline.mjs', browser: false, history: true}
     env:
