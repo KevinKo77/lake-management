@@ -19,7 +19,7 @@
  * without review can change the gate. The protection therefore relies on review controls (CODEOWNERS + branch protection
  * with required code-owner review and required CI) — see lanova/player-intelligence/PUBLICATION-POLICY.md.
  */
-import {readFileSync, existsSync, realpathSync, lstatSync, readdirSync, statSync} from 'node:fs';
+import {readFileSync, existsSync, realpathSync, lstatSync, readdirSync, writeFileSync, renameSync, unlinkSync, openSync, readSync, closeSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {resolve, dirname, basename, join, relative, sep} from 'node:path';
 import {execFileSync} from 'node:child_process';
@@ -45,17 +45,40 @@ export function loadPolicy(root = ROOT) {
   return p;
 }
 
+/** lstat without following links; null only when nothing at all exists at the path. */
+function lstatOrNull(p) { try { return lstatSync(p); } catch (e) { if (e.code === 'ENOENT') return null; throw e; } }
+
 /**
- * Where would this output land? Follows symbolic links of the parent directory; refuses a symbolic link as the target
- * and a parent that does not exist (fail closed). isPublic is true for any location inside the repository.
+ * Where would this output land? Resolves symbolic links of the parent directory, and refuses:
+ *   - a parent directory that does not exist (fail closed);
+ *   - ANY symbolic link at the target, including a dangling one (lstat, never existsSync, which follows links);
+ *   - anything at the target that is not a regular file.
+ * isPublic is true for any location inside the repository.
  */
 export function resolveOutput(out, root = ROOT) {
   const abs = resolve(out), parent = dirname(abs);
-  if (!existsSync(parent)) throw new Error(`output directory does not exist: ${parent}`);
-  const target = join(realpathSync(parent), basename(abs)), realRoot = realpathSync(root);
-  if (existsSync(target) && lstatSync(target).isSymbolicLink()) throw new Error('output is a symbolic link: refused');
+  const ps = lstatOrNull(parent); if (!ps) throw new Error(`output directory does not exist: ${parent}`);
+  const realParent = realpathSync(parent); if (!lstatSync(realParent).isDirectory()) throw new Error(`output parent is not a directory: ${parent}`);
+  const target = join(realParent, basename(abs)), realRoot = realpathSync(root), st = lstatOrNull(target);
+  if (st?.isSymbolicLink()) throw new Error('output is a symbolic link (dangling or not): refused');
+  if (st && !st.isFile()) throw new Error('output exists and is not a regular file: refused');
   const isPublic = target === realRoot || target.startsWith(realRoot + sep);
   return {abs: target, isPublic, rel: isPublic ? posix(relative(realRoot, target)) : null};
+}
+
+/**
+ * Write without ever following a link at the target: the bytes go to a new file created exclusively ("wx") in the
+ * same real directory, then rename() replaces the directory entry itself. A link planted after the check is replaced,
+ * never written through. The target is checked again immediately before the rename.
+ */
+export function safeWrite(output, data) {
+  const tmp = join(dirname(output.abs), `.${basename(output.abs)}.${process.pid}.${Date.now()}.tmp`);
+  writeFileSync(tmp, data, {flag: 'wx', mode: 0o644});
+  try {
+    const st = lstatOrNull(output.abs);
+    if (st && (st.isSymbolicLink() || !st.isFile())) throw new Error('output target changed into a link or a non-file before writing: refused');
+    renameSync(tmp, output.abs);
+  } catch (e) { try { unlinkSync(tmp); } catch { /* already gone */ } throw e; }
 }
 
 const deny = (reason, extra = {}) => ({allowed: false, reasons: [reason], ...extra});
@@ -96,16 +119,44 @@ export const outputMatches = (decision, bytes) => decision.scope !== 'public' ||
  * datasets, identity registries, decision contexts and Football.TXT "full" match files. Each one must be an approved
  * artifact at its approved path with its approved bytes; files matching a blocked source are always violations.
  */
-export function scanPublicTree(root = ROOT, policy = loadPolicy(root), files = null) {
+export const MAX_INSPECT_BYTES = 50e6;
+/** SHA-256 of a file read in chunks (no whole-file buffer for large files). */
+function sha256File(p) {
+  const h = createHash('sha256'), fd = openSync(p, 'r'), buf = Buffer.allocUnsafe(1 << 20);
+  try { for (let n; (n = readSync(fd, buf, 0, buf.length, null)) > 0;) h.update(buf.subarray(0, n)); } finally { closeSync(fd); }
+  return h.digest('hex');
+}
+
+/**
+ * Scan what the repository publishes (git-tracked files, or every file when not a git checkout) for Player Intelligence
+ * datasets, identity registries, decision contexts and Football.TXT "full" match files. Each one must be an approved
+ * artifact at its approved path with its approved bytes; files matching a blocked source are always violations.
+ * FAIL CLOSED: a file the scan cannot inspect is a violation, never skipped — an oversized file (> maxBytes), a symbolic
+ * link, anything that is not a regular file, a tracked path that is missing, or an unreadable file — unless its exact
+ * bytes are an approved artifact at that path.
+ */
+export function scanPublicTree(root = ROOT, policy = loadPolicy(root), files = null, {maxBytes = MAX_INSPECT_BYTES} = {}) {
   const list = files ?? (() => {
     try { return execFileSync('git', ['ls-files', '-z'], {cwd: root}).toString().split('\0').filter(Boolean); }
-    catch { const out = []; const walk = d => { for (const f of readdirSync(join(root, d))) { if (['.git', 'node_modules'].includes(f)) continue; const p = d ? `${d}/${f}` : f; statSync(join(root, p)).isDirectory() ? walk(p) : out.push(p); } }; walk(''); return out; }
+    catch { const out = []; const walk = d => { for (const f of readdirSync(join(root, d))) { if (['.git', 'node_modules'].includes(f)) continue; const p = d ? `${d}/${f}` : f; lstatSync(join(root, p)).isDirectory() ? walk(p) : out.push(p); } }; walk(''); return out; }
   })();
   const approved = new Map(policy.approvals.flatMap(a => [[a.sourcePath, a.sourceSha256], [a.registryPath, a.registrySha256], [a.outputPath, a.outputSha256], ...(a.generatorPath ? [[a.generatorPath, a.generatorSha256]] : [])]));
-  const blocked = new Set(policy.blocked.map(b => b.sourceSha256)), violations = [], found = [];
+  const blocked = new Set(policy.blocked.map(b => b.sourceSha256)), violations = [], found = [], uninspectable = [];
+  const reject = (file, kind, reason) => { found.push({file, kind}); violations.push({file, kind, reason}); };
   for (const f of list) {
-    const p = join(root, f); if (!existsSync(p) || statSync(p).size > 50e6) continue;
-    const bytes = readFileSync(p), h = sha256(bytes), text = bytes.toString('utf8');
+    const p = join(root, f), st = lstatOrNull(p);
+    if (!st) { reject(f, 'missing', 'tracked file missing from the working tree: cannot be inspected'); continue; }
+    if (st.isSymbolicLink()) { reject(f, 'symbolic link', 'symbolic link in the published tree: not inspected, rejected'); continue; }
+    if (!st.isFile()) { reject(f, 'not a regular file', 'not a regular file: not inspected, rejected'); continue; }
+    if (st.size > maxBytes) {
+      let h = null; try { h = sha256File(p); } catch { /* unreadable */ }
+      if (h && blocked.has(h)) reject(f, 'blocked source', 'blocked source');
+      else if (h && approved.get(f) === h) found.push({file: f, kind: 'approved oversized artifact'});
+      else { reject(f, 'oversized file', `larger than ${maxBytes} bytes: content not inspected — rejected unless approved by path and SHA-256`); uninspectable.push(f); }
+      continue;
+    }
+    let bytes; try { bytes = readFileSync(p); } catch (e) { reject(f, 'unreadable', `unreadable (${e.code ?? e.message}): rejected`); continue; }
+    const h = sha256(bytes), text = bytes.toString('utf8');
     let kind = blocked.has(h) ? 'blocked source' : null;
     if (!kind && f.endsWith('.json')) { try { const s = JSON.parse(text)?.schema; if (typeof s === 'string' && /^lanova-player-(facts|registry|context)/.test(s)) kind = s; } catch { /* not JSON */ } }
     if (!kind && /\n(▪|Refs:)/.test(text) && (text.match(/^\S[^\n:]{1,60}: \S[^\n]* - \S[^\n]*,/gm) ?? []).length >= 2) kind = 'Football.TXT full match file';
@@ -113,12 +164,12 @@ export function scanPublicTree(root = ROOT, policy = loadPolicy(root), files = n
     found.push({file: f, kind});
     if (kind === 'blocked source' || approved.get(f) !== h) violations.push({file: f, kind, reason: kind === 'blocked source' ? 'blocked source' : approved.has(f) ? 'bytes differ from the approved artifact' : 'not an approved artifact'});
   }
-  return {found, violations};
+  return {found, violations, scanned: list.length, uninspectable};
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const {found, violations} = scanPublicTree();
   for (const f of found) console.log(violations.some(v => v.file === f.file) ? 'VIOLATION' : 'approved ', f.file, `(${f.kind})`);
   if (violations.length) { console.error(`FAIL publication gate: ${violations.length} unapproved Player Intelligence artifact(s) in the published tree`); process.exit(1); }
-  console.log(`PASS publication gate: ${found.length} Player Intelligence artifact(s), all approved`);
+  console.log(`PASS publication gate: ${found.length} Player Intelligence artifact(s), all approved; every tracked file inspected (none oversized, linked or unreadable)`);
 }

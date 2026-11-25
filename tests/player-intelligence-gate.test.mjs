@@ -2,11 +2,11 @@
 // approved fictional fixture must fail, whatever the manifest, labels or output path say. Nothing is written in the repo.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync, writeFileSync, mkdtempSync, mkdirSync, symlinkSync, existsSync, copyFileSync} from 'node:fs';
+import {readFileSync, writeFileSync, mkdtempSync, mkdirSync, symlinkSync, existsSync, copyFileSync, openSync, ftruncateSync, closeSync, cpSync, lstatSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
 import {tmpdir} from 'node:os';
 import {join, resolve} from 'node:path';
-import {loadPolicy, resolveOutput, decide, scanPublicTree, sha256, ROOT} from '../scripts/player-intelligence/publication_gate.mjs';
+import {loadPolicy, resolveOutput, decide, scanPublicTree, sha256, safeWrite, ROOT, MAX_INSPECT_BYTES} from '../scripts/player-intelligence/publication_gate.mjs';
 
 const DIR = 'lanova/cases/player-intelligence/demo-data', OUT = `${DIR}/demo-facts.json`;
 const SRC = readFileSync(`${DIR}/demo-league-full.txt`), REG = readFileSync(`${DIR}/demo-registry.json`), MAN = JSON.parse(readFileSync(`${DIR}/demo-manifest.json`, 'utf8'));
@@ -140,4 +140,54 @@ test('published-tree scan: the repository holds only approved Player Intelligenc
   assert.ok(scanPublicTree(root, p, files).violations.some(x => x.file === 'misc/blob.bin' && x.reason === 'blocked source'));
   // The command-line scan passes on the real repository (it is run in CI).
   const r = spawnSync('node', ['scripts/player-intelligence/publication_gate.mjs'], {encoding: 'utf8'}); assert.equal(r.status, 0, r.stderr); assert.match(r.stdout, /PASS publication gate/);
+});
+
+test('P1-A: dangling symbolic links are refused — nothing is created or overwritten outside or inside the repository', () => {
+  const dir = tmp(), args = forged(dir), outside = join(tmp(), 'victim.json'), inside = resolve(ROOT, 'lanova', `pi-dangling-${process.pid}.json`);
+  // Dangling link (target does not exist) pointing OUTSIDE the repository, with an unapproved and with the approved source.
+  const l1 = join(dir, 'dangling-out.json'); symlinkSync(outside, l1);
+  for (const a of [args, []]) { const r = build(...a, '--out', l1); assert.equal(r.status, 2, r.stdout); assert.match(r.stderr, /symbolic link \(dangling or not\)/); }
+  assert.ok(!existsSync(outside), 'no external file created through the dangling link'); assert.ok(lstatSync(l1).isSymbolicLink(), 'the link itself is left untouched');
+  // Dangling link pointing INTO the repository.
+  const l2 = join(dir, 'dangling-in.json'); symlinkSync(inside, l2);
+  const r2 = build(...args, '--out', l2); assert.equal(r2.status, 2); assert.ok(!existsSync(inside), 'nothing written into the repository');
+  // Link to an EXISTING external file: refused, file not overwritten.
+  const victim = join(tmp(), 'existing.json'); writeFileSync(victim, 'original'); const l3 = join(dir, 'to-existing.json'); symlinkSync(victim, l3);
+  const r3 = build(...args, '--out', l3); assert.equal(r3.status, 2); assert.equal(readFileSync(victim, 'utf8'), 'original');
+  // A directory or other non-file at the target is refused as well.
+  mkdirSync(join(dir, 'a-dir.json')); assert.throws(() => resolveOutput(join(dir, 'a-dir.json')), /not a regular file/);
+  // A link planted AFTER the check is replaced by rename(), never written through.
+  const late = join(dir, 'late.json'), victim2 = join(tmp(), 'late-victim.json'); const o = resolveOutput(late); symlinkSync(victim2, late);
+  assert.throws(() => safeWrite(o, 'data'), /changed into a link/); assert.ok(!existsSync(victim2), 'race: no file created through the late link');
+  untouched();
+});
+
+test('P1-B: oversized tracked files are rejected, not skipped (sparse temporary file, nothing large committed)', () => {
+  const root = tmp(), big = 'lanova/cases/big.bin', fd = (mkdirSync(join(root, 'lanova/cases'), {recursive: true}), openSync(join(root, big), 'w'));
+  ftruncateSync(fd, MAX_INSPECT_BYTES + 1); closeSync(fd);                                                         // sparse: no real disk use
+  const r = scanPublicTree(root, policy, [big]);
+  assert.deepEqual(r.violations.map(v => [v.file, v.kind]), [[big, 'oversized file']]); assert.match(r.violations[0].reason, /content not inspected — rejected unless approved by path and SHA-256/);
+  assert.deepEqual(r.uninspectable, [big]);
+  // Approved by exact path and SHA-256: accepted; same bytes at another path, or the blocked list: rejected.
+  const h = sha256(readFileSync(join(root, big))), p = structuredClone(policy); p.approvals.push({...p.approvals[0], id: 'big', outputPath: big, outputSha256: h});
+  assert.deepEqual(scanPublicTree(root, p, [big]).violations, []);
+  cpSync(join(root, big), join(root, 'lanova/cases/big-copy.bin')); assert.equal(scanPublicTree(root, p, ['lanova/cases/big-copy.bin']).violations[0].kind, 'oversized file');
+  const pb = structuredClone(p); pb.blocked.push({id: 'b', sourceSha256: h, reason: 'test'}); assert.equal(scanPublicTree(root, pb, [big]).violations[0].kind, 'blocked source');
+  // Other files the scan cannot inspect are rejected too: tracked symbolic links (even dangling), directories, missing paths.
+  symlinkSync('/nonexistent/target', join(root, 'link.json')); mkdirSync(join(root, 'subdir'));
+  assert.deepEqual(scanPublicTree(root, policy, ['link.json', 'subdir', 'gone.json']).violations.map(v => v.kind), ['symbolic link', 'not a regular file', 'missing']);
+  // The threshold is a parameter; the same rule applies to any size limit.
+  writeFileSync(join(root, 'small.txt'), 'x'.repeat(100)); assert.equal(scanPublicTree(root, policy, ['small.txt'], {maxBytes: 10}).violations[0].kind, 'oversized file');
+});
+
+test('P1-B: the command-line gate (the CI job) fails on an unapproved oversized tracked file', () => {
+  const repo = tmp();
+  for (const d of ['scripts/player-intelligence', 'lanova/cases/player-intelligence/demo-data']) cpSync(resolve(ROOT, d), join(repo, d), {recursive: true});
+  mkdirSync(join(repo, 'lanova/player-intelligence'), {recursive: true}); copyFileSync(resolve(ROOT, 'lanova/player-intelligence/publication-policy.json'), join(repo, 'lanova/player-intelligence/publication-policy.json'));
+  const git = (...a) => spawnSync('git', a, {cwd: repo, encoding: 'utf8'});
+  git('init', '-q'); git('add', '-A');
+  const ok = spawnSync('node', ['scripts/player-intelligence/publication_gate.mjs'], {cwd: repo, encoding: 'utf8'}); assert.equal(ok.status, 0, ok.stderr + ok.stdout);
+  const fd = openSync(join(repo, 'lanova/huge.dat'), 'w'); ftruncateSync(fd, MAX_INSPECT_BYTES + 1); closeSync(fd); git('add', 'lanova/huge.dat');
+  const bad = spawnSync('node', ['scripts/player-intelligence/publication_gate.mjs'], {cwd: repo, encoding: 'utf8'});
+  assert.equal(bad.status, 1); assert.match(bad.stdout, /VIOLATION lanova\/huge\.dat \(oversized file\)/); assert.match(bad.stderr, /FAIL publication gate/);
 });

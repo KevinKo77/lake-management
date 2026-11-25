@@ -11,11 +11,11 @@
  *   node scripts/player-intelligence/build_player_facts.mjs [--source FILE --registry FILE --manifest FILE --out FILE] [--check]
  * Default: the fictional demonstration dataset of /lanova/cases/player-intelligence/.
  */
-import {readFileSync, writeFileSync, existsSync} from 'node:fs';
+import {readFileSync, existsSync} from 'node:fs';
 import {parseFullTxt} from '../../lanova/player-intelligence/parse.js';
 import {buildFacts} from '../../lanova/player-intelligence/facts.js';
 import {checkRegistry} from '../../lanova/player-intelligence/identity.js';
-import {loadPolicy, resolveOutput, decide, outputMatches, sha256} from './publication_gate.mjs';
+import {loadPolicy, resolveOutput, decide, outputMatches, sha256, safeWrite} from './publication_gate.mjs';
 
 const DEMO = 'lanova/cases/player-intelligence/demo-data';
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : true]] : acc), []));
@@ -39,7 +39,7 @@ const facts = buildFacts(parseFullTxt(sourceBytes.toString('utf8')), registry, {
 const json = JSON.stringify(facts, null, 1) + '\n';
 if (!outputMatches(decision, Buffer.from(json))) fail(3, `publication gate: DENIED — the built output (${sha256(Buffer.from(json)).slice(0, 12)}…) differs from the output pinned by ${decision.approvalId}`);
 if (args.check) { const same = existsSync(output.abs) && readFileSync(output.abs, 'utf8') === json; console.log(same ? `${out} is reproduced exactly` : `${out} differs`); process.exit(same ? 0 : 1); }
-writeFileSync(output.abs, json);
+try { safeWrite(output, json); } catch (e) { fail(2, `publication gate: ${e.message}`); }
 const a = facts.identityAudit, v = facts.validation;
 console.log(`${out} [${decision.scope}${decision.approvalId ? `: ${decision.approvalId}` : ''}]: ${v.matches} matches, ${facts.players.length} player-club records (${a.resolved} resolved, ${a.ambiguous} ambiguous, ${a.unresolved} unresolved, ${a.conflict} conflict); ` +
   `totals ${JSON.stringify(v.totals)}; ${v.parseProblems.length} parse problems, ${v.inconsistencies.length} inconsistencies`);

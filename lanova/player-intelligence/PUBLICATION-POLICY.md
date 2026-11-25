@@ -16,13 +16,24 @@ The whole repository is the public site, so **any file committed here is publish
 | The approval records who approved it and where it was reviewed | Required. |
 | The built output equals the output SHA-256 the approval pins | Required (exit 3 otherwise). |
 
-**Output paths.** The path is resolved through symbolic links before the check, which covers `..` traversal, absolute paths and links pointing into the repository. A symbolic link as the target, or a missing directory, is refused.
+**Output paths.** The parent directory is resolved through symbolic links before the check, which covers `..` traversal, absolute paths and directory links pointing into the repository.
+
+The target is examined with `lstat`, never with a call that follows links. **Any symbolic link at the target is refused, including a dangling one.** Anything else that is not a regular file (a directory, for example) is refused too, and so is a missing directory.
+
+The bytes are then written to a new file created exclusively in the same real directory, and `rename()` replaces the directory entry itself. A link planted between the check and the write is replaced, never written through.
 
 **Outside the repository.** Writing there is allowed only as **RESTRICTED** local data. The dataset is labelled `synthetic: false` and `publication: "RESTRICTED — local only, not for publication"`.
 
 **The browser.** The page loads its dataset only if the SHA-256 of the bytes it receives equals the approved fictional output. A tampered file, even one labelled "synthetic", is refused.
 
-**The published-tree scan.** `node scripts/player-intelligence/publication_gate.mjs` runs as its own CI job and inside the unit tests. It inspects every git-tracked file for:
+**The published-tree scan.** `node scripts/player-intelligence/publication_gate.mjs` runs as its own CI job and inside the unit tests. It inspects **every** git-tracked file. Fail closed: a file it cannot inspect is **rejected**, never skipped. That covers:
+- files larger than 50 MB, unless approved by exact path and SHA-256;
+- tracked symbolic links, including dangling ones;
+- anything that is not a regular file;
+- tracked paths missing from the checkout;
+- unreadable files.
+
+It looks for:
 - Player Intelligence datasets, registries and decision contexts;
 - Football.TXT "full" match files;
 - files whose SHA-256 is on the blocked list.
@@ -39,7 +50,7 @@ The gate, the policy, the tests and the CI workflow are all in this repository. 
    - no bypass for administrators, or bypass logged and limited.
 2. **Required status checks:** the "LANOVA V3 validation" jobs, including "Publication gate · Player Intelligence (fail closed)", on the exact head commit.
 3. **Review rule:** a change to `publication-policy.json`, `rights/`, the gate, or the fixture generator is a **rights decision**, not a code change. The reviewer checks the evidence itself, not only the diff.
-4. **Content-based limit:** the scan recognises known formats (the JSON schemas, the Football.TXT "full" layout and blocked hashes). Data re-encoded into another format would not be recognised, so reviewers remain responsible for anything else added to the tree.
+4. **Human review remains required for unknown encodings and formats.** The scan recognises only known formats (the JSON schemas, the Football.TXT "full" layout and blocked hashes) and rejects what it cannot inspect. Data re-encoded into another format, compressed, split across files or embedded in other content would not be recognised. Reviewers remain responsible for every new data-bearing file, whatever its format.
 
 ## Changing the policy
 - **Fictional fixture:** change `make_demo_fixture.mjs`, regenerate, rebuild, then update the pinned hashes in the same reviewed PR. The tests fail until the hashes match.
